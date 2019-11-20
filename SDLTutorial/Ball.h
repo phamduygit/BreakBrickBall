@@ -16,6 +16,11 @@ private:
 public:
 	Ball();
 	Ball(SDL_Renderer*& rendererValue) {
+		x = 250;
+		y = 700;
+		radius = 20;
+		speed = 3;
+		image = NULL;
 		renderer = rendererValue;
 	}
 	~Ball();

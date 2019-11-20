@@ -6,6 +6,7 @@ Ball::Ball() {
 	radius = 0;
 	speed = 0;
 	image = NULL;
+	renderer = NULL;
 }
 
 Ball::~Ball() {

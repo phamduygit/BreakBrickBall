@@ -15,7 +15,18 @@ protected:
 	SDL_Renderer* renderer;
 
 public:
+	Brick() {
+		x = 100;
+		y = 100;
+		size = 50;
+		image = NULL;
+		renderer = NULL;
+	}
 	Brick(SDL_Renderer*& renderValue) {
+		x = 100;
+		y = 100;
+		size = 50;
+		image = NULL;
 		renderer = renderValue;
 	}
 	int getX() {
