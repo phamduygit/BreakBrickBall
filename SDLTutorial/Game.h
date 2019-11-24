@@ -4,7 +4,7 @@
 #include <SDL_image.h>
 #include <iostream>
 #include <string>
-#include "Ball.h"
+#include "MagicBall.h"
 #include "Brick.h"
 using namespace std;
 class Game
@@ -71,12 +71,22 @@ public:
 			_brick.setImage("Brick1.png");
 		}
 	}
-	void update() {
+	void render() {
 		SDL_RenderClear(_renderer);
 		DrawInRenderer(_renderer, _grassBackground);
 		_ball.draw();
 		_brick.draw();
 		SDL_RenderPresent(_renderer);
+	}
+	void update() {
+		if (_ball.getY() < 0 + _ball.getRadius() || _ball.getY() > 800 - _ball.getRadius() ) {
+			_ball.setDegree(-_ball.getDegree());
+
+		}
+		if (_ball.getX() - _ball.getRadius() < 0 || _ball.getX() + _ball.getRadius() > 500) {
+			_ball.setDegree(180 - _ball.getDegree());
+		}
+		_ball.move();
 	}
 	void handleEvents() {
 		SDL_Event Events;

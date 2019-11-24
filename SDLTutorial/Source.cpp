@@ -14,7 +14,9 @@ int main(int argc, char* argv[]) {
 	while (game->getRunning()) {
 		game->handleEvents();
 		game->update();
+		game->render();
 		SDL_Delay(10);
 	}
+	
 	return 0;
 }

@@ -6,14 +6,12 @@ using namespace std;
 
 class Brick
 {
-protected:
-	//Vi tri 
+protected: 
 	int x;
 	int y;
 	int size;
 	SDL_Texture* image;
 	SDL_Renderer* renderer;
-
 public:
 	Brick() {
 		x = 100;

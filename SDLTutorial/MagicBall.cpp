@@ -1,4 +1,4 @@
-#include "Ball.h"
+#include "MagicBall.h"
 
 Ball::Ball() {
 	x = 0;
