@@ -1,5 +1,5 @@
 #include "MagicBall.h"
-
+Ball* Ball::instance = NULL;
 Ball::Ball() {
 	x = 0;
 	y = 0;

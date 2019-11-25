@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <string>
 #include "Functions.h"
+#include "TextureManager.h"
 using namespace std;
 
 class Brick
@@ -12,6 +13,8 @@ protected:
 	int size;
 	SDL_Texture* image;
 	SDL_Renderer* renderer;
+	int currentFrame;
+	int currentRow;
 public:
 	Brick() {
 		x = 100;
@@ -19,13 +22,28 @@ public:
 		size = 50;
 		image = NULL;
 		renderer = NULL;
+		currentRow = 1;
+		currentFrame = 4;
 	}
 	Brick(SDL_Renderer*& renderValue) {
-		x = 100;
-		y = 100;
+		
+		x = 370;
+		y = 50;
+		size =50 ;
+		image = NULL;
+		renderer = renderValue;
+		currentRow = 1;
+		currentFrame = 1;
+	}
+	Brick(SDL_Renderer*& renderValue,int _x,int _y) {
+
+		x = _x;
+		y = _y;
 		size = 50;
 		image = NULL;
 		renderer = renderValue;
+		currentRow = 1;
+		currentFrame = 1;
 	}
 	int getX() {
 		return x;
@@ -48,8 +66,30 @@ public:
 	void setImage(string name) {
 		image = LoadImage(name, renderer);
 	}
+	void setFrame(int val) {
+
+		currentFrame = val;
+
+	}
+	int getFrame() {
+		return currentFrame;
+	}
+	void update() {
+		//if(ball is colision to brick at (x,y)){
+
+	//	}
+
+	}
+	/*bool isTouch(int x,int y ,int radius) {
+	
+
+
+
+	}*/
 	void draw() {
-		DrawInRenderer(renderer, image, x, y, size, size);
+		//DrawInRenderer(renderer, image, x, y, size, size);
+		TextureManager::GetInstance()->drawFrame("Brick", x, y, size, size, 1, currentFrame, renderer);
+
 	}
 
 

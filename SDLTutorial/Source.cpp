@@ -9,13 +9,13 @@ using namespace std;
 int main(int argc, char* argv[]) {
 	// Kiểm tra xem SDL có hoạt động hay chưa và đưa ra lỗi 
 	
-	Game* game = new Game;
+	Game* game = Game::Instance();
 	game->Init("Break Brick Ball", 500, 800);
 	while (game->getRunning()) {
 		game->handleEvents();
 		game->update();
 		game->render();
-		SDL_Delay(10);
+		SDL_Delay(3);
 	}
 	
 	return 0;

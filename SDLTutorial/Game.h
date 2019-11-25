@@ -6,6 +6,8 @@
 #include <string>
 #include "MagicBall.h"
 #include "Brick.h"
+#include <vector>
+
 using namespace std;
 class Game
 {
@@ -15,10 +17,9 @@ private:
 	SDL_Renderer* _renderer;
 	bool _running;
 	SDL_Texture* _grassBackground;
-	Ball _ball;
-	Brick _brick;
+	Ball* ball;
+	vector<Brick> listBrick;
 	double degrees;
-public:
 	Game() {
 		_screenSurface = NULL;
 		_window = NULL;
@@ -27,6 +28,16 @@ public:
 		_grassBackground = NULL;
 		degrees = 0;
 	}
+	static Game* instance;
+public:
+	static Game* Instance() {
+		if (instance == NULL) {
+			instance = new Game();
+		}
+		return instance;
+	}
+	
+	
 	void Init(string title, int Width , int Height) {
 		if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 			cout << "SDL could not initialize! SDL Error: " << SDL_GetError();
@@ -64,29 +75,55 @@ public:
 				}
 				_running = true;
 			}
+			TextureManager::GetInstance()->load("Brick.png", "Brick", _renderer);
 			_grassBackground = LoadImage("GrassBackground.png", _renderer);
-			_ball = Ball(_renderer);
-			_ball.setImage("Ball.png");
-			_brick = Brick(_renderer);
-			_brick.setImage("Brick1.png");
+			ball = Ball::Instance(_renderer);
+
+			ball->setImage("Ball.png");
+			Brick _brick;
+			for (int i = 0; i < 10; i++) {
+				_brick = Brick(_renderer,i*50,0);
+				listBrick.push_back(_brick);
+
+			}
+				
+		//	_brick.setImage("Brick.png");
 		}
 	}
 	void render() {
 		SDL_RenderClear(_renderer);
 		DrawInRenderer(_renderer, _grassBackground);
-		_ball.draw();
-		_brick.draw();
+		ball->draw();
+		for(auto _brick:listBrick)
+			_brick.draw();
 		SDL_RenderPresent(_renderer);
 	}
 	void update() {
-		if (_ball.getY() < 0 + _ball.getRadius() || _ball.getY() > 800 - _ball.getRadius() ) {
-			_ball.setDegree(-_ball.getDegree());
+
+		if (ball->getY() < 0 + ball->getRadius() || ball->getY() > 800 - ball->getRadius() ) {
+			ball->setDegree(-ball->getDegree());
 
 		}
-		if (_ball.getX() - _ball.getRadius() < 0 || _ball.getX() + _ball.getRadius() > 500) {
-			_ball.setDegree(180 - _ball.getDegree());
+		if (ball->getX() - ball->getRadius() < 0 || ball->getX() + ball->getRadius() > 500) {
+			ball->setDegree(180 - ball->getDegree());
 		}
-		_ball.move();
+		cout <<ball->getX() << endl << ball->getY();
+		for (int i = 0;i< listBrick.size();i++) {
+			if (ball->isCollision(listBrick[i].getX(), listBrick[i].getY(), listBrick[i].getSize())) {
+				if (ball->getY() < listBrick[i].getY() + listBrick[i].getSize() + ball->getRadius()) {
+					ball->setDegree(-ball->getDegree());
+
+				}
+				listBrick[i].setFrame(listBrick[i].getFrame() + 1);
+				if (listBrick[i].getFrame() == 4) {
+					listBrick.erase(listBrick.begin() + i);
+
+				}
+				
+			}
+		}
+
+		ball->move();
 	}
 	void handleEvents() {
 		SDL_Event Events;
@@ -99,12 +136,12 @@ public:
 		{
 			switch (Events.key.keysym.sym)
 			{
-			case SDLK_a:
-				degrees -= 15;
+			/*case SDLK_a:
+				_brick.setFrame(_brick.getFrame()+1);
 				break;
 			case SDLK_d:
-				degrees += 15;
-				break;
+				_brick.setFrame(_brick.getFrame()-1);
+				break;*/
 			}
 		}
 	}
