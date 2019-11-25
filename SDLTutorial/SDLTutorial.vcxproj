@@ -127,6 +127,7 @@
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="MagicBall.cpp" />
+    <ClCompile Include="Paddle.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -134,6 +135,7 @@
     <ClInclude Include="Functions.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="MagicBall.h" />
+    <ClInclude Include="Paddle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -21,7 +21,7 @@ public:
 		x = 250;
 		y = 700;
 		radius = 15;
-		speed = 3;
+		speed = 5;
 		image = NULL;
 		degree = 60;
 		renderer = rendererValue;

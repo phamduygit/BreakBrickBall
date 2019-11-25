@@ -39,13 +39,14 @@ SDL_Texture* LoadFont(string Text, SDL_Renderer* Renderer, string Font) {
 	}
 	return newTexture;
 }
-void DrawInRenderer(SDL_Renderer* Renderer, SDL_Texture* Texture, int x, int y, int w, int h) {
-	SDL_Rect Size;
+void DrawInRenderer(SDL_Renderer* Renderer, SDL_Texture* Texture, float x, float y, float w, float h) {
+	SDL_FRect Size;
 	Size.x = x;
 	Size.y = y;
 	Size.w = w;
 	Size.h = h;
-	SDL_RenderCopy(Renderer, Texture, NULL, &Size);
+	SDL_Rect test = { 128, 0, 128 , 128 };
+	SDL_RenderCopyF(Renderer, Texture, NULL, &Size);
 }
 void DrawInRendererRotate(SDL_Renderer* Renderer, SDL_Texture* Texture, float x, float y, float w, float h, float radius, float degree) {
 	SDL_FRect Size;

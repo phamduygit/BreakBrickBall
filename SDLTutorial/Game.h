@@ -6,6 +6,7 @@
 #include <string>
 #include "MagicBall.h"
 #include "Brick.h"
+#include "Paddle.h"
 using namespace std;
 class Game
 {
@@ -17,7 +18,9 @@ private:
 	SDL_Texture* _grassBackground;
 	Ball _ball;
 	Brick _brick;
+	Paddle _paddle;
 	double degrees;
+	bool MoveLR[2] = { false, false };
 public:
 	Game() {
 		_screenSurface = NULL;
@@ -69,6 +72,8 @@ public:
 			_ball.setImage("Ball.png");
 			_brick = Brick(_renderer);
 			_brick.setImage("Brick1.png");
+			_paddle = Paddle(_renderer);
+			_paddle.setImage("Paddle.png");
 		}
 	}
 	void render() {
@@ -76,6 +81,7 @@ public:
 		DrawInRenderer(_renderer, _grassBackground);
 		_ball.draw();
 		_brick.draw();
+		_paddle.draw();
 		SDL_RenderPresent(_renderer);
 	}
 	void update() {
@@ -87,6 +93,10 @@ public:
 			_ball.setDegree(180 - _ball.getDegree());
 		}
 		_ball.move();
+		if (_ball.getY() > _paddle.getY() - _ball.getRadius() && _ball.getX() > _paddle.getX() && _ball.getX() < _paddle.getX() + 120) {
+			_ball.setDegree(-_ball.getDegree());
+		}
+		_paddle.Move(MoveLR);
 	}
 	void handleEvents() {
 		SDL_Event Events;
@@ -100,10 +110,22 @@ public:
 			switch (Events.key.keysym.sym)
 			{
 			case SDLK_a:
-				degrees -= 15;
+				MoveLR[0] = true;
 				break;
 			case SDLK_d:
-				degrees += 15;
+				MoveLR[1] = true;
+				break;
+			}
+		}
+		else if (Events.type == SDL_KEYUP)
+		{
+			switch (Events.key.keysym.sym)
+			{
+			case SDLK_a:
+				MoveLR[0] = false;
+				break;
+			case SDLK_d:
+				MoveLR[1] = false;
 				break;
 			}
 		}

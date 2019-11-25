@@ -7,9 +7,9 @@ using namespace std;
 class Brick
 {
 protected: 
-	int x;
-	int y;
-	int size;
+	float x;
+	float y;
+	float size;
 	SDL_Texture* image;
 	SDL_Renderer* renderer;
 public:
@@ -27,22 +27,22 @@ public:
 		image = NULL;
 		renderer = renderValue;
 	}
-	int getX() {
+	float getX() {
 		return x;
 	}
-	void setX(int xValue) {
+	void setX(float xValue) {
 		x = xValue;
 	}
-	int getY() {
+	float getY() {
 		return y;
 	}
-	void setY(int yValue) {
+	void setY(float yValue) {
 		y = yValue;
 	}
-	int getSize() {
+	float getSize() {
 		return size;
 	}
-	void setSize(int sizeValue) {
+	void setSize(float sizeValue) {
 		size = sizeValue;
 	}
 	void setImage(string name) {
