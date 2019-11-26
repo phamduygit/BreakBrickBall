@@ -95,6 +95,7 @@ public:
 		_ball.move();
 		if (_ball.getY() > _paddle.getY() - _ball.getRadius() && _ball.getX() > _paddle.getX() && _ball.getX() < _paddle.getX() + 120) {
 			_ball.setDegree(-_ball.getDegree());
+			_ball.setY(_ball.getY() - _ball.getSpeed());
 		}
 		_paddle.Move(MoveLR);
 	}
@@ -126,6 +127,22 @@ public:
 				break;
 			case SDLK_d:
 				MoveLR[1] = false;
+				break;
+			}
+		}
+		else if (Events.type == SDL_MOUSEMOTION || Events.type == SDL_MOUSEBUTTONUP || Events.type == SDL_MOUSEBUTTONDOWN) {
+			int x, y;
+			SDL_GetMouseState(&x, &y);
+			cout << x << " " << y << endl;
+			switch (Events.type)
+			{
+			case SDL_MOUSEBUTTONDOWN:
+				cout << "Kick Xuong" << endl;
+				break;
+			case SDL_MOUSEBUTTONUP:
+				cout << "Kick Tha" << endl;
+				break;
+			default:
 				break;
 			}
 		}
