@@ -8,10 +8,12 @@
 #include "Brick.h"
 #include <vector>
 #include "Paddle.h"
+#include "Line.h"
 using namespace std;
 class Game
 {
 private:
+	Line line;
 	SDL_Surface* _screenSurface;
 	SDL_Window* _window;
 	SDL_Renderer* _renderer;
@@ -22,13 +24,17 @@ private:
 	double degrees;
 	Paddle _paddle;
 	bool MoveLR[2] = { false, false };
+	int x;
+	int y;
 	Game() {
+		
 		_screenSurface = NULL;
 		_window = NULL;
 		_renderer = NULL;
 		_running = false;
 		_grassBackground = NULL;
 		degrees = 0;
+		
 		
 	}
 	static Game* instance;
@@ -83,6 +89,7 @@ public:
 			ball = Ball::Instance(_renderer);
 
 			ball->setImage("Ball.png");
+			line = Line(_renderer);
 			Brick _brick;
 			for (int i = 0; i < 10; i++) {
 				_brick = Brick(_renderer,i*50,0);
@@ -108,10 +115,12 @@ public:
 		for(auto _brick:listBrick)
 			_brick.draw();
 		//SDL_RenderDrawLine(_renderer, 0, 0, 200, 300);
-		SDL_Point p[200];
+		/*SDL_Point p[200];
 		for (int i = 0; i < 200; i++) {
 			p[i].x = p[i].y = i;
-		}
+		}*/
+		//SDL_RenderDrawLineF(_renderer, _paddle.getX(), _paddle.getY(), x, y);
+		line.draw();
 		_paddle.draw();
 		
 
@@ -120,7 +129,8 @@ public:
 		//delete[] p;
 	}
 	void update() {
-
+		line.setMouse(x,y);
+		line.setPaddlePoint(_paddle.getX(), _paddle.getY());
 		if (ball->getY() - ball->getRadius() <= 0 ) {
 			ball->setDegree(-ball->getDegree());
 
@@ -227,9 +237,9 @@ public:
 			}
 		}
 		else if (Events.type == SDL_MOUSEMOTION || Events.type == SDL_MOUSEBUTTONUP || Events.type == SDL_MOUSEBUTTONDOWN) {
-			int x, y;
+			//int x, y;
 			SDL_GetMouseState(&x, &y);
-			cout << x << " " << y << endl;
+			//cout << x << " " << y << endl;
 			switch (Events.type)
 			{
 			case SDL_MOUSEBUTTONDOWN:

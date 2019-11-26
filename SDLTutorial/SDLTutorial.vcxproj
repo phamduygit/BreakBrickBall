@@ -131,7 +131,6 @@
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="MagicBall.cpp" />
     <ClCompile Include="Paddle.cpp" />
-    <ClCompile Include="Point2D.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -143,7 +142,6 @@
     <ClInclude Include="Line.h" />
     <ClInclude Include="MagicBall.h" />
     <ClInclude Include="Paddle.h" />
-    <ClInclude Include="Point2D.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
