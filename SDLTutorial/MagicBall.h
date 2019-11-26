@@ -27,17 +27,23 @@ private:
 	float degree;
 	SDL_Texture* image;
 	SDL_Renderer* renderer;
+	
 	Ball(SDL_Renderer*& rendererValue) {
 		x = 250;
 		y = 700;
 		radius = 15;
-		speed = 3;
+		speed = 4;
 		image = NULL;
 		degree = 60;
 		renderer = rendererValue;
 	}
 	static Ball* instance;
 public:
+	void reset() {
+		x = 250;
+		y = 250;
+		degree = 60;
+	}
 	static Ball* Instance(SDL_Renderer*& rendererValue) {
 		if (instance == NULL) {
 			instance = new Ball(rendererValue);
@@ -142,7 +148,7 @@ public:
 	}
 	void draw() {
 		//DrawInRenderer(renderer, image, x - radius, y - radius, radius * 2, 100);
-		DrawInRendererRotate(renderer, image, x - radius, y - radius, radius * 2, 100.0, radius, 90 - degree);
+		DrawInRendererRotate(renderer, image, x - radius, y - radius, radius * 2, radius*2, radius, 90 - degree);
 
 	}
 

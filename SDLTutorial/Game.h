@@ -7,7 +7,7 @@
 #include "MagicBall.h"
 #include "Brick.h"
 #include <vector>
-
+#include "Paddle.h"
 using namespace std;
 class Game
 {
@@ -20,6 +20,8 @@ private:
 	Ball* ball;
 	vector<Brick> listBrick;
 	double degrees;
+	Paddle _paddle;
+	bool MoveLR[2] = { false, false };
 	Game() {
 		_screenSurface = NULL;
 		_window = NULL;
@@ -27,6 +29,7 @@ private:
 		_running = false;
 		_grassBackground = NULL;
 		degrees = 0;
+		
 	}
 	static Game* instance;
 public:
@@ -86,8 +89,16 @@ public:
 				listBrick.push_back(_brick);
 
 			}
+			for (int i = 0; i < 10; i++) {
+				_brick = Brick(_renderer, i * 50, 1*50);
+				listBrick.push_back(_brick);
+
+			}
+			_paddle = Paddle(_renderer);
+			_paddle.setImage("Paddle.png");
+
 				
-		//	_brick.setImage("Brick.png");
+		
 		}
 	}
 	void render() {
@@ -96,24 +107,77 @@ public:
 		ball->draw();
 		for(auto _brick:listBrick)
 			_brick.draw();
+		//SDL_RenderDrawLine(_renderer, 0, 0, 200, 300);
+		SDL_Point p[200];
+		for (int i = 0; i < 200; i++) {
+			p[i].x = p[i].y = i;
+		}
+		_paddle.draw();
+		
+
+	//	SDL_RenderDrawPoints(_renderer, p, 200);
 		SDL_RenderPresent(_renderer);
+		//delete[] p;
 	}
 	void update() {
 
-		if (ball->getY() < 0 + ball->getRadius() || ball->getY() > 800 - ball->getRadius() ) {
+		if (ball->getY() - ball->getRadius() <= 0 ) {
 			ball->setDegree(-ball->getDegree());
+
+		}
+		if (ball->getY() > 800 - ball->getRadius()) {
+			ball->reset();
 
 		}
 		if (ball->getX() - ball->getRadius() < 0 || ball->getX() + ball->getRadius() > 500) {
 			ball->setDegree(180 - ball->getDegree());
 		}
-		cout <<ball->getX() << endl << ball->getY();
+		//cout <<ball->getX() << endl << ball->getY();
 		for (int i = 0;i< listBrick.size();i++) {
+			//Khi phát hiện có va chạm 
+			//
 			if (ball->isCollision(listBrick[i].getX(), listBrick[i].getY(), listBrick[i].getSize())) {
-				if (ball->getY() < listBrick[i].getY() + listBrick[i].getSize() + ball->getRadius()) {
+				//
+				if (ball->getY() - ball->getRadius()<= listBrick[i].getY() + listBrick[i].getSize()&&
+					ball->getY()>listBrick[i].getY()+listBrick[i].getSize()
+					     ) {//Dưới
+					cout << "Duoi\n";
 					ball->setDegree(-ball->getDegree());
+					ball->setY(ball->getY() + ball->getSpeed());
+					
 
 				}
+				else {
+					if (ball->getY() + ball->getRadius() >= listBrick[i].getY()&&
+						ball->getY()<listBrick[i].getY()
+						) {//trên 
+						cout << "\nTren";
+						ball->setDegree(-ball->getDegree());
+						ball->setY(ball->getY() - 6);
+
+
+
+					}
+				}
+				if (
+					ball->getX()-ball->getRadius()<=listBrick[i].getX()+listBrick[i].getSize()&&
+					ball->getX()<listBrick[i].getX()) { // Bên phải
+					cout << "\nTrai";
+					ball->setDegree(180 - ball->getDegree());
+					ball->setX(ball->getX() - 6);
+				}
+				else {
+					if (ball->getX() + ball->getRadius() >= listBrick[i].getX()&&
+						ball->getX()>listBrick[i].getX()+listBrick[i].getSize()
+						) { //Bên trái
+						cout << "\nPhai";
+						ball->setDegree(180 - ball->getDegree());
+						ball->setX(ball->getX() + 6);
+
+					}
+
+				}
+
 				listBrick[i].setFrame(listBrick[i].getFrame() + 1);
 				if (listBrick[i].getFrame() == 4) {
 					listBrick.erase(listBrick.begin() + i);
@@ -124,7 +188,13 @@ public:
 		}
 
 		ball->move();
+		if (ball->getY() > _paddle.getY() - ball->getRadius() && ball->getX() > _paddle.getX() && ball->getX() < _paddle.getX() + 120) {
+			ball->setDegree(-ball->getDegree());
+			ball->setY(ball->getY() - ball->getSpeed());
+		}
+		_paddle.Move(MoveLR);
 	}
+	
 	void handleEvents() {
 		SDL_Event Events;
 		SDL_PollEvent(&Events);
@@ -136,12 +206,40 @@ public:
 		{
 			switch (Events.key.keysym.sym)
 			{
-			/*case SDLK_a:
-				_brick.setFrame(_brick.getFrame()+1);
+			case SDLK_a:
+				MoveLR[0] = true;
 				break;
 			case SDLK_d:
-				_brick.setFrame(_brick.getFrame()-1);
-				break;*/
+				MoveLR[1] = true;
+				break;
+			}
+		}
+		else if (Events.type == SDL_KEYUP)
+		{
+			switch (Events.key.keysym.sym)
+			{
+			case SDLK_a:
+				MoveLR[0] = false;
+				break;
+			case SDLK_d:
+				MoveLR[1] = false;
+				break;
+			}
+		}
+		else if (Events.type == SDL_MOUSEMOTION || Events.type == SDL_MOUSEBUTTONUP || Events.type == SDL_MOUSEBUTTONDOWN) {
+			int x, y;
+			SDL_GetMouseState(&x, &y);
+			cout << x << " " << y << endl;
+			switch (Events.type)
+			{
+			case SDL_MOUSEBUTTONDOWN:
+				cout << "Kick Xuong" << endl;
+				break;
+			case SDL_MOUSEBUTTONUP:
+				cout << "Kick Tha" << endl;
+				break;
+			default:
+				break;
 			}
 		}
 	}
