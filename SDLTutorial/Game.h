@@ -120,6 +120,7 @@ public:
 			p[i].x = p[i].y = i;
 		}*/
 		//SDL_RenderDrawLineF(_renderer, _paddle.getX(), _paddle.getY(), x, y);
+		SDL_SetRenderDrawColor(_renderer, 255, 0, 255, NULL);
 		line.draw();
 		_paddle.draw();
 		
