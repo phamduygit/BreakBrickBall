@@ -33,6 +33,9 @@ public:
 		image = NULL;
 		renderer = RenderValue;
 	}
+	int getSize() {
+		return w;
+	}
 	float getX() {
 		return x;
 	}

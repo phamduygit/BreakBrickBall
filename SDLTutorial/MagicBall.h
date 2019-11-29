@@ -27,6 +27,7 @@ private:
 	float degree;
 	SDL_Texture* image;
 	SDL_Renderer* renderer;
+	bool isLaunch;
 	
 	Ball(SDL_Renderer*& rendererValue) {
 		x = 250;
@@ -36,13 +37,15 @@ private:
 		image = NULL;
 		degree = 60;
 		renderer = rendererValue;
+		isLaunch = false;
 	}
 	static Ball* instance;
 public:
-	void reset() {
-		x = 250;
-		y = 250;
-		degree = 60;
+	void reset(int x,int y) {
+		this->x =x ;
+		this->y = y;
+	
+		isLaunch = false;
 	}
 	static Ball* Instance(SDL_Renderer*& rendererValue) {
 		if (instance == NULL) {
@@ -53,6 +56,13 @@ public:
 	Ball();
 
 	~Ball();
+	bool getIsLaunch() {
+		return isLaunch;
+	}
+	void setIsLaunch(bool val) {
+		isLaunch = val;
+
+	}
 	float getX() {
 		return x;
 	}
@@ -155,8 +165,10 @@ public:
 
 
 	void move() {
-		x += float(cos(degree * 3.14 / 180) * speed);
-		y -= float(sin(degree * 3.14 / 180) * speed);
+		if (isLaunch) {
+			x += float(cos(degree * 3.14 / 180) * speed);
+			y -= float(sin(degree * 3.14 / 180) * speed);
+		}
 	}
 };
 

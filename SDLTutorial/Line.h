@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include <iostream>
+#include <vector>
 using namespace std;
 class Line
 {
@@ -12,11 +13,17 @@ private:
 	SDL_FPoint target;
 	int sizePaddle;
 	SDL_Renderer* renderer;
+	float heSoGoc;
 public:
 	Line() {
 		sizePaddle = 120;
 		width = 500;
 		height = 800;
+		//heSoGoc;
+	}
+	float getHeSoGoc() {
+		return heSoGoc;
+
 	}
 	Line(SDL_Renderer* renderer) {
 		sizePaddle = 120;
@@ -35,12 +42,7 @@ public:
 		mouse.x = x;
 		mouse.y = y;
 	}
-	/*float calc(float heSoGoc, float heSoTuDo, SDL_FPoint p) {
-		return heSoGoc * p.x + heSoTuDo - p.y;
-	}
-	float calc(float heSoGoc, float heSoTuDo, SDL_Point p) {
-		return heSoGoc * p.x + heSoTuDo - p.y;
-	}*/
+	
 	float calc(SDL_FPoint a, SDL_FPoint b, SDL_FPoint c) {
 		return (c.x - a.x) / (b.x - a.x) - (c.y - a.y) / (b.y - a.y);
 
@@ -53,9 +55,7 @@ public:
 		return (c.x - a.x) / (b.x - a.x) - (c.y - a.y) / (b.y - a.y);
 
 	}
-	void drawLine(float x1, float y1, float x2, float y2) {
-
-	}
+	
 	void draw(float hsGoc, float hsTuDo) {
 		SDL_FPoint A;
 		SDL_FPoint B;
@@ -81,7 +81,7 @@ public:
 				B.y = 0;
 				B.x = (B.y - hsTuDo) / hsGoc;
 				SDL_RenderDrawLineF(renderer, A.x, A.y, B.x, B.y);
-				cout << "He so goc trai: " << hsGoc << endl;
+				//cout << "He so goc trai: " << hsGoc << endl;
 			}
 			else
 			{
@@ -103,12 +103,12 @@ public:
 					/*B.y = 0;
 					B.x = (B.y - hsTuDo) / hsGoc;*/
 				SDL_RenderDrawLineF(renderer, A.x, A.y, B.x, B.y);
-				cout << "Hs goc phai: " << hsGoc << endl;
+				//cout << "Hs goc phai: " << hsGoc << endl;
 			}
 		}
 		else {
 			if (hsGoc >= 0) {
-				cout << "hs";
+			//	cout << "hs";
 				A.x = paddle.x;
 				A.y = paddle.y;
 				B.x = -hsTuDo/hsGoc;
@@ -161,7 +161,7 @@ public:
 	}
 
 		void draw() {
-			SDL_FPoint bottomLeft;
+			/*SDL_FPoint bottomLeft;
 			bottomLeft.x = 0;
 			bottomLeft.y = height;
 			SDL_FPoint topLeft;
@@ -172,18 +172,12 @@ public:
 			topRight.x = width;
 			topRight.y = 0;
 			topLeft.x = 0;
-			topLeft.y = 0;
+			topLeft.y = 0;*/
 
-			float hesoGoc = (paddle.y - (float)mouse.y) / (paddle.x + 60 - (float)mouse.x);
-			float hsTuDo = mouse.y - hesoGoc * mouse.x;
+			heSoGoc = (paddle.y - (float)mouse.y) / (paddle.x + 60 - (float)mouse.x);
+			float hsTuDo = mouse.y - heSoGoc * mouse.x;
 
-			draw(hesoGoc, hsTuDo);
-			//if (haiDiemNamCungPhiaDuongThang(paddle, topLeft, mouse, bottomLeft)) {
-			//draw(-hesoGoc, hsTuDo);
-			/*}
-			if (haiDiemNamCungPhiaDuongThang(paddle, topRight, mouse, bottomRight)) {
-
-			}*/
+			draw(heSoGoc, hsTuDo);		
 		}
 	
 
@@ -195,8 +189,6 @@ public:
 
 	
 	void render() {
-
-		//	SDL_RenderDrawLines()
 
 	}
 

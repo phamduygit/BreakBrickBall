@@ -9,6 +9,7 @@
 #include <vector>
 #include "Paddle.h"
 #include "Line.h"
+#define PI 3.141592
 using namespace std;
 class Game
 {
@@ -26,16 +27,19 @@ private:
 	bool MoveLR[2] = { false, false };
 	int x;
 	int y;
+	//Theo thứ tự là click 
+	bool mouseActionClicked = false;
+	bool isResetState = false;
 	Game() {
-		
+
 		_screenSurface = NULL;
 		_window = NULL;
 		_renderer = NULL;
 		_running = false;
 		_grassBackground = NULL;
 		degrees = 0;
-		
-		
+
+
 	}
 	static Game* instance;
 public:
@@ -45,9 +49,9 @@ public:
 		}
 		return instance;
 	}
-	
-	
-	void Init(string title, int Width , int Height) {
+
+
+	void Init(string title, int Width, int Height) {
 		if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 			cout << "SDL could not initialize! SDL Error: " << SDL_GetError();
 			_running = false;
@@ -92,75 +96,107 @@ public:
 			line = Line(_renderer);
 			Brick _brick;
 			for (int i = 0; i < 10; i++) {
-				_brick = Brick(_renderer,i*50,0);
+				_brick = Brick(_renderer, i * 50, 0);
 				listBrick.push_back(_brick);
 
 			}
 			for (int i = 0; i < 10; i++) {
-				_brick = Brick(_renderer, i * 50, 1*50);
+				_brick = Brick(_renderer, i * 50, 1 * 50);
 				listBrick.push_back(_brick);
 
 			}
 			_paddle = Paddle(_renderer);
 			_paddle.setImage("Paddle.png");
 
-				
-		
+
+
 		}
 	}
 	void render() {
 		SDL_RenderClear(_renderer);
 		DrawInRenderer(_renderer, _grassBackground);
 		ball->draw();
-		for(auto _brick:listBrick)
+		for (auto _brick : listBrick)
 			_brick.draw();
-		//SDL_RenderDrawLine(_renderer, 0, 0, 200, 300);
-		/*SDL_Point p[200];
-		for (int i = 0; i < 200; i++) {
-			p[i].x = p[i].y = i;
-		}*/
-		//SDL_RenderDrawLineF(_renderer, _paddle.getX(), _paddle.getY(), x, y);
 		SDL_SetRenderDrawColor(_renderer, 255, 0, 255, NULL);
-		line.draw();
+		if (!ball->getIsLaunch()) {
+			line.draw();
+		}
 		_paddle.draw();
-		
+		//	Line::drawLine(0, 0, 90, 180,_renderer);
 
-	//	SDL_RenderDrawPoints(_renderer, p, 200);
+
+
 		SDL_RenderPresent(_renderer);
 		//delete[] p;
 	}
 	void update() {
-		line.setMouse(x,y);
+
+		line.setMouse(x, y);
 		line.setPaddlePoint(_paddle.getX(), _paddle.getY());
-		if (ball->getY() - ball->getRadius() <= 0 ) {
-			ball->setDegree(-ball->getDegree());
 
-		}
-		if (ball->getY() > 800 - ball->getRadius()) {
-			ball->reset();
 
+		//Khi nhan duoc tin hieu click chuot va trai banh chua bay
+		if (mouseActionClicked == true&&!ball->getIsLaunch()) {
+			ball->setIsLaunch(true);
+			float degree = atan(line.getHeSoGoc())*180/PI;
+			if (degree > 0) {
+				degree = 180 - degree;
+			}
+			else {
+				degree = abs(degree);
+			}
+			cout << degree << endl;
+			ball->setDegree(degree);
+			//cout << degree << endl;
 		}
-		if (ball->getX() - ball->getRadius() < 0 || ball->getX() + ball->getRadius() > 500) {
-			ball->setDegree(180 - ball->getDegree());
+		//Khi bi reset va chuot chua nhan
+		if (isResetState == true) {
+			if (!mouseActionClicked) {
+				ball->setX(_paddle.getX() + _paddle.getSize() / 2);
+				ball->setY(_paddle.getY() - ball->getRadius());
+			}
+			else {
+				isResetState = false;
+			}
+		}
+		if (ball->getIsLaunch()) {
+			/*if (mouseActionClicked) {
+				ball->setSpeed(ball->getSpeed() + 1);
+
+			}*/
+			if (ball->getY() - ball->getRadius() <= 0) {
+				ball->setDegree(-ball->getDegree());
+
+			}
+			if (ball->getY() + ball->getRadius() > 800) {
+
+				ball->reset(_paddle.getX() + 60, _paddle.getY());
+				isResetState = true;
+
+			}
+			if (ball->getX() - ball->getRadius() < 0 || ball->getX() + ball->getRadius() > 500) {
+				ball->setDegree(180 - ball->getDegree());
+			}
 		}
 		//cout <<ball->getX() << endl << ball->getY();
-		for (int i = 0;i< listBrick.size();i++) {
+		for (int i = 0; i < listBrick.size(); i++) {
 			//Khi phát hiện có va chạm 
 			//
 			if (ball->isCollision(listBrick[i].getX(), listBrick[i].getY(), listBrick[i].getSize())) {
 				//
-				if (ball->getY() - ball->getRadius()<= listBrick[i].getY() + listBrick[i].getSize()&&
-					ball->getY()>listBrick[i].getY()+listBrick[i].getSize()
-					     ) {//Dưới
+				if (ball->getY() - ball->getRadius() <= listBrick[i].getY() + listBrick[i].getSize() &&
+					ball->getY() > listBrick[i].getY() + listBrick[i].getSize()
+					) {//Dưới
 					cout << "Duoi\n";
 					ball->setDegree(-ball->getDegree());
 					ball->setY(ball->getY() + ball->getSpeed());
-					
+
 
 				}
 				else {
-					if (ball->getY() + ball->getRadius() >= listBrick[i].getY()&&
-						ball->getY()<listBrick[i].getY()
+					if (ball->getY() + ball->getRadius() >= listBrick[i].getY() &&
+						ball->getY() < listBrick[i].getY()
 						) {//trên 
 						cout << "\nTren";
 						ball->setDegree(-ball->getDegree());
@@ -171,15 +207,15 @@ public:
 					}
 				}
 				if (
-					ball->getX()-ball->getRadius()<=listBrick[i].getX()+listBrick[i].getSize()&&
-					ball->getX()<listBrick[i].getX()) { // Bên phải
+					ball->getX() - ball->getRadius() <= listBrick[i].getX() + listBrick[i].getSize() &&
+					ball->getX() < listBrick[i].getX()) { // Bên phải
 					cout << "\nTrai";
 					ball->setDegree(180 - ball->getDegree());
 					ball->setX(ball->getX() - 6);
 				}
 				else {
-					if (ball->getX() + ball->getRadius() >= listBrick[i].getX()&&
-						ball->getX()>listBrick[i].getX()+listBrick[i].getSize()
+					if (ball->getX() + ball->getRadius() >= listBrick[i].getX() &&
+						ball->getX() > listBrick[i].getX() + listBrick[i].getSize()
 						) { //Bên trái
 						cout << "\nPhai";
 						ball->setDegree(180 - ball->getDegree());
@@ -194,7 +230,7 @@ public:
 					listBrick.erase(listBrick.begin() + i);
 
 				}
-				
+
 			}
 		}
 
@@ -205,7 +241,7 @@ public:
 		}
 		_paddle.Move(MoveLR);
 	}
-	
+
 	void handleEvents() {
 		SDL_Event Events;
 		SDL_PollEvent(&Events);
@@ -244,10 +280,10 @@ public:
 			switch (Events.type)
 			{
 			case SDL_MOUSEBUTTONDOWN:
-				cout << "Kick Xuong" << endl;
+				mouseActionClicked = true;
 				break;
 			case SDL_MOUSEBUTTONUP:
-				cout << "Kick Tha" << endl;
+				mouseActionClicked = false;
 				break;
 			default:
 				break;

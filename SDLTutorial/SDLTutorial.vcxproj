@@ -123,8 +123,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Project1\Project1\TextureManager.cpp" />
-    <ClCompile Include="..\..\Project1\Project1\Vector2D.cpp" />
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -132,16 +130,16 @@
     <ClCompile Include="MagicBall.cpp" />
     <ClCompile Include="Paddle.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Project1\Project1\TextureManager.h" />
-    <ClInclude Include="..\..\Project1\Project1\Vector2D.h" />
     <ClInclude Include="Brick.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Line.h" />
     <ClInclude Include="MagicBall.h" />
     <ClInclude Include="Paddle.h" />
+    <ClInclude Include="TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
