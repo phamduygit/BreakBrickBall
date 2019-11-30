@@ -11,6 +11,7 @@
 #include "Line.h"
 #include "Barrier.h"
 #include <cmath>
+#include <math.h>
 
 
 #define PI 3.141592
@@ -145,6 +146,21 @@ public:
 		SDL_RenderPresent(_renderer);
 		//delete[] p;
 	}
+	bool isBoundFromPaddle() {
+		float t1;
+		float t2;
+		if (ball->getRadius() * ball->getRadius() - (_paddle.getY() - ball->getY())* (_paddle.getY() - ball->getY()) >= 0) {
+			float sq = sqrt(abs(ball->getRadius() * ball->getRadius() - (_paddle.getY() - ball->getY()) * (_paddle.getY() - ball->getY())));
+				t1 = (sq - _paddle.getX() + ball->getX()) / 120.0;
+				t2 = (-sq - _paddle.getX() + ball->getX()) / 120.0;
+				if ((t1 >= 0 && t1 <= 1) || (t2 >= 0 && t2 <= 1))
+					return true;
+		}
+		return false;
+
+	
+		
+	}
 	void update() {
 
 		line.setMouse(x, y);
@@ -195,18 +211,19 @@ public:
 		//
 		//Debug
 		//
-		cout << ball->getDegree() << endl;
+		//cout << ball->getDegree() << endl;
 		//cout <<ball->getX() << endl << ball->getY();
 		for (int i = 0; i < listBrick.size(); i++) {
 			//Khi phát hiện có va chạm 
 			if (ball->isCollision(listBrick[i].getX(), listBrick[i].getY(), listBrick[i].getSize())) {
 				//
-				if (ball->getY() - ball->getRadius() <= listBrick[i].getY() + listBrick[i].getSize() &&
+				if (ball->getY() - ball->getRadius() < listBrick[i].getY() + listBrick[i].getSize() &&
 					ball->getY() > listBrick[i].getY() + listBrick[i].getSize()
 					) {//Dưới
 					//cout << "Duoi\n";
+					float offset = abs(ball->getY() - ball->getRadius() - (listBrick[i].getY() + listBrick[i].getSize()));
 					ball->setDegree(-ball->getDegree());
-					ball->setY(ball->getY() + ball->getSpeed());
+					ball->setY(ball->getY() +offset*2);
 				}
 				else {
 					if (ball->getY() + ball->getRadius() >= listBrick[i].getY() &&
@@ -266,25 +283,26 @@ public:
 
 		}*/
 		//Va cham voi paddle
-		if (ball->getY() + ball->getRadius() > _paddle.getY() &&
+
+		//Sua chua
+		if(isBoundFromPaddle()){
+		/*if (ball->getY() + ball->getRadius() > _paddle.getY() &&
 			ball->getX() > _paddle.getX()-ball->getRadius() &&
-			ball->getX() < _paddle.getX() + _paddle.getSize()+ball->getRadius()) {
-			float offset = abs(ball->getY() + ball->getRadius() - _paddle.getY());
+			ball->getX() < _paddle.getX() + _paddle.getSize()+ball->getRadius()) {*/
+			float offset = abs(ball->getY() + ball->getRadius() - _paddle.getY())*2;
 
 
-		/*if(-ball->getY()-ball->getRadius()+_paddle.getY()<=abs(ball->getDeltaY())&&
-			ball->getY()+ball->getRadius()<_paddle.getY() &&
-			ball->getX() < _paddle.getX() + _paddle.getSize()&&ball->getDegree()<0){*/
+		
 			ball->setY(ball->getY() - offset);
 			if (_paddle.getDeltaX() != 0) {
 				if (ball->getDegree() < 0) {
 					if (_paddle.getDeltaX() > 0) {
-						if(-ball->getDegree()<180-30)
-							ball->setDegree(-ball->getDegree() + 30);
+						if(-ball->getDegree()<180-15)
+							ball->setDegree(-ball->getDegree() + 15);
 					}
 					else {
 						if (-ball->getDegree() > 30) {
-							ball->setDegree(-ball->getDegree() - 30);
+							ball->setDegree(-ball->getDegree() - 15);
 						}
 						
 					}

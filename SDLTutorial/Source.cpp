@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
 		game->render();
 		game->update();
 		//game->render();
-		SDL_Delay(3);
+		SDL_Delay(5);
 	}
 	
 	return 0;
