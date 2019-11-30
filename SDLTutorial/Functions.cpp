@@ -17,11 +17,11 @@ SDL_Texture* LoadImage(string NameImage, SDL_Renderer* Renderer) {
 }
 SDL_Texture* LoadFont(string Text, SDL_Renderer* Renderer, string Font) {
 	SDL_Texture* newTexture = NULL;
-	TTF_Font* font = TTF_OpenFont(Font.c_str(), 200);
+	TTF_Font* font = TTF_OpenFont(Font.c_str(), 400);
 	if (font == NULL) {
 		cout << "Not open ttf!" << endl;
 	}
-	SDL_Color fg = { 255, 255, 255 };
+	SDL_Color fg = { 174, 35, 255 };
 
 	SDL_Surface* loadedSurface = TTF_RenderText_Solid(font, Text.c_str(), fg);
 	if (loadedSurface == NULL)

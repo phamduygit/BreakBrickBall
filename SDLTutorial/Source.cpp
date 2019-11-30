@@ -11,6 +11,7 @@ int main(int argc, char* argv[]) {
 	
 	Game* game = Game::Instance();
 	game->Init("Break Brick Ball", 500, 800);
+
 	while (game->getRunning()) {
 		game->handleEvents();
 		game->render();
