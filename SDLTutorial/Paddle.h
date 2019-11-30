@@ -12,6 +12,8 @@ protected:
 	float w;
 	float h;
 	float speed;
+	float deltaX;
+	float previousX;
 	SDL_Texture* image;
 	SDL_Renderer* renderer;
 public:
@@ -23,6 +25,7 @@ public:
 		speed = 5;
 		image = NULL;
 		renderer = NULL;
+		deltaX = 0;
 	}
 	Paddle(SDL_Renderer* RenderValue) {
 		x = 150;
@@ -61,6 +64,7 @@ public:
 		DrawInRenderer(renderer, image, x, y, w, h);
 	}
 	void move(int X) {
+		previousX = x;
 		if (X < 0) {
 			this->x = 0;
 		}
@@ -71,7 +75,12 @@ public:
 		else {
 			x = X;
 		}
+		deltaX = x - previousX;
 
+
+	}
+	float getDeltaX() {
+		return deltaX;
 	}
 	virtual void Move(bool moveLR[]) {
 		if (moveLR[0]) {
