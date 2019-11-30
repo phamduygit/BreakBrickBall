@@ -13,8 +13,9 @@ int main(int argc, char* argv[]) {
 	game->Init("Break Brick Ball", 500, 800);
 	while (game->getRunning()) {
 		game->handleEvents();
-		game->update();
 		game->render();
+		game->update();
+		//game->render();
 		SDL_Delay(10);
 	}
 	

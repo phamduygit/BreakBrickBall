@@ -6,7 +6,7 @@
 using namespace std;
 class Paddle
 {
-private:
+protected:
 	float x;
 	float y;
 	float w;
@@ -33,34 +33,34 @@ public:
 		image = NULL;
 		renderer = RenderValue;
 	}
-	int getSize() {
+	virtual int getSize() {
 		return w;
 	}
-	float getX() {
+	virtual float getX() {
 		return x;
 	}
-	void setX(float value) {
+	virtual void setX(float value) {
 		x = value;
 	}
-	float getY() {
+	virtual float getY() {
 		return y;
 	}
-	void setY(float value) {
+	virtual void setY(float value) {
 		y = value;
 	}
-	void setSpeed(float value) {
+	virtual void setSpeed(float value) {
 		speed = value;
 	}
-	float getSpeed() {
+	virtual float getSpeed() {
 		return speed;
 	}
-	void setImage(string name) {
+	virtual void setImage(string name) {
 		image = LoadImage(name, renderer);
 	}
-	void draw() {
+	virtual void draw() {
 		DrawInRenderer(renderer, image, x, y, w, h);
 	}
-	void Move(bool moveLR[]) {
+	virtual void Move(bool moveLR[]) {
 		if (moveLR[0]) {
 			if (x > 0) {
 				x -= speed;

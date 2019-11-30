@@ -33,7 +33,7 @@ private:
 		x = 250;
 		y = 700;
 		radius = 15;
-		speed = 4;
+		speed = 8;
 		image = NULL;
 		degree = 60;
 		renderer = rendererValue;
@@ -160,6 +160,12 @@ public:
 		//DrawInRenderer(renderer, image, x - radius, y - radius, radius * 2, 100);
 		DrawInRendererRotate(renderer, image, x - radius, y - radius, radius * 2, radius*2, radius, 90 - degree);
 
+	}
+	float getDeltaX() {
+		return float(cos(degree * 3.14 / 180) * speed);
+	}
+	float getDeltaY() {
+		return float(sin(degree * 3.14 / 180) * speed);
 	}
 
 
