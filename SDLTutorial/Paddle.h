@@ -36,6 +36,9 @@ public:
 		image = NULL;
 		renderer = RenderValue;
 	}
+	virtual int getHeight() {
+		return h;
+	}
 	virtual int getSize() {
 		return w;
 	}

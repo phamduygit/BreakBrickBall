@@ -8,8 +8,7 @@ public:
 	Barrier(){}
 	Barrier(SDL_Renderer*&,int ,int );
 	void move() {
-		
-		//cout << x << endl;
+	
 		if (x +w> 500||x<0) {
 			deltaX = -deltaX;
 		}

@@ -75,21 +75,12 @@ public:
 		return currentFrame;
 	}
 	void update() {
-		//if(ball is colision to brick at (x,y)){
-
-	//	}
 
 	}
-	/*bool isTouch(int x,int y ,int radius) {
 	
-
-
-
-	}*/
 	void draw() {
 		//DrawInRenderer(renderer, image, x, y, size, size);
 		TextureManager::GetInstance()->drawFrame("Brick", x, y, size, size, 1, currentFrame, renderer);
-
 	}
 
 

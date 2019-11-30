@@ -11,6 +11,8 @@
 #include "Line.h"
 #include "Barrier.h"
 #include <cmath>
+
+
 #define PI 3.141592
 using namespace std;
 class Game
@@ -100,7 +102,12 @@ public:
 			line = Line(_renderer);
 			Brick _brick;
 			for (int i = 0; i < 10; i++) {
-				_brick = Brick(_renderer, i * 50, 0);
+				_brick = Brick(_renderer, i * 50, 7 * 50);
+				listBrick.push_back(_brick);
+
+			}
+			for (int i = 0; i < 10; i++) {
+				_brick = Brick(_renderer, i * 50, 4*50);
 				listBrick.push_back(_brick);
 
 			}
@@ -125,6 +132,7 @@ public:
 		for (auto _brick : listBrick)
 			_brick.draw();
 		SDL_SetRenderDrawColor(_renderer, 255, 0, 255, NULL);
+	
 		if (!ball->getIsLaunch()) {
 			line.draw();
 		}
@@ -191,7 +199,6 @@ public:
 		//cout <<ball->getX() << endl << ball->getY();
 		for (int i = 0; i < listBrick.size(); i++) {
 			//Khi phát hiện có va chạm 
-			//
 			if (ball->isCollision(listBrick[i].getX(), listBrick[i].getY(), listBrick[i].getSize())) {
 				//
 				if (ball->getY() - ball->getRadius() <= listBrick[i].getY() + listBrick[i].getSize() &&
@@ -200,8 +207,6 @@ public:
 					//cout << "Duoi\n";
 					ball->setDegree(-ball->getDegree());
 					ball->setY(ball->getY() + ball->getSpeed());
-
-
 				}
 				else {
 					if (ball->getY() + ball->getRadius() >= listBrick[i].getY() &&
@@ -249,18 +254,28 @@ public:
 			ball->setDegree(-ball->getDegree());
 			ball->setY(ball->getY() - ball->getSpeed());
 		}*/
-		//Va cham voi paddle
+		//Va cham voi vat can
+		/*if (ball->getY() - ball->getRadius() < barrier.getY() + barrier.getHeight() &&
+			ball->getX() > barrier.getX() &&
+			ball->getX() < barrier.getX() + barrier.getSize()) {
+			cout << "HIHI";
+			float offset = (ball->getY() - ball->getRadius() - (barrier.getY() + barrier.getHeight())) + 10;
+			ball->setDegree(-ball->getDegree());
+			ball->setY(ball->getY() + offset);
 
+
+		}*/
+		//Va cham voi paddle
 		if (ball->getY() + ball->getRadius() > _paddle.getY() &&
-			ball->getX() > _paddle.getX() &&
-			ball->getX() < _paddle.getX() + _paddle.getSize()) {
+			ball->getX() > _paddle.getX()-ball->getRadius() &&
+			ball->getX() < _paddle.getX() + _paddle.getSize()+ball->getRadius()) {
 			float offset = abs(ball->getY() + ball->getRadius() - _paddle.getY());
 
 
 		/*if(-ball->getY()-ball->getRadius()+_paddle.getY()<=abs(ball->getDeltaY())&&
 			ball->getY()+ball->getRadius()<_paddle.getY() &&
 			ball->getX() < _paddle.getX() + _paddle.getSize()&&ball->getDegree()<0){*/
-
+			ball->setY(ball->getY() - offset);
 			if (_paddle.getDeltaX() != 0) {
 				if (ball->getDegree() < 0) {
 					if (_paddle.getDeltaX() > 0) {
@@ -278,7 +293,7 @@ public:
 			else {
 				ball->setDegree(-ball->getDegree());
 			}
-			ball->setY(ball->getY() -offset);
+		
 
 
 		}
@@ -286,7 +301,6 @@ public:
 		if (ball->getIsLaunch()) {
 			_paddle.move(x);
 		}
-		//_paddle.Move(MoveLR);
 	}
 
 	void handleEvents() {

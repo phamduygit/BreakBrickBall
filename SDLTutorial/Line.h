@@ -59,7 +59,6 @@ public:
 	void draw(float hsGoc, float hsTuDo) {
 		SDL_FPoint A;
 		SDL_FPoint B;
-		//cout << hsGoc<<endl;
 		SDL_Point topLeft = { 0,0 };
 		SDL_Point bottomLeft = { 0,height };
 		SDL_Point topRight = { width,0 };
@@ -81,7 +80,6 @@ public:
 				B.y = 0;
 				B.x = (B.y - hsTuDo) / hsGoc;
 				SDL_RenderDrawLineF(renderer, A.x, A.y, B.x, B.y);
-				//cout << "He so goc trai: " << hsGoc << endl;
 			}
 			else
 			{
@@ -89,19 +87,11 @@ public:
 				A.y = paddle.y;
 				B.x = width;
 				B.y = hsGoc * B.x + hsTuDo;
-				//	SDL_RenderDrawLineF(renderer, 0, 0, 200, 200);
 				SDL_RenderDrawLineF(renderer, A.x + 60, A.y, B.x, B.y);
 				hsGoc = -hsGoc;
 				hsTuDo = B.y - B.x * hsGoc;
-				/*	A.x = width;
-					A.y = A.x * hsGoc + hsTuDo;*/
 				A.y = 0;
 				A.x = (A.y - hsTuDo) / hsGoc;
-				//	cout << A.y<<endl;
-
-					//y= a*x+b
-					/*B.y = 0;
-					B.x = (B.y - hsTuDo) / hsGoc;*/
 				SDL_RenderDrawLineF(renderer, A.x, A.y, B.x, B.y);
 				//cout << "Hs goc phai: " << hsGoc << endl;
 			}
