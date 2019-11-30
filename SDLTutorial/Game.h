@@ -108,7 +108,7 @@ public:
 				listBrick.push_back(_brick);
 
 			}
-			barrier = Barrier(_renderer,0,30);
+			barrier = Barrier(_renderer,0,200);
 			barrier.setImage("Paddle.png");
 			_paddle = Paddle(_renderer);
 			_paddle.setImage("Paddle.png");
@@ -248,11 +248,14 @@ public:
 			ball->getX() > _paddle.getX() &&
 			ball->getX() < _paddle.getX() + _paddle.getSize()) {
 			ball->setDegree(-ball->getDegree());
-			ball->setY(ball->getY() - 2*ball->getDeltaY());
+			ball->setY(ball->getY() -ball->getRadius());
 
 		}
 		//barrier.move();
-		_paddle.Move(MoveLR);
+		if (ball->getIsLaunch()) {
+			_paddle.move(x);
+		}
+		//_paddle.Move(MoveLR);
 	}
 
 	void handleEvents() {
