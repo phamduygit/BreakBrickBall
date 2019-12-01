@@ -164,7 +164,7 @@ public:
 	void update() {
 
 		line.setMouse(x, y);
-		line.setPaddlePoint(_paddle.getX(), _paddle.getY());
+		line.setPaddle(_paddle.getX(), _paddle.getY(),_paddle.getSize());
 		//Khi nhan duoc tin hieu click chuot va trai banh chua bay
 		if (mouseActionClicked == true && !ball->getIsLaunch()) {
 			ball->setIsLaunch(true);

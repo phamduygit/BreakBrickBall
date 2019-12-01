@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <SDL.h>
 #include <iostream>
 #include <vector>
@@ -14,6 +14,7 @@ private:
 	int sizePaddle;
 	SDL_Renderer* renderer;
 	float heSoGoc;
+	float paddleSize;
 public:
 	Line() {
 		sizePaddle = 120;
@@ -34,14 +35,16 @@ public:
 		this->renderer = renderer;
 	}
 
-	void setPaddlePoint(double x, double y) {
+	void setPaddle(double x, double y,float _paddleSize) {
 		paddle.x = x;
 		paddle.y = y;
+		paddleSize = _paddleSize;
 	}
 	void setMouse(int x, int y) {
 		mouse.x = x;
 		mouse.y = y;
 	}
+	
 	
 	float calc(SDL_FPoint a, SDL_FPoint b, SDL_FPoint c) {
 		return (c.x - a.x) / (b.x - a.x) - (c.y - a.y) / (b.y - a.y);
@@ -71,12 +74,11 @@ public:
 				A.y = paddle.y;
 				B.x = 0;
 				B.y = hsTuDo;
-				//	SDL_RenderDrawLineF(renderer, 0, 0, 200, 200);
-				SDL_RenderDrawLineF(renderer, A.x + 60, A.y, B.x, B.y);
+				SDL_RenderDrawLineF(renderer, A.x + paddleSize/2, A.y, B.x, B.y);
+				//Vẽ tia đối xứng
 				hsGoc = -hsGoc;
 				A.x = 0;
 				A.y = A.x * hsGoc + hsTuDo;
-				//y= a*x+b
 				B.y = 0;
 				B.x = (B.y - hsTuDo) / hsGoc;
 				SDL_RenderDrawLineF(renderer, A.x, A.y, B.x, B.y);
@@ -87,38 +89,27 @@ public:
 				A.y = paddle.y;
 				B.x = width;
 				B.y = hsGoc * B.x + hsTuDo;
-				SDL_RenderDrawLineF(renderer, A.x + 60, A.y, B.x, B.y);
+				SDL_RenderDrawLineF(renderer, A.x + paddleSize/2, A.y, B.x, B.y);
 				hsGoc = -hsGoc;
 				hsTuDo = B.y - B.x * hsGoc;
 				A.y = 0;
 				A.x = (A.y - hsTuDo) / hsGoc;
 				SDL_RenderDrawLineF(renderer, A.x, A.y, B.x, B.y);
-				//cout << "Hs goc phai: " << hsGoc << endl;
 			}
 		}
 		else {
 			if (hsGoc >= 0) {
-			//	cout << "hs";
 				A.x = paddle.x;
 				A.y = paddle.y;
 				B.x = -hsTuDo/hsGoc;
 				B.y = 0;
-				//	SDL_RenderDrawLineF(renderer, 0, 0, 200, 200);
-				SDL_RenderDrawLineF(renderer, A.x + 60, A.y, B.x, B.y);
+				SDL_RenderDrawLineF(renderer, A.x + paddleSize/2, A.y, B.x, B.y);
+				//Vẽ tia đối xứng
 				hsGoc = -hsGoc;
 				hsTuDo = B.y - hsGoc * B.x;
 				A.x = 0;
 				A.y = hsTuDo;
-
-				//hsGoc = -hsGoc;
-				//A.x = 0;
-
-				//A.y = A.x * hsGoc + hsTuDo;
-				////y= a*x+b
-				//B.y = 0;
-				//B.x = (B.y - hsTuDo) / hsGoc;
 				SDL_RenderDrawLineF(renderer, A.x, A.y, B.x, B.y);
-				//cout << "He so goc trai: " << hsGoc << endl;
 			}
 			else
 			{
@@ -126,47 +117,20 @@ public:
 				A.y = paddle.y;
 				B.x = -hsTuDo/hsGoc;
 				B.y = 0;
-				//	SDL_RenderDrawLineF(renderer, 0, 0, 200, 200);
-				SDL_RenderDrawLineF(renderer, A.x + 60, A.y, B.x, B.y);
+				SDL_RenderDrawLineF(renderer, A.x + paddleSize/2, A.y, B.x, B.y);
 				hsGoc = -hsGoc;
 				hsTuDo = B.y - hsGoc * B.x;
 				A.x = width;
 				A.y = A.x * hsGoc + hsTuDo;
-				//hsGoc = -hsGoc;
-				//hsTuDo = B.y - B.x * hsGoc;
-				///*	A.x = width;
-				//	A.y = A.x * hsGoc + hsTuDo;*/
-				//A.y = 0;
-				//A.x = (A.y - hsTuDo) / hsGoc;
-				////	cout << A.y<<endl;
-
-				//	//y= a*x+b
-				//	/*B.y = 0;
-				//	B.x = (B.y - hsTuDo) / hsGoc;*/
 				SDL_RenderDrawLineF(renderer, A.x, A.y, B.x, B.y);
-				//cout << "Hs goc phai: " << hsGoc << endl;
 			}
 
 		}
 	}
 
 		void draw() {
-			/*SDL_FPoint bottomLeft;
-			bottomLeft.x = 0;
-			bottomLeft.y = height;
-			SDL_FPoint topLeft;
-			SDL_FPoint topRight;
-			SDL_FPoint bottomRight;
-			bottomRight.x = width;
-			bottomRight.y = height;
-			topRight.x = width;
-			topRight.y = 0;
-			topLeft.x = 0;
-			topLeft.y = 0;*/
-
-			heSoGoc = (paddle.y - (float)mouse.y) / (paddle.x + 60 - (float)mouse.x);
+			heSoGoc = (paddle.y - (float)mouse.y) / (paddle.x + paddleSize/2 - (float)mouse.x);
 			float hsTuDo = mouse.y - heSoGoc * mouse.x;
-
 			draw(heSoGoc, hsTuDo);		
 		}
 	

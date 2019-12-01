@@ -33,7 +33,7 @@ private:
 		x = 250;
 		y = 700;
 		radius = 15;
-		speed = 4;
+		speed = 8;
 		image = NULL;
 		degree = 60;
 		renderer = rendererValue;
