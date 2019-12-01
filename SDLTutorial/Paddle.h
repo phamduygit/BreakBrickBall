@@ -66,24 +66,36 @@ public:
 	virtual void draw() {
 		DrawInRenderer(renderer, image, x, y, w, h);
 	}
-	void move(int X) {
-		previousX = x;
-		if (X < 0) {
-			this->x = 0;
-		}
-		else if (X +w> 500) {
-			this->x = 500 - w;
+	
+	void move(int X,bool autoPlay = false) {
+		if (autoPlay == false) {
+			X = X - 60;
+			previousX = x;
+			if (X < 0) {
+				this->x = 0;
+			}
+			else if (X + w > 500) {
+				this->x = 500 - w;
 
+			}
+			else {
+				x = X;
+			}
+			deltaX = x - previousX;
 		}
 		else {
-			x = X;
+			x = X-60;
+
+
 		}
-		deltaX = x - previousX;
 
 
 	}
 	float getDeltaX() {
 		return deltaX;
+	}
+	void resetDeltaX() {
+		deltaX = 0;
 	}
 	virtual void Move(bool moveLR[]) {
 		if (moveLR[0]) {

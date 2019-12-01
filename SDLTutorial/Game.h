@@ -12,7 +12,9 @@
 #include "Barrier.h"
 #include <cmath>
 #include <math.h>
-
+#include "ListBrick.h"
+#include "Map.h"
+#include "Menu.h"
 
 #define PI 3.141592
 using namespace std;
@@ -20,22 +22,27 @@ class Game
 {
 private:
 	Line line;
+	Menu _menu;
 	SDL_Surface* _screenSurface;
 	SDL_Window* _window;
 	SDL_Renderer* _renderer;
 	bool _running;
 	SDL_Texture* _grassBackground;
 	Ball* ball;
-	vector<Brick> listBrick;
+	/*vector<Brick> listBrick;*/
+	ListBrick listBrick;
 	double degrees;
 	Paddle _paddle;
 	Barrier barrier;
 	bool MoveLR[2] = { false, false };
-	int x;
-	int y;
+	int xMouse;
+	int yMouse;
 	//Theo thứ tự là click 
 	bool mouseActionClicked = false;
 	bool isResetState = true;
+	int currentMap = 0;
+	bool isEnteredGame = false;
+	bool isCollision = false;
 
 	Game() {
 
@@ -95,28 +102,17 @@ public:
 				}
 				_running = true;
 			}
+			_menu = Menu(_renderer);
 			TextureManager::GetInstance()->load("Brick.png", "Brick", _renderer);
 			_grassBackground = LoadImage("GrassBackground.png", _renderer);
 			ball = Ball::Instance(_renderer);
-
 			ball->setImage("Ball.png");
 			line = Line(_renderer);
-			Brick _brick;
-			for (int i = 0; i < 10; i++) {
-				_brick = Brick(_renderer, i * 50, 7 * 50);
-				listBrick.push_back(_brick);
-
-			}
-			for (int i = 0; i < 10; i++) {
-				_brick = Brick(_renderer, i * 50, 4*50);
-				listBrick.push_back(_brick);
-
-			}
-			for (int i = 0; i < 10; i++) {
-				_brick = Brick(_renderer, i * 50, 1 * 50);
-				listBrick.push_back(_brick);
-
-			}
+			listBrick.setRenderer(_renderer);
+			listBrick.createWithMapText("map.txt");
+			_menu.setFont("MachineGunk-nyqg.ttf");
+			_menu.setImage("GrassBackground.png");
+			
 			barrier = Barrier(_renderer,0,200);
 			barrier.setImage("Paddle.png");
 			_paddle = Paddle(_renderer);
@@ -127,21 +123,21 @@ public:
 		}
 	}
 	void render() {
+		
 		SDL_RenderClear(_renderer);
-		DrawInRenderer(_renderer, _grassBackground);
-		ball->draw();
-		for (auto _brick : listBrick)
-			_brick.draw();
-		SDL_SetRenderDrawColor(_renderer, 255, 0, 255, NULL);
-	
-		if (!ball->getIsLaunch()) {
-			line.draw();
+		if (_menu.getChose()) {
+			DrawInRenderer(_renderer, _grassBackground);
+			ball->draw();
+			listBrick.drawBrickMap();
+			SDL_SetRenderDrawColor(_renderer, 255, 255, 255, NULL);
+			if (!ball->getIsLaunch()) {
+				line.draw();
+			}
+			_paddle.draw();
 		}
-		_paddle.draw();
-		barrier.draw();
-	
-
-
+		else {
+			_menu.draw(xMouse,yMouse,mouseActionClicked);
+		}
 
 		SDL_RenderPresent(_renderer);
 		//delete[] p;
@@ -162,163 +158,113 @@ public:
 		
 	}
 	void update() {
-
-		line.setMouse(x, y);
-		line.setPaddle(_paddle.getX(), _paddle.getY(),_paddle.getSize());
-		//Khi nhan duoc tin hieu click chuot va trai banh chua bay
-		if (mouseActionClicked == true && !ball->getIsLaunch()) {
-			ball->setIsLaunch(true);
-			float degree = atan(line.getHeSoGoc()) * 180 / PI;
-			if (degree > 0) {
-				degree = 180 - degree;
+		if (_menu.getChose()) {
+			line.setMouse(xMouse, yMouse);
+			line.setPaddle(_paddle.getX(), _paddle.getY(), _paddle.getSize());
+			//Khi nhan duoc tin hieu click chuot va trai banh chua bay
+			if (mouseActionClicked == true && !ball->getIsLaunch() &&
+				(_menu.getCurrentChoose() == 1 || _menu.getCurrentChoose() == 2)) {
+				ball->setIsLaunch(true);
+				float degree = atan(line.getHeSoGoc()) * 180 / PI;
+				if (degree > 0) {
+					degree = 180 - degree;
+				}
+				else {
+					degree = abs(degree);
+				}
+				//cout << degree << endl;
+				ball->setDegree(degree);
 			}
-			else {
-				degree = abs(degree);
+			//Khi bi reset va chuot chua nhan
+			if (isResetState == true) {
+				if (!mouseActionClicked) {
+					ball->setX(_paddle.getX() + _paddle.getSize() / 2);
+					ball->setY(_paddle.getY() - ball->getRadius());
+				}
+				else {
+					isResetState = false;
+				}
 			}
-			//cout << degree << endl;
-			ball->setDegree(degree);
-			//cout << degree << endl;
-		}
-		//Khi bi reset va chuot chua nhan
-		if (isResetState == true) {
-			if (!mouseActionClicked) {
-				ball->setX(_paddle.getX() + _paddle.getSize() / 2);
-				ball->setY(_paddle.getY() - ball->getRadius());
-			}
-			else {
-				isResetState = false;
-			}
-		}
-		if (ball->getIsLaunch()) {
-			/*if (mouseActionClicked) {
-				ball->setSpeed(ball->getSpeed() + 1);
-
-			}*/
-			if (ball->getY() - ball->getRadius() <= 0) {
-				ball->setDegree(-ball->getDegree());
-
-			}
-			if (ball->getY() + ball->getRadius() > 800) {
-
-				ball->reset(_paddle.getX() + 60, _paddle.getY());
-				isResetState = true;
-
-			}
-			if (ball->getX() - ball->getRadius() < 0 || ball->getX() + ball->getRadius() > 500) {
-				ball->setDegree(180 - ball->getDegree());
-			}
-		}
-		//
-		//Debug
-		//
-		//cout << ball->getDegree() << endl;
-		//cout <<ball->getX() << endl << ball->getY();
-		for (int i = 0; i < listBrick.size(); i++) {
-			//Khi phát hiện có va chạm 
-			if (ball->isCollision(listBrick[i].getX(), listBrick[i].getY(), listBrick[i].getSize())) {
-				//
-				if (ball->getY() - ball->getRadius() < listBrick[i].getY() + listBrick[i].getSize() &&
-					ball->getY() > listBrick[i].getY() + listBrick[i].getSize()
-					) {//Dưới
-					//cout << "Duoi\n";
-					float offset = abs(ball->getY() - ball->getRadius() - (listBrick[i].getY() + listBrick[i].getSize()));
+			if (ball->getIsLaunch()) {
+				if (ball->getY() - ball->getRadius() <= 0) {
 					ball->setDegree(-ball->getDegree());
-					ball->setY(ball->getY() +offset*2);
+
 				}
-				else {
-					if (ball->getY() + ball->getRadius() >= listBrick[i].getY() &&
-						ball->getY() < listBrick[i].getY()
-						) {//trên 
-					//	cout << "\nTren";
-						ball->setDegree(-ball->getDegree());
-						ball->setY(ball->getY() - ball->getSpeed());
-					}
+				if (ball->getY() + ball->getRadius() > 800) {
+
+					ball->reset(_paddle.getX() + 60, _paddle.getY());
+					isResetState = true;
+
 				}
-				if (
-					ball->getX() - ball->getRadius() <= listBrick[i].getX() + listBrick[i].getSize() &&
-					ball->getX() < listBrick[i].getX()) { // Bên phải
-					//cout << "\nTrai";
+				if (ball->getX() - ball->getRadius() < 0 || ball->getX() + ball->getRadius() > 500) {
 					ball->setDegree(180 - ball->getDegree());
-					ball->setX(ball->getX() - ball->getSpeed());
 				}
-				else {
-					if (ball->getX() + ball->getRadius() >= listBrick[i].getX() &&
-						ball->getX() > listBrick[i].getX() + listBrick[i].getSize()
-						) { //Bên trái
-						//cout << "\nPhai";
-						ball->setDegree(180 - ball->getDegree());
-						ball->setX(ball->getX() + ball->getSpeed());
-
-					}
-
-				}
-
-				listBrick[i].setFrame(listBrick[i].getFrame() + 1);
-
-				if (listBrick[i].getFrame() == 4) {
-					listBrick.erase(listBrick.begin() + i);
-
-				}
-
 			}
-		}
 
-		ball->move();
-		//Kiểm soát ball va cham với paddle
-		/*if (ball->getY() > _paddle.getY() - ball->getRadius() &&
-			ball->getX() > _paddle.getX() &&
-			ball->getX() < _paddle.getX() + _paddle.getSize()) {
-			ball->setDegree(-ball->getDegree());
-			ball->setY(ball->getY() - ball->getSpeed());
-		}*/
-		//Va cham voi vat can
-		/*if (ball->getY() - ball->getRadius() < barrier.getY() + barrier.getHeight() &&
-			ball->getX() > barrier.getX() &&
-			ball->getX() < barrier.getX() + barrier.getSize()) {
-			cout << "HIHI";
-			float offset = (ball->getY() - ball->getRadius() - (barrier.getY() + barrier.getHeight())) + 10;
-			ball->setDegree(-ball->getDegree());
-			ball->setY(ball->getY() + offset);
+			listBrick.handleCollision();
 
+			ball->move();
+			//cout << _paddle.getDeltaX() << endl;
+			if (isBoundFromPaddle()) {
+				cout << ball->getDegree() << endl;
+				float offset = abs(ball->getY() + ball->getRadius() - _paddle.getY());
+				ball->setY(ball->getY() - offset);
+				//Set lai goc cho ball khi paddle co van toc
+				if (abs(_paddle.getDeltaX())!=0) {					
+					/*if (ball->getDegree() < 0) {*/
+						
+						if (_paddle.getDeltaX() > 0) {
 
-		}*/
-		//Va cham voi paddle
+							ball->setDegree(int(ball->getDegree()) % 360);
+							//cout << ball->getDegree() << endl;
 
-		//Sua chua
-		if(isBoundFromPaddle()){
-		/*if (ball->getY() + ball->getRadius() > _paddle.getY() &&
-			ball->getX() > _paddle.getX()-ball->getRadius() &&
-			ball->getX() < _paddle.getX() + _paddle.getSize()+ball->getRadius()) {*/
-			float offset = abs(ball->getY() + ball->getRadius() - _paddle.getY())*2;
+							if (abs(ball->getDegree()) + 15 < 150) {
+							//	cout << "del>0" << endl;
+								ball->setDegree(abs(-ball->getDegree()) + 15);
+								//_paddle.resetDeltaX();
+								//Debug
+								//cout << ball->getDegree() << endl;
+							}
+							else {
+								ball->setDegree(-ball->getDegree());
+							}
+						}
+						else if (_paddle.getDeltaX() < 0) {
 
+							ball->setDegree(int(ball->getDegree()) % 360);
+							//cout << ball->getDegree() << endl;
 
-		
-			ball->setY(ball->getY() - offset);
-			if (_paddle.getDeltaX() != 0) {
-				if (ball->getDegree() < 0) {
-					if (_paddle.getDeltaX() > 0) {
-						if(-ball->getDegree()<180-15)
-							ball->setDegree(-ball->getDegree() + 15);
-					}
-					else {
-						if (-ball->getDegree() > 30) {
-							ball->setDegree(-ball->getDegree() - 15);
+							if (abs(ball->getDegree()) - 15 > 20) {							
+								//cout << "Del<0"<<endl;
+								ball->setDegree(abs(ball->getDegree()) - 15);
+								//cout << ball->getDegree() << endl;
+							//	_paddle.resetDeltaX();
+							}
+							else {
+								ball->setDegree(-ball->getDegree());
+
+							}
 						}
 						
-					}
+					//}
+					ball->setY(ball->getY() - offset);
+				
+
+				}
+				else {
+					ball->setDegree(-ball->getDegree());
 				}
 			}
-			else {
-				ball->setDegree(-ball->getDegree());
-			}
 		
-
-
+			if (ball->getIsLaunch()) {
+				_paddle.move(xMouse);
+			}
+			
 		}
-		barrier.move();
-		if (ball->getIsLaunch()) {
-			_paddle.move(x);
-		}
+		
+	
+
+		
 	}
 
 	void handleEvents() {
@@ -353,7 +299,7 @@ public:
 			}
 		}
 		else if (Events.type == SDL_MOUSEMOTION || Events.type == SDL_MOUSEBUTTONUP || Events.type == SDL_MOUSEBUTTONDOWN) {
-			SDL_GetMouseState(&x, &y);
+			SDL_GetMouseState(&xMouse, &yMouse);
 			switch (Events.type)
 			{
 			case SDL_MOUSEBUTTONDOWN:
