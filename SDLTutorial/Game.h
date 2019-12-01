@@ -91,6 +91,10 @@ public:
 					if (TTF_Init()) {
 						cout << "SDL_ttf could not initialize! SDL_ttf Error: " << TTF_GetError();
 					}
+					if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+					{
+						cout << "SDL_mixer could not initialize! SDL_mixer Error: %s\n" << Mix_GetError();
+					}
 				}
 				_running = true;
 			}
@@ -298,7 +302,15 @@ public:
 			case SDLK_d:
 				MoveLR[1] = false;
 				break;
+			case SDLK_1:
+				PlaySound(LoadSound("high.wav"));
+				break;
+			case SDLK_2:
+				PlayMusic(LoadMusic("Music1.mp3"));
+				break;
 			}
+			
+			
 		}
 		else if (Events.type == SDL_MOUSEMOTION || Events.type == SDL_MOUSEBUTTONUP || Events.type == SDL_MOUSEBUTTONDOWN) {
 			SDL_GetMouseState(&x, &y);
