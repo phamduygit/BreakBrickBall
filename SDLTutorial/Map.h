@@ -3,6 +3,7 @@
 class Map
 {
 protected:
+
 	ListBrick listBrick;
 	string dataFileName;
 

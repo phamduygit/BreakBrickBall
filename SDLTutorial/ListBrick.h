@@ -86,6 +86,7 @@ public:
 					ball->getX() - ball->getRadius() <= list[i].getX() + list[i].getSize() &&
 					ball->getX() < list[i].getX()) { // Bên phải
 					//cout << "\nTrai";
+
 					ball->setDegree(180 - ball->getDegree());
 					ball->setX(ball->getX() - ball->getSpeed());
 				}

@@ -112,8 +112,8 @@ public:
 			listBrick.createWithMapText("map.txt");
 			_menu.setFont("MachineGunk-nyqg.ttf");
 			_menu.setImage("GrassBackground.png");
-			
-			barrier = Barrier(_renderer,0,200);
+
+			barrier = Barrier(_renderer, 0, 200);
 			barrier.setImage("Paddle.png");
 			_paddle = Paddle(_renderer);
 			_paddle.setImage("Paddle.png");
@@ -123,7 +123,7 @@ public:
 		}
 	}
 	void render() {
-		
+
 		SDL_RenderClear(_renderer);
 		if (_menu.getChose()) {
 			DrawInRenderer(_renderer, _grassBackground);
@@ -136,7 +136,7 @@ public:
 			_paddle.draw();
 		}
 		else {
-			_menu.draw(xMouse,yMouse,mouseActionClicked);
+			_menu.draw(xMouse, yMouse, mouseActionClicked);
 		}
 
 		SDL_RenderPresent(_renderer);
@@ -145,17 +145,17 @@ public:
 	bool isBoundFromPaddle() {
 		float t1;
 		float t2;
-		if (ball->getRadius() * ball->getRadius() - (_paddle.getY() - ball->getY())* (_paddle.getY() - ball->getY()) >= 0) {
+		if (ball->getRadius() * ball->getRadius() - (_paddle.getY() - ball->getY()) * (_paddle.getY() - ball->getY()) >= 0) {
 			float sq = sqrt(abs(ball->getRadius() * ball->getRadius() - (_paddle.getY() - ball->getY()) * (_paddle.getY() - ball->getY())));
-				t1 = (sq - _paddle.getX() + ball->getX()) / 120.0;
-				t2 = (-sq - _paddle.getX() + ball->getX()) / 120.0;
-				if ((t1 >= 0 && t1 <= 1) || (t2 >= 0 && t2 <= 1))
-					return true;
+			t1 = (sq - _paddle.getX() + ball->getX()) / 120.0;
+			t2 = (-sq - _paddle.getX() + ball->getX()) / 120.0;
+			if ((t1 >= 0 && t1 <= 1) || (t2 >= 0 && t2 <= 1))
+				return true;
 		}
 		return false;
 
-	
-		
+
+
 	}
 	void update() {
 		if (_menu.getChose()) {
@@ -177,6 +177,7 @@ public:
 			}
 			//Khi bi reset va chuot chua nhan
 			if (isResetState == true) {
+				
 				if (!mouseActionClicked) {
 					ball->setX(_paddle.getX() + _paddle.getSize() / 2);
 					ball->setY(_paddle.getY() - ball->getRadius());
@@ -199,72 +200,60 @@ public:
 				if (ball->getX() - ball->getRadius() < 0 || ball->getX() + ball->getRadius() > 500) {
 					ball->setDegree(180 - ball->getDegree());
 				}
-			}
-
+			}		
 			listBrick.handleCollision();
 
 			ball->move();
 			//cout << _paddle.getDeltaX() << endl;
-			if (isBoundFromPaddle()) {
-				cout << ball->getDegree() << endl;
+			//if (ball->getDegree() < 0) cout << ball->getDegree() << endl;
+			if (isBoundFromPaddle()&&ball->getIsLaunch()) {
+				int degree = (int)ball->getDegree()%360;
+				if (degree > 0) {
+					degree -= 360;
+
+				}
+				//cout << degreeTest << endl;
+				
+			
 				float offset = abs(ball->getY() + ball->getRadius() - _paddle.getY());
 				ball->setY(ball->getY() - offset);
-				//Set lai goc cho ball khi paddle co van toc
-				if (abs(_paddle.getDeltaX())!=0) {					
-					/*if (ball->getDegree() < 0) {*/
+				//Doi huong cho bong trong dieu kien paddle khong co van toc
+				if(_paddle.getDeltaX()!=0){
+					cout << "\nXuoc";
+					if (_paddle.getDeltaX() > 0) {
 						
-						if (_paddle.getDeltaX() > 0) {
+						if (abs(degree)+15<160) {
+							ball->setDegree(-degree + 15);
 
-							ball->setDegree(int(ball->getDegree()) % 360);
-							//cout << ball->getDegree() << endl;
-
-							if (abs(ball->getDegree()) + 15 < 150) {
-							//	cout << "del>0" << endl;
-								ball->setDegree(abs(-ball->getDegree()) + 15);
-								//_paddle.resetDeltaX();
-								//Debug
-								//cout << ball->getDegree() << endl;
-							}
-							else {
-								ball->setDegree(-ball->getDegree());
-							}
 						}
-						else if (_paddle.getDeltaX() < 0) {
-
-							ball->setDegree(int(ball->getDegree()) % 360);
-							//cout << ball->getDegree() << endl;
-
-							if (abs(ball->getDegree()) - 15 > 20) {							
-								//cout << "Del<0"<<endl;
-								ball->setDegree(abs(ball->getDegree()) - 15);
-								//cout << ball->getDegree() << endl;
-							//	_paddle.resetDeltaX();
-							}
-							else {
-								ball->setDegree(-ball->getDegree());
-
-							}
+					}
+					else if(_paddle.getDeltaX()<0) {
+						if (abs(degree)-15>30) {
+							ball->setDegree(-degree - 15);
 						}
-						
-					//}
-					ball->setY(ball->getY() - offset);
-				
+
+					}
 
 				}
 				else {
 					ball->setDegree(-ball->getDegree());
 				}
-			}
-		
-			if (ball->getIsLaunch()) {
-				_paddle.move(xMouse);
-			}
-			
-		}
-		
-	
 
-		
+				if (ball->getSpeed() <= 15) {
+					ball->setSpeed(ball->getSpeed() * 1.1);
+				}
+			//	cout << ball->getSpeed()<<endl;
+			}
+
+			if (ball->getIsLaunch()) {
+				_paddle.move(ball->getX(), true);
+			}
+
+		}
+
+
+
+
 	}
 
 	void handleEvents() {
