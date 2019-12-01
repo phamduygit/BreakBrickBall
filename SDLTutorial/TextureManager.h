@@ -27,7 +27,7 @@ public:
 		}
 		SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, tempSurface);
 		SDL_FreeSurface(tempSurface);
-		//int x, y;
+		//float x, y;
 		//SDL_QueryTexture(texture, NULL, NULL, &x, &y);
 		//cout << x << "   " << y;
 		if (texture) {
@@ -37,26 +37,32 @@ public:
 		return false;
 
 	}
-	void draw(string id, int x, int y, int width, int height, SDL_Renderer* renderer, SDL_RendererFlip flip = SDL_FLIP_NONE) {
+	void draw(string id, float x, float y, float width, float height, SDL_Renderer* renderer, SDL_RendererFlip flip = SDL_FLIP_NONE) {
 		cout << "call";
-		SDL_Rect source, destination;
+		SDL_FRect destination;
+		SDL_Rect source;
 		source.x = 0;
 		source.y = 0;
-		source.w = destination.w = width;
-		source.h = destination.h = height;
+		source.w = int(width);
+		source.h = int(height);
+		destination.w = width;
+		destination.h = height;
 		destination.x = x;
 		destination.y = y;
-		SDL_RenderCopyEx(renderer, textureMap[id], &source, &destination, 0, 0, flip);
+		SDL_RenderCopyExF(renderer, textureMap[id], &source, &destination, 0, 0, flip);
 
 	}
-	void drawFrame(string id, int x, int y, int width, int height, int currentRow, int currentFrame, SDL_Renderer* renderer, SDL_RendererFlip flip = SDL_FLIP_NONE) {
-		SDL_Rect source, dest;
-		source.x = width * (currentFrame-1);
-		source.y = height * (currentRow - 1);
-		source.w = dest.w = width;
-		source.h = dest.h = height;
+	void drawFrame(string id, float x, float y, float width, float height, float currentRow, float currentFrame, SDL_Renderer* renderer, SDL_RendererFlip flip = SDL_FLIP_NONE) {
+		SDL_FRect dest;
+		SDL_Rect source;
+		source.x = int(width * (currentFrame-1));
+		source.y = int(height * (currentRow - 1));
+		source.w = int(width);
+		source.h = int(height);
+		dest.w = width;
+		dest.h = height;
 		dest.x = x;
 		dest.y = y;
-		SDL_RenderCopyEx(renderer, textureMap[id], &source, &dest, 0, 0, flip);
+		SDL_RenderCopyExF(renderer, textureMap[id], &source, &dest, 0, 0, flip);
 	}
 };

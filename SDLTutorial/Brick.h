@@ -8,13 +8,13 @@ using namespace std;
 class Brick
 {
 protected: 
-	int x;
-	int y;
-	int size;
+	 float x;
+	 float y;
+	 float size;
 	SDL_Texture* image;
 	SDL_Renderer* renderer;
-	int currentFrame;
-	int currentRow;
+	 float currentFrame;
+	 float currentRow;
 public:
 	Brick() {
 		x = 100;
@@ -35,7 +35,7 @@ public:
 		currentRow = 1;
 		currentFrame = 1;
 	}
-	Brick(SDL_Renderer*& renderValue,int _x,int _y) {
+	Brick(SDL_Renderer*& renderValue, float _x, float _y) {
 
 		x = _x;
 		y = _y;
@@ -45,33 +45,33 @@ public:
 		currentRow = 1;
 		currentFrame = 1;
 	}
-	int getX() {
+	 float getX() {
 		return x;
 	}
-	void setX(int xValue) {
+	void setX( float xValue) {
 		x = xValue;
 	}
-	int getY() {
+	 float getY() {
 		return y;
 	}
-	void setY(int yValue) {
+	void setY( float yValue) {
 		y = yValue;
 	}
-	int getSize() {
+	 float getSize() {
 		return size;
 	}
-	void setSize(int sizeValue) {
+	void setSize( float sizeValue) {
 		size = sizeValue;
 	}
 	void setImage(string name) {
 		image = LoadImage(name, renderer);
 	}
-	void setFrame(int val) {
+	void setFrame( float val) {
 
 		currentFrame = val;
 
 	}
-	int getFrame() {
+	 float getFrame() {
 		return currentFrame;
 	}
 	void update() {

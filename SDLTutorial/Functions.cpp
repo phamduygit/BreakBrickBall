@@ -39,13 +39,19 @@ SDL_Texture* LoadFont(string Text, SDL_Renderer* Renderer, string Font) {
 	}
 	return newTexture;
 }
-void DrawInRenderer(SDL_Renderer* Renderer, SDL_Texture* Texture, int x, int y, int w, int h) {
-	SDL_Rect Size;
+void DrawInRenderer(SDL_Renderer* Renderer, SDL_Texture* Texture, float x, float y, float w, float h) {
+	SDL_FRect Size;
 	Size.x = x;
 	Size.y = y;
 	Size.w = w;
 	Size.h = h;
-	SDL_RenderCopy(Renderer, Texture, NULL, &Size);
+	SDL_RenderCopyF(Renderer, Texture, NULL, &Size);
+}
+void DrawInRenderer(SDL_Renderer* Renderer, SDL_Texture* Texture, SDL_FRect* Size) {
+	SDL_RenderCopyF(Renderer, Texture, NULL, Size);
+}
+void DrawInRenderer(SDL_Renderer* Renderer, SDL_Texture* Texture) {
+	SDL_RenderCopyF(Renderer, Texture, NULL, NULL);
 }
 void DrawInRendererRotate(SDL_Renderer* Renderer, SDL_Texture* Texture, float x, float y, float w, float h, float radius, float degree) {
 	SDL_FRect Size;
@@ -57,7 +63,4 @@ void DrawInRendererRotate(SDL_Renderer* Renderer, SDL_Texture* Texture, float x,
 	P.x = radius;
 	P.y = radius;
 	SDL_RenderCopyExF(Renderer, Texture, NULL, &Size, degree, &P, SDL_FLIP_NONE);
-}
-void DrawInRenderer(SDL_Renderer* Renderer, SDL_Texture* Texture) {
-	SDL_RenderCopy(Renderer, Texture, NULL, NULL);
 }

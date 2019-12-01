@@ -25,6 +25,7 @@ public:
 		speed = 5;
 		image = NULL;
 		renderer = NULL;
+		previousX = 0;
 		deltaX = 0;
 	}
 	Paddle(SDL_Renderer* RenderValue) {
@@ -35,11 +36,13 @@ public:
 		speed = 5;
 		image = NULL;
 		renderer = RenderValue;
+		deltaX = 0;
+		previousX = 0;
 	}
-	virtual int getHeight() {
+	virtual float getHeight() {
 		return h;
 	}
-	virtual int getSize() {
+	virtual float getSize() {
 		return w;
 	}
 	virtual float getX() {
@@ -66,7 +69,7 @@ public:
 	virtual void draw() {
 		DrawInRenderer(renderer, image, x, y, w, h);
 	}
-	void move(int X) {
+	void move(float X) {
 		previousX = x;
 		if (X < 0) {
 			this->x = 0;

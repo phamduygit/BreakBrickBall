@@ -7,8 +7,11 @@ Ball::Ball() {
 	speed = 0;
 	image = NULL;
 	renderer = NULL;
+	degree = 0;
+	isLaunch = false;
 }
 
 Ball::~Ball() {
 	SDL_DestroyTexture(image);
 }
+
