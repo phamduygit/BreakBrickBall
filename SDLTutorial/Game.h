@@ -31,7 +31,8 @@ private:
 	SDL_Texture* _grassBackground;
 	Ball* ball;
 	/*vector<Brick> listBrick;*/
-	ListBrick listBrick;
+//	ListBrick listBrick;
+	Map _map;
 	double degrees;
 	Paddle _paddle;
 	Barrier barrier;
@@ -45,6 +46,8 @@ private:
 	int currentMap = 0;
 	bool isEnteredGame = false;
 	bool isCollision = false;
+	int _currentMap = 1;
+	vector<string> fileMapName;
 
 	Game() {
 		_screenSurface = NULL;
@@ -111,6 +114,7 @@ public:
 			ball->setImage("Ball.png");
 			line = Line(_renderer);
 <<<<<<< HEAD
+<<<<<<< HEAD
 			Brick _brick;
 			for (int i = 0; i < 10; i++) {
 				_brick = Brick(_renderer, float(i * 50.0), float(7 * 50.0));
@@ -141,16 +145,36 @@ public:
 			_menu = Menu(_renderer);
 			_menu.setFont("MachineGunk-nyqg.ttf");
 			_menu.setImage("GrassBackground.png");
+=======
+			_map = Map(_renderer, "map.txt");
+		//	listBrick.setRenderer(_renderer);
+		//	listBrick.createWithMapText("map.txt");
+			_menu.setFont("MachineGunk-nyqg.ttf");
+			_menu.setImage("GrassBackground.png");
+
+			barrier = Barrier(_renderer, 0, 200);
+			barrier.setImage("Paddle.png");
+			_paddle = Paddle(_renderer);
+			_paddle.setImage("Paddle.png");
+			fileMapName.push_back("");
+			fileMapName.push_back("map.txt");
+			fileMapName.push_back("map1.txt");
+			fileMapName.push_back("map2.txt");
+
+
+
+>>>>>>> e5985a6028c94a9382b84c178b258114316cb5af
 
 
 		}
 	}
 	void render() {
-		
+
 		SDL_RenderClear(_renderer);
 		if (_menu.getChose()) {
 			DrawInRenderer(_renderer, _grassBackground);
 			ball->draw();
+<<<<<<< HEAD
 <<<<<<< HEAD
 			for (auto _brick : listBrick)
 				_brick.draw();
@@ -158,6 +182,11 @@ public:
 
 =======
 			listBrick.drawBrickMap();
+=======
+		//	listBrick.drawBrickMap();
+			
+			_map.draw();
+>>>>>>> e5985a6028c94a9382b84c178b258114316cb5af
 			SDL_SetRenderDrawColor(_renderer, 255, 255, 255, NULL);
 >>>>>>> 8ed4979a960d86868c4f5c94c5f4598a6e12cf39
 			if (!ball->getIsLaunch()) {
@@ -177,7 +206,7 @@ public:
 =======
 		}
 		else {
-			_menu.draw(xMouse,yMouse,mouseActionClicked);
+			_menu.draw(xMouse, yMouse, mouseActionClicked);
 		}
 >>>>>>> 8ed4979a960d86868c4f5c94c5f4598a6e12cf39
 
@@ -187,17 +216,24 @@ public:
 	bool isBoundFromPaddle() {
 		float t1;
 		float t2;
-		if (ball->getRadius() * ball->getRadius() - (_paddle.getY() - ball->getY())* (_paddle.getY() - ball->getY()) >= 0) {
+		if (ball->getRadius() * ball->getRadius() - (_paddle.getY() - ball->getY()) * (_paddle.getY() - ball->getY()) >= 0) {
 			float sq = sqrt(abs(ball->getRadius() * ball->getRadius() - (_paddle.getY() - ball->getY()) * (_paddle.getY() - ball->getY())));
+<<<<<<< HEAD
 				t1 = float((sq - _paddle.getX() + ball->getX()) / float(120.0));
 				t2 = float((-sq - _paddle.getX() + ball->getX()) / float(120.0));
 				if ((t1 >= 0 && t1 <= 1) || (t2 >= 0 && t2 <= 1))
 					return true;
+=======
+			t1 = (sq - _paddle.getX() + ball->getX()) /(float)_paddle.getSize();
+			t2 = (-sq - _paddle.getX() + ball->getX()) /(float) _paddle.getSize();
+			if ((t1 >= 0 && t1 <= 1) || (t2 >= 0 && t2 <= 1))
+				return true;
+>>>>>>> e5985a6028c94a9382b84c178b258114316cb5af
 		}
 		return false;
 
-	
-		
+
+
 	}
 	void update() {
 		if (_menu.getChose()) {
@@ -337,6 +373,7 @@ public:
 			}
 			//Khi bi reset va chuot chua nhan
 			if (isResetState == true) {
+				
 				if (!mouseActionClicked) {
 					ball->setX(_paddle.getX() + _paddle.getSize() / 2);
 					ball->setY(_paddle.getY() - ball->getRadius());
@@ -352,58 +389,58 @@ public:
 				}
 				if (ball->getY() + ball->getRadius() > 800) {
 
-					ball->reset(_paddle.getX() + 60, _paddle.getY());
+					ball->reset(_paddle.getX() +_paddle.getSize()/2, _paddle.getY());
 					isResetState = true;
 
 				}
 				if (ball->getX() - ball->getRadius() < 0 || ball->getX() + ball->getRadius() > 500) {
 					ball->setDegree(180 - ball->getDegree());
 				}
+			}		
+			//listBrick.handleCollision();
+			if (_map.isCompleted()) {
+				int index = _currentMap % fileMapName.size();
+				if (index != 0)
+					_map.loadData(fileMapName[index]);
+				index++;
+
 			}
 
-			listBrick.handleCollision();
+			_map.update();
 
 			ball->move();
 			//cout << _paddle.getDeltaX() << endl;
-			if (isBoundFromPaddle()) {
-				cout << ball->getDegree() << endl;
+			//if (ball->getDegree() < 0) cout << ball->getDegree() << endl;
+			if (isBoundFromPaddle()&&ball->getIsLaunch()) {
+				int degree = (int)ball->getDegree()%360;
+				cout << degree << endl;
+				if (degree > 0&&degree<300) {
+					degree -= 360;
+				}
+								
 				float offset = abs(ball->getY() + ball->getRadius() - _paddle.getY());
-				ball->setY(ball->getY() - offset);
-				//Set lai goc cho ball khi paddle co van toc
-				if (abs(_paddle.getDeltaX())!=0) {					
-					/*if (ball->getDegree() < 0) {*/
-						
-						if (_paddle.getDeltaX() > 0) {
+				ball->setY(ball->getY() - 1.1*offset);
+				//Doi huong cho bong trong dieu kien paddle khong co van toc
 
-							ball->setDegree(int(ball->getDegree()) % 360);
-							//cout << ball->getDegree() << endl;
-
-							if (abs(ball->getDegree()) + 15 < 150) {
-							//	cout << "del>0" << endl;
-								ball->setDegree(abs(-ball->getDegree()) + 15);
-								//_paddle.resetDeltaX();
-								//Debug
-								//cout << ball->getDegree() << endl;
-							}
-							else {
-								ball->setDegree(-ball->getDegree());
-							}
-						}
-						else if (_paddle.getDeltaX() < 0) {
-
+<<<<<<< HEAD
 							ball->setDegree(int(ball->getDegree()) % 360);
 							//cout << ball->getDegree() << endl;
 >>>>>>> 8ed4979a960d86868c4f5c94c5f4598a6e12cf39
+=======
+				if(abs(_paddle.getDeltaX())>ball->getSpeed()*1.0/2){
+					cout << "\nXuoc"<<_paddle.getDeltaX()<<endl;
+					
+					if (_paddle.getDeltaX() > 0) {
+						cout << "if1"<<endl;
+						if (abs(degree)+15<160) {
+							ball->setDegree(-degree + 15);
+>>>>>>> e5985a6028c94a9382b84c178b258114316cb5af
 
-							if (abs(ball->getDegree()) - 15 > 20) {							
-								//cout << "Del<0"<<endl;
-								ball->setDegree(abs(ball->getDegree()) - 15);
-								//cout << ball->getDegree() << endl;
-							//	_paddle.resetDeltaX();
-							}
-							else {
-								ball->setDegree(-ball->getDegree());
+						}
+						else {
+							ball->setDegree(-ball->getDegree());
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 			}*/
 			//Va cham voi paddle
@@ -446,28 +483,48 @@ public:
 		}
 =======
 							}
+=======
+>>>>>>> e5985a6028c94a9382b84c178b258114316cb5af
 						}
-						
-					//}
-					ball->setY(ball->getY() - offset);
-				
+					}
+					else if(_paddle.getDeltaX()<0) {
+						cout << "if2" << endl;
+						if (abs(degree)-15>30) {
+							ball->setDegree(-degree - 15);
+						}
+						else {
+							ball->setDegree(-ball->getDegree());
+						}
+
+					}
 
 				}
 				else {
+					cout << "else called" << endl;
 					ball->setDegree(-ball->getDegree());
 				}
+
+			/*	if (ball->getSpeed() <= 8) {
+					ball->setSpeed(ball->getSpeed() * 1.1);
+				}*/
+			//	cout << ball->getSpeed()<<endl;
 			}
-		
+
 			if (ball->getIsLaunch()) {
+				//_paddle.move(ball->getX(), true);
 				_paddle.move(xMouse);
 			}
-			
-		}
-		
-	
 
+		}
+
+<<<<<<< HEAD
 >>>>>>> 8ed4979a960d86868c4f5c94c5f4598a6e12cf39
 		
+=======
+
+
+
+>>>>>>> e5985a6028c94a9382b84c178b258114316cb5af
 	}
 
 	void handleEvents() {

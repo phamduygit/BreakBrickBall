@@ -88,6 +88,7 @@ public:
 				B.y = hsTuDo;
 				SDL_RenderDrawLineF(renderer, A.x + paddleSize/2, A.y - Ball::Instance(renderer)->getRadius(), B.x, B.y);
 				//Vẽ tia đối xứng
+				
 				hsGoc = -hsGoc;
 				A.x = 0;
 				A.y = A.x * hsGoc + hsTuDo;
