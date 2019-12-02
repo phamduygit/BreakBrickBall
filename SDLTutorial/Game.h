@@ -30,7 +30,8 @@ private:
 	SDL_Texture* _grassBackground;
 	Ball* ball;
 	/*vector<Brick> listBrick;*/
-	ListBrick listBrick;
+//	ListBrick listBrick;
+	Map _map;
 	double degrees;
 	Paddle _paddle;
 	Barrier barrier;
@@ -43,6 +44,8 @@ private:
 	int currentMap = 0;
 	bool isEnteredGame = false;
 	bool isCollision = false;
+	int _currentMap = 1;
+	vector<string> fileMapName;
 
 	Game() {
 
@@ -108,8 +111,9 @@ public:
 			ball = Ball::Instance(_renderer);
 			ball->setImage("Ball.png");
 			line = Line(_renderer);
-			listBrick.setRenderer(_renderer);
-			listBrick.createWithMapText("map.txt");
+			_map = Map(_renderer, "map.txt");
+		//	listBrick.setRenderer(_renderer);
+		//	listBrick.createWithMapText("map.txt");
 			_menu.setFont("MachineGunk-nyqg.ttf");
 			_menu.setImage("GrassBackground.png");
 
@@ -117,6 +121,12 @@ public:
 			barrier.setImage("Paddle.png");
 			_paddle = Paddle(_renderer);
 			_paddle.setImage("Paddle.png");
+			fileMapName.push_back("");
+			fileMapName.push_back("map.txt");
+			fileMapName.push_back("map1.txt");
+			fileMapName.push_back("map2.txt");
+
+
 
 
 
@@ -128,7 +138,9 @@ public:
 		if (_menu.getChose()) {
 			DrawInRenderer(_renderer, _grassBackground);
 			ball->draw();
-			listBrick.drawBrickMap();
+		//	listBrick.drawBrickMap();
+			
+			_map.draw();
 			SDL_SetRenderDrawColor(_renderer, 255, 255, 255, NULL);
 			if (!ball->getIsLaunch()) {
 				line.draw();
@@ -147,8 +159,8 @@ public:
 		float t2;
 		if (ball->getRadius() * ball->getRadius() - (_paddle.getY() - ball->getY()) * (_paddle.getY() - ball->getY()) >= 0) {
 			float sq = sqrt(abs(ball->getRadius() * ball->getRadius() - (_paddle.getY() - ball->getY()) * (_paddle.getY() - ball->getY())));
-			t1 = (sq - _paddle.getX() + ball->getX()) / 120.0;
-			t2 = (-sq - _paddle.getX() + ball->getX()) / 120.0;
+			t1 = (sq - _paddle.getX() + ball->getX()) /(float)_paddle.getSize();
+			t2 = (-sq - _paddle.getX() + ball->getX()) /(float) _paddle.getSize();
 			if ((t1 >= 0 && t1 <= 1) || (t2 >= 0 && t2 <= 1))
 				return true;
 		}
@@ -193,7 +205,7 @@ public:
 				}
 				if (ball->getY() + ball->getRadius() > 800) {
 
-					ball->reset(_paddle.getX() + 60, _paddle.getY());
+					ball->reset(_paddle.getX() +_paddle.getSize()/2, _paddle.getY());
 					isResetState = true;
 
 				}
@@ -201,52 +213,71 @@ public:
 					ball->setDegree(180 - ball->getDegree());
 				}
 			}		
-			listBrick.handleCollision();
+			//listBrick.handleCollision();
+			if (_map.isCompleted()) {
+				int index = _currentMap % fileMapName.size();
+				if (index != 0)
+					_map.loadData(fileMapName[index]);
+				index++;
+
+			}
+
+			_map.update();
 
 			ball->move();
 			//cout << _paddle.getDeltaX() << endl;
 			//if (ball->getDegree() < 0) cout << ball->getDegree() << endl;
 			if (isBoundFromPaddle()&&ball->getIsLaunch()) {
 				int degree = (int)ball->getDegree()%360;
-				if (degree > 0) {
+				cout << degree << endl;
+				if (degree > 0&&degree<300) {
 					degree -= 360;
-
 				}
-				//cout << degreeTest << endl;
-				
-			
+								
 				float offset = abs(ball->getY() + ball->getRadius() - _paddle.getY());
-				ball->setY(ball->getY() - offset);
+				ball->setY(ball->getY() - 1.1*offset);
 				//Doi huong cho bong trong dieu kien paddle khong co van toc
-				if(_paddle.getDeltaX()!=0){
-					cout << "\nXuoc";
+
+				if(abs(_paddle.getDeltaX())>ball->getSpeed()*1.0/2){
+					cout << "\nXuoc"<<_paddle.getDeltaX()<<endl;
+					
 					if (_paddle.getDeltaX() > 0) {
-						
+						cout << "if1"<<endl;
 						if (abs(degree)+15<160) {
 							ball->setDegree(-degree + 15);
 
 						}
+						else {
+							ball->setDegree(-ball->getDegree());
+
+						}
 					}
 					else if(_paddle.getDeltaX()<0) {
+						cout << "if2" << endl;
 						if (abs(degree)-15>30) {
 							ball->setDegree(-degree - 15);
+						}
+						else {
+							ball->setDegree(-ball->getDegree());
 						}
 
 					}
 
 				}
 				else {
+					cout << "else called" << endl;
 					ball->setDegree(-ball->getDegree());
 				}
 
-				if (ball->getSpeed() <= 15) {
+			/*	if (ball->getSpeed() <= 8) {
 					ball->setSpeed(ball->getSpeed() * 1.1);
-				}
+				}*/
 			//	cout << ball->getSpeed()<<endl;
 			}
 
 			if (ball->getIsLaunch()) {
-				_paddle.move(ball->getX(), true);
+				//_paddle.move(ball->getX(), true);
+				_paddle.move(xMouse);
 			}
 
 		}

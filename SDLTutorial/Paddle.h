@@ -67,9 +67,9 @@ public:
 		DrawInRenderer(renderer, image, x, y, w, h);
 	}
 	
-	void move(int X,bool autoPlay = false) {
+	void move(int X,float sizePaddle = 120,bool autoPlay = false) {
 		if (autoPlay == false) {
-			X = X - 60;
+			X = X - sizePaddle/2;
 			previousX = x;
 			if (X < 0) {
 				this->x = 0;
@@ -84,7 +84,8 @@ public:
 			deltaX = x - previousX;
 		}
 		else {
-			x = X-60;
+			x = X-sizePaddle/2;
+			deltaX = x - previousX;
 
 
 		}
