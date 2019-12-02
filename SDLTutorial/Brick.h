@@ -3,6 +3,7 @@
 #include <string>
 #include "Functions.h"
 #include "TextureManager.h"
+#include "MagicBall.h"
 using namespace std;
 
 class Brick
@@ -11,7 +12,7 @@ protected:
 	int x;
 	int y;
 	int size;
-	SDL_Texture* image;
+	//SDL_Texture* image;
 	SDL_Renderer* renderer;
 	int currentFrame;
 	int currentRow;
@@ -20,7 +21,7 @@ public:
 		x = 100;
 		y = 100;
 		size = 50;
-		image = NULL;
+		//image = NULL;
 		renderer = NULL;
 		currentRow = 1;
 		currentFrame = 4;
@@ -30,7 +31,7 @@ public:
 		x = 370;
 		y = 50;
 		size =50 ;
-		image = NULL;
+		//image = NULL;
 		renderer = renderValue;
 		currentRow = 1;
 		currentFrame = 1;
@@ -40,45 +41,44 @@ public:
 		x = _x;
 		y = _y;
 		size = 50;
-		image = NULL;
+	//	image = NULL;
 		renderer = renderValue;
 		currentRow = 1;
 		currentFrame = 1;
 	}
-	int getX() {
+	virtual int getX() {
 		return x;
 	}
-	void setX(int xValue) {
+	virtual void setX(int xValue) {
 		x = xValue;
 	}
-	int getY() {
+	virtual int getY() {
 		return y;
 	}
-	void setY(int yValue) {
+	virtual void setY(int yValue) {
 		y = yValue;
 	}
-	int getSize() {
+	virtual int getSize() {
 		return size;
 	}
-	void setSize(int sizeValue) {
+	virtual void setSize(int sizeValue) {
 		size = sizeValue;
 	}
 	void setImage(string name) {
-		image = LoadImage(name, renderer);
+	//	image = LoadImage(name, renderer);
 	}
-	void setFrame(int val) {
+	virtual void setFrame(int val) {
 
 		currentFrame = val;
-
 	}
-	int getFrame() {
+	virtual int getFrame() {
 		return currentFrame;
 	}
-	void update() {
+	virtual void update() {
 
 	}
 	
-	void draw() {
+	virtual void draw() {
 		//DrawInRenderer(renderer, image, x, y, size, size);
 		TextureManager::GetInstance()->drawFrame("Brick", x, y, size, size, 1, currentFrame, renderer);
 	}

@@ -9,19 +9,19 @@ class Paddle
 protected:
 	float x;
 	float y;
-	float w;
-	float h;
+	float width;
+	float height;
 	float speed;
 	float deltaX;
 	float previousX;
 	SDL_Texture* image;
 	SDL_Renderer* renderer;
-public:
+	static Paddle* instance;
 	Paddle() {
 		x = 150;
 		y = 700;
-		w = 80;
-		h = 10;
+		width = 80;
+		height = 10;
 		speed = 5;
 		image = NULL;
 		renderer = NULL;
@@ -30,17 +30,30 @@ public:
 	Paddle(SDL_Renderer* RenderValue) {
 		x = 150;
 		y = 750;
-		w = 120;
-		h = 20;
+		width = 120;
+		height = 20;
 		speed = 5;
 		image = NULL;
 		renderer = RenderValue;
 	}
-	virtual int getHeight() {
-		return h;
+public:
+	static Paddle* Instance(SDL_Renderer * renderer) {
+		if (instance == NULL) {
+			instance =new  Paddle(renderer);
+
+		}
+		return instance;
 	}
-	virtual int getSize() {
-		return w;
+	
+	
+	virtual int getHeight() {
+		return height;
+	}
+	virtual int getWidth() {
+		return width;
+	}
+	void setWidth(float newwidth) {
+		this->width = newwidth;
 	}
 	virtual float getX() {
 		return x;
@@ -64,7 +77,7 @@ public:
 		image = LoadImage(name, renderer);
 	}
 	virtual void draw() {
-		DrawInRenderer(renderer, image, x, y, w, h);
+		DrawInRenderer(renderer, image, x, y, width, height);
 	}
 	
 	void move(int X,float sizePaddle = 120,bool autoPlay = false) {
@@ -74,8 +87,8 @@ public:
 			if (X < 0) {
 				this->x = 0;
 			}
-			else if (X + w > 500) {
-				this->x = 500 - w;
+			else if (X + width > 500) {
+				this->x = 500 - width;
 
 			}
 			else {

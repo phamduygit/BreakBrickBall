@@ -15,6 +15,7 @@
 #include "ListBrick.h"
 #include "Map.h"
 #include "Menu.h"
+#include "Player.h"
 
 #define PI 3.141592
 using namespace std;
@@ -33,7 +34,7 @@ private:
 //	ListBrick listBrick;
 	Map _map;
 	double degrees;
-	Paddle _paddle;
+	Paddle *_paddle;
 	Barrier barrier;
 	bool MoveLR[2] = { false, false };
 	int xMouse;
@@ -46,8 +47,11 @@ private:
 	bool isCollision = false;
 	int _currentMap = 1;
 	vector<string> fileMapName;
+	Player *player;
+	static float time;
 
 	Game() {
+		player = Player::Instance();
 
 		_screenSurface = NULL;
 		_window = NULL;
@@ -107,11 +111,12 @@ public:
 			}
 			_menu = Menu(_renderer);
 			TextureManager::GetInstance()->load("Brick.png", "Brick", _renderer);
+			TextureManager::GetInstance()->load("amulet.png", "Amulet", _renderer);
 			_grassBackground = LoadImage("GrassBackground.png", _renderer);
 			ball = Ball::Instance(_renderer);
 			ball->setImage("Ball.png");
 			line = Line(_renderer);
-			_map = Map(_renderer, "map.txt");
+			_map = Map(_renderer, "map1.txt");
 		//	listBrick.setRenderer(_renderer);
 		//	listBrick.createWithMapText("map.txt");
 			_menu.setFont("MachineGunk-nyqg.ttf");
@@ -119,12 +124,9 @@ public:
 
 			barrier = Barrier(_renderer, 0, 200);
 			barrier.setImage("Paddle.png");
-			_paddle = Paddle(_renderer);
-			_paddle.setImage("Paddle.png");
-			fileMapName.push_back("");
-			fileMapName.push_back("map.txt");
-			fileMapName.push_back("map1.txt");
-			fileMapName.push_back("map2.txt");
+			_paddle = Paddle::Instance(_renderer);
+			_paddle->setImage("Paddle.png");
+	
 
 
 
@@ -145,7 +147,7 @@ public:
 			if (!ball->getIsLaunch()) {
 				line.draw();
 			}
-			_paddle.draw();
+			_paddle->draw();
 		}
 		else {
 			_menu.draw(xMouse, yMouse, mouseActionClicked);
@@ -157,10 +159,10 @@ public:
 	bool isBoundFromPaddle() {
 		float t1;
 		float t2;
-		if (ball->getRadius() * ball->getRadius() - (_paddle.getY() - ball->getY()) * (_paddle.getY() - ball->getY()) >= 0) {
-			float sq = sqrt(abs(ball->getRadius() * ball->getRadius() - (_paddle.getY() - ball->getY()) * (_paddle.getY() - ball->getY())));
-			t1 = (sq - _paddle.getX() + ball->getX()) /(float)_paddle.getSize();
-			t2 = (-sq - _paddle.getX() + ball->getX()) /(float) _paddle.getSize();
+		if (ball->getRadius() * ball->getRadius() - (_paddle->getY() - ball->getY()) * (_paddle->getY() - ball->getY()) >= 0) {
+			float sq = sqrt(abs(ball->getRadius() * ball->getRadius() - (_paddle->getY() - ball->getY()) * (_paddle->getY() - ball->getY())));
+			t1 = (sq - _paddle->getX() + ball->getX()) /(float)_paddle->getWidth();
+			t2 = (-sq - _paddle->getX() + ball->getX()) /(float) _paddle->getWidth();
 			if ((t1 >= 0 && t1 <= 1) || (t2 >= 0 && t2 <= 1))
 				return true;
 		}
@@ -172,7 +174,7 @@ public:
 	void update() {
 		if (_menu.getChose()) {
 			line.setMouse(xMouse, yMouse);
-			line.setPaddle(_paddle.getX(), _paddle.getY(), _paddle.getSize());
+			line.setPaddle(_paddle->getX(), _paddle->getY(), _paddle->getWidth());
 			//Khi nhan duoc tin hieu click chuot va trai banh chua bay
 			if (mouseActionClicked == true && !ball->getIsLaunch() &&
 				(_menu.getCurrentChoose() == 1 || _menu.getCurrentChoose() == 2)) {
@@ -191,8 +193,8 @@ public:
 			if (isResetState == true) {
 				
 				if (!mouseActionClicked) {
-					ball->setX(_paddle.getX() + _paddle.getSize() / 2);
-					ball->setY(_paddle.getY() - ball->getRadius());
+					ball->setX(_paddle->getX() + _paddle->getWidth() / 2);
+					ball->setY(_paddle->getY() - ball->getRadius());
 				}
 				else {
 					isResetState = false;
@@ -205,7 +207,7 @@ public:
 				}
 				if (ball->getY() + ball->getRadius() > 800) {
 
-					ball->reset(_paddle.getX() +_paddle.getSize()/2, _paddle.getY());
+					ball->reset(_paddle->getX() +_paddle->getWidth()/2, _paddle->getY());
 					isResetState = true;
 
 				}
@@ -214,18 +216,18 @@ public:
 				}
 			}		
 			//listBrick.handleCollision();
-			if (_map.isCompleted()) {
+		/*	if (_map.isCompleted()) {
 				int index = _currentMap % fileMapName.size();
 				if (index != 0)
 					_map.loadData(fileMapName[index]);
 				index++;
 
-			}
+			}*/
 
 			_map.update();
 
 			ball->move();
-			//cout << _paddle.getDeltaX() << endl;
+			//cout << _paddle->getDeltaX() << endl;
 			//if (ball->getDegree() < 0) cout << ball->getDegree() << endl;
 			if (isBoundFromPaddle()&&ball->getIsLaunch()) {
 				int degree = (int)ball->getDegree()%360;
@@ -234,14 +236,14 @@ public:
 					degree -= 360;
 				}
 								
-				float offset = abs(ball->getY() + ball->getRadius() - _paddle.getY());
+				float offset = abs(ball->getY() + ball->getRadius() - _paddle->getY());
 				ball->setY(ball->getY() - 1.1*offset);
 				//Doi huong cho bong trong dieu kien paddle khong co van toc
 
-				if(abs(_paddle.getDeltaX())>ball->getSpeed()*1.0/2){
-					cout << "\nXuoc"<<_paddle.getDeltaX()<<endl;
+				if(abs(_paddle->getDeltaX())>ball->getSpeed()*1.0/2){
+					cout << "\nXuoc"<<_paddle->getDeltaX()<<endl;
 					
-					if (_paddle.getDeltaX() > 0) {
+					if (_paddle->getDeltaX() > 0) {
 						cout << "if1"<<endl;
 						if (abs(degree)+15<160) {
 							ball->setDegree(-degree + 15);
@@ -252,7 +254,7 @@ public:
 
 						}
 					}
-					else if(_paddle.getDeltaX()<0) {
+					else if(_paddle->getDeltaX()<0) {
 						cout << "if2" << endl;
 						if (abs(degree)-15>30) {
 							ball->setDegree(-degree - 15);
@@ -276,8 +278,8 @@ public:
 			}
 
 			if (ball->getIsLaunch()) {
-				//_paddle.move(ball->getX(), true);
-				_paddle.move(xMouse);
+				//_paddle->move(ball->getX(), true);
+				_paddle->move(xMouse);
 			}
 
 		}

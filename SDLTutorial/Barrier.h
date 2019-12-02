@@ -9,7 +9,7 @@ public:
 	Barrier(SDL_Renderer*&,int ,int );
 	void move() {
 	
-		if (x +w> 500||x<0) {
+		if (x +width> 500||x<0) {
 			deltaX = -deltaX;
 		}
 		this->x += deltaX;

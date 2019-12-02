@@ -31,7 +31,7 @@ public:
 			list[i].draw();
 		}
 	}
-	void createWithMapText(string fileName) {
+	void createListWithMapText(string fileName) {
 		vector<int> map;
 		fstream file(fileName, ios::in);
 		while (!file.eof()) {
@@ -44,7 +44,6 @@ public:
 			}
 
 		}
-
 		for (int k = 0; k < map.size(); k++) {
 			int i = k % 10;
 			int j = k / 10;
@@ -73,7 +72,8 @@ public:
 		float dy = yE - yS;
 		float a = dx * dx + dy * dy;
 		float b = 2 * (xS * dx - xBall * dx + yS * dy - yBall * dy);
-		float c = xS*xS + xBall * xBall + yS*yS + yBall * yBall - 2 * (xS * xBall + yS * yBall) - radius * radius;
+		float c = xS*xS + xBall * xBall + yS*yS + yBall * yBall - 2 * (xS * xBall + yS * yBall) - 
+			radius * radius;
 		float delta = b * b - 4 * a * c;
 		if (delta >= 0) {
 			float x1 = (-b + sqrt(delta)) / (2 * a);
@@ -88,8 +88,7 @@ public:
 		Ball* ball = Ball::Instance(renderer);
 		for (int i = 0; i < list.size(); i++) {
 			//Khi phát hiện có va chạm 
-			if (ball->isCollision(list[i].getX(), list[i].getY(), list[i].getSize())) {
-				//
+			if (ball->isCollision(list[i].getX(), list[i].getY(), list[i].getSize())) {	//
 				if (ball->getY() - ball->getRadius() < list[i].getY() + list[i].getSize() &&
 					ball->getY() > list[i].getY() + list[i].getSize()
 					&& 
