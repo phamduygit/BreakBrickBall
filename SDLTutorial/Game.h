@@ -18,7 +18,10 @@
 #include "Player.h"
 
 #define PI 3.141592
+
+//int time = 0;
 using namespace std;
+
 class Game
 {
 private:
@@ -48,8 +51,6 @@ private:
 	int _currentMap = 1;
 	vector<string> fileMapName;
 	Player *player;
-	static float time;
-
 	Game() {
 		player = Player::Instance();
 
@@ -59,8 +60,7 @@ private:
 		_running = false;
 		_grassBackground = NULL;
 		degrees = 0;
-
-
+		
 	}
 	static Game* instance;
 public:
@@ -116,12 +116,11 @@ public:
 			ball = Ball::Instance(_renderer);
 			ball->setImage("Ball.png");
 			line = Line(_renderer);
-			_map = Map(_renderer, "map1.txt");
+			_map = Map(_renderer, "map2.txt");
 		//	listBrick.setRenderer(_renderer);
 		//	listBrick.createWithMapText("map.txt");
 			_menu.setFont("MachineGunk-nyqg.ttf");
 			_menu.setImage("GrassBackground.png");
-
 			barrier = Barrier(_renderer, 0, 200);
 			barrier.setImage("Paddle.png");
 			_paddle = Paddle::Instance(_renderer);
@@ -186,10 +185,9 @@ public:
 				else {
 					degree = abs(degree);
 				}
-				//cout << degree << endl;
+				
 				ball->setDegree(degree);
 			}
-			//Khi bi reset va chuot chua nhan
 			if (isResetState == true) {
 				
 				if (!mouseActionClicked) {
@@ -227,11 +225,8 @@ public:
 			_map.update();
 
 			ball->move();
-			//cout << _paddle->getDeltaX() << endl;
-			//if (ball->getDegree() < 0) cout << ball->getDegree() << endl;
 			if (isBoundFromPaddle()&&ball->getIsLaunch()) {
 				int degree = (int)ball->getDegree()%360;
-				cout << degree << endl;
 				if (degree > 0&&degree<300) {
 					degree -= 360;
 				}
@@ -240,11 +235,9 @@ public:
 				ball->setY(ball->getY() - 1.1*offset);
 				//Doi huong cho bong trong dieu kien paddle khong co van toc
 
-				if(abs(_paddle->getDeltaX())>ball->getSpeed()*1.0/2){
-					cout << "\nXuoc"<<_paddle->getDeltaX()<<endl;
+				if(abs(_paddle->getDeltaX())>ball->getSpeed()*1.0/3){
 					
 					if (_paddle->getDeltaX() > 0) {
-						cout << "if1"<<endl;
 						if (abs(degree)+15<160) {
 							ball->setDegree(-degree + 15);
 
@@ -255,8 +248,7 @@ public:
 						}
 					}
 					else if(_paddle->getDeltaX()<0) {
-						cout << "if2" << endl;
-						if (abs(degree)-15>30) {
+						if (abs(degree)-15>45) {
 							ball->setDegree(-degree - 15);
 						}
 						else {
@@ -267,19 +259,13 @@ public:
 
 				}
 				else {
-					cout << "else called" << endl;
 					ball->setDegree(-ball->getDegree());
 				}
-
-			/*	if (ball->getSpeed() <= 8) {
-					ball->setSpeed(ball->getSpeed() * 1.1);
-				}*/
-			//	cout << ball->getSpeed()<<endl;
 			}
 
 			if (ball->getIsLaunch()) {
-				//_paddle->move(ball->getX(), true);
-				_paddle->move(xMouse);
+				_paddle->move(ball->getX(),_paddle->getWidth(), true);
+				//_paddle->move(xMouse);
 			}
 
 		}

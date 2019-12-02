@@ -94,9 +94,8 @@ public:
 					&& 
 					intersectionLineAndCircle(list[i].getX(),list[i].getY()+list[i].getSize(),
 						list[i].getX()+list[i].getSize(), list[i].getY() + list[i].getSize())
-					//	ball->get
-					) {//Vi tri cua banh khi va cham la o ben duoi 
-					cout << "Duoi\n";
+					) {
+					//Vi tri cua banh khi va cham la o ben duoi 
 					float offset = abs(ball->getY() - ball->getRadius() - (list[i].getY() + list[i].getSize()));
 					ball->setDegree(-ball->getDegree());
 					ball->setY(ball->getY() + offset * 1.1);
@@ -106,7 +105,6 @@ public:
 					intersectionLineAndCircle(list[i].getX(),list[i].getY(),
 						list[i].getX()+list[i].getSize(), list[i].getY())
 					) {//Vi tri cua trai banh khi va cham la o ben tren vat the
-				//	cout << "\nTren";
 					float offset = abs(ball->getY() + ball->getRadius() - list[i].getY());
 					ball->setDegree(-ball->getDegree());
 					ball->setY(ball->getY() - offset * 1.1);
@@ -116,7 +114,6 @@ public:
 					intersectionLineAndCircle(list[i].getX()+list[i].getSize(),list[i].getY(),
 						list[i].getX() + list[i].getSize(), list[i].getY()+list[i].getSize())
 					) { // Bên phải
-					cout << "\nPhai";
 					float offset = abs(ball->getX() - ball->getRadius() - list[i].getX() - list[i].getSize());
 					ball->setDegree(180 - ball->getDegree());
 					ball->setX(ball->getX() + offset * 1.1);
@@ -125,7 +122,6 @@ public:
 					ball->getX() < list[i].getX() &&
 					intersectionLineAndCircle(list[i].getX(),list[i].getY(), list[i].getX(), list[i].getY()+list[i].getSize())
 					) { //Bên trái
-					cout << "Trai";
 					float offset = abs(ball->getX() + ball->getRadius() - list[i].getX());
 					ball->setDegree(180 - ball->getDegree());
 					ball->setX(ball->getX() - offset * 1.1);

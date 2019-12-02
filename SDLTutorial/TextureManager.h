@@ -27,9 +27,6 @@ public:
 		}
 		SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, tempSurface);
 		SDL_FreeSurface(tempSurface);
-		//int x, y;
-		//SDL_QueryTexture(texture, NULL, NULL, &x, &y);
-		//cout << x << "   " << y;
 		if (texture) {
 			textureMap[id] = texture;
 			return true;
@@ -38,7 +35,6 @@ public:
 
 	}
 	void draw(string id, int x, int y, int width, int height, SDL_Renderer* renderer, SDL_RendererFlip flip = SDL_FLIP_NONE) {
-		cout << "call";
 		SDL_Rect source, destination;
 		source.x = 0;
 		source.y = 0;

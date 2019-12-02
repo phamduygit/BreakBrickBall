@@ -25,7 +25,6 @@ public:
 	}
 	void draw() {
 		TextureManager::GetInstance()->drawFrame("Amulet", x, y, size, size, 1, currentFrame, renderer);
-		cout << currentFrame << endl;
 	}
 };
 

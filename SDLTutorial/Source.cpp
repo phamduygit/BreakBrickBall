@@ -16,6 +16,7 @@ int main(int argc, char* argv[]) {
 		game->render();
 		game->update();
 		//game->render();
+		/*time = (clock() - time)/CLOCKS_PER_SEC;*/
 		SDL_Delay(10);
 	}
 	

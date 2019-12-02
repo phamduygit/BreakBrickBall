@@ -25,6 +25,7 @@ private:
 	float radius;
 	float speed;
 	float degree;
+	float backupSpeed;
 	SDL_Texture* image;
 	SDL_Renderer* renderer;
 	bool isLaunch;
@@ -34,6 +35,7 @@ private:
 		y = 700;
 		radius = 15;
 		speed = 8;
+		backupSpeed = speed;
 		image = NULL;
 		degree = 60;
 		renderer = rendererValue;
@@ -41,6 +43,9 @@ private:
 	}
 	static Ball* instance;
 public:
+	float getBackupSpeed() {
+		return backupSpeed;
+	}
 	void reset(int x,int y) {
 		this->x =x ;
 		this->y = y;
@@ -76,7 +81,9 @@ public:
 		y = value;
 	}
 	void setSpeed(float value) {
+		backupSpeed = speed;
 		speed = value;
+		
 	}
 	float getSpeed() {
 		return speed;

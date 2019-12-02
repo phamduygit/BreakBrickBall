@@ -40,6 +40,26 @@ public:
 	virtual void update() {
 		listBrick.handleCollision();
 		listAmulet.handleCollision();
+		int limitTime = 4000;
+		map<string, bool> mapEffect = listAmulet.getMapEffect();
+		if (listAmulet.getTime() >= limitTime) {
+		
+			if (mapEffect["Magnet"]) {
+				listAmulet.resetMagnet();
+			}
+			else if (mapEffect["IncreasePaddle"]) {
+				listAmulet.resetWidthPaddle();
+
+			}
+			else if (mapEffect["IncreaseSizeBall"]) {
+				listAmulet.resetSizeBall();
+			}
+			else if (mapEffect["SlowSpeed"]) {
+				listAmulet.resetSpeed();
+			}
+			
+
+		}
 	}
 	int getNumberOfBrick() {
 		return listBrick.getSize();

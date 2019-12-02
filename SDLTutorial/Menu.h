@@ -35,7 +35,7 @@ public:
 		if (x > 80 && x < 80 + 250 && y > 100 && y < 100 + 50) {
 			DrawInRenderer(renderer, BT_NewGame, 80, 100, 250 * 1.2, 50 * 1.2);
 			if (mouseActionClick) {
-				//cout << "1";
+
 				currentChoose = 1;
 				Chose = true;
 				mouseActionClick = false;
@@ -49,7 +49,6 @@ public:
 		if (x > 80 && x < 80 + 300 && y > 200 && y < 200 + 50) {
 			DrawInRenderer(renderer, BT_Continue, 80, 200, 300 * 1.2, 50 * 1.2);
 			if (mouseActionClick) {
-				cout << "1";
 				currentChoose = 2;
 				Chose = true;
 				mouseActionClick = false;
