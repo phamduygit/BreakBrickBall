@@ -1,7 +1,0 @@
-﻿  Game.cpp
-  Menu.cpp
-  Source.cpp
-C:\Users\minhd\Desktop\BreakBrickBall\SDLTutorial\Game.h(226,22): warning C4018: '<': signed/unsigned mismatch
-  Generating Code...
-C:\Users\minhd\Desktop\BreakBrickBall\SDLTutorial\Game.h(226,22): warning C4018: '<': signed/unsigned mismatch
-  SDLTutorial.vcxproj -> C:\Users\minhd\Desktop\BreakBrickBall\Debug\SDLTutorial.exe

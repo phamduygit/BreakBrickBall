@@ -154,6 +154,59 @@ public:
 
 
 	}
+	bool isCollision(int _x, int _y, int width,int height) {
+		Cirle a;
+		a.x = this->x;
+		a.y = y;
+		a.r = radius;
+		SDL_Rect b;
+		b.x = _x;
+		b.y = _y;
+		b.w = width;
+		b.h = height;
+		int cX, cY;
+
+		//Find closest x offset
+		if (a.x < b.x)
+		{
+			cX = b.x;
+		}
+		else if (a.x > b.x + b.w)
+		{
+			cX = b.x + b.w;
+		}
+		else
+		{
+			cX = a.x;
+		}
+
+		//Find closest y offset
+		if (a.y < b.y)
+		{
+			cY = b.y;
+		}
+		else if (a.y > b.y + b.h)
+		{
+			cY = b.y + b.h;
+		}
+		else
+		{
+			cY = a.y;
+		}
+
+		//If the closest point is inside the circle
+		if (distanceSquared(a.x, a.y, cX, cY) < a.r * a.r)
+		{
+			//This box and the circle have collided
+			return true;
+		}
+
+		//If the shapes have not collided
+		return false;
+
+
+
+	}
 	void setImage(string name) {
 		image = LoadImage(name, renderer);
 	}

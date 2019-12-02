@@ -13,7 +13,9 @@
 #include "Menu.h"
 #include <cmath>
 #include <math.h>
-
+#include "ListBrick.h"
+#include "Map.h"
+#include "Menu.h"
 
 #define PI 3.141592
 using namespace std;
@@ -21,23 +23,28 @@ class Game
 {
 private:
 	Line line;
+	Menu _menu;
 	SDL_Surface* _screenSurface;
 	SDL_Window* _window;
 	SDL_Renderer* _renderer;
 	bool _running;
 	SDL_Texture* _grassBackground;
 	Ball* ball;
-	vector<Brick> listBrick;
+	/*vector<Brick> listBrick;*/
+	ListBrick listBrick;
 	double degrees;
 	Paddle _paddle;
 	Barrier barrier;
 	Menu _menu;
 	bool MoveLR[2] = { false, false };
-	int x;
-	int y;
+	int xMouse;
+	int yMouse;
 	//Theo thứ tự là click 
 	bool mouseActionClicked = false;
 	bool isResetState = true;
+	int currentMap = 0;
+	bool isEnteredGame = false;
+	bool isCollision = false;
 
 	Game() {
 		_screenSurface = NULL;
@@ -97,12 +104,13 @@ public:
 				}
 				_running = true;
 			}
+			_menu = Menu(_renderer);
 			TextureManager::GetInstance()->load("Brick.png", "Brick", _renderer);
 			_grassBackground = LoadImage("GrassBackground.png", _renderer);
 			ball = Ball::Instance(_renderer);
-
 			ball->setImage("Ball.png");
 			line = Line(_renderer);
+<<<<<<< HEAD
 			Brick _brick;
 			for (int i = 0; i < 10; i++) {
 				_brick = Brick(_renderer, float(i * 50.0), float(7 * 50.0));
@@ -119,6 +127,13 @@ public:
 				listBrick.push_back(_brick);
 
 			}
+=======
+			listBrick.setRenderer(_renderer);
+			listBrick.createWithMapText("map.txt");
+			_menu.setFont("MachineGunk-nyqg.ttf");
+			_menu.setImage("GrassBackground.png");
+			
+>>>>>>> 8ed4979a960d86868c4f5c94c5f4598a6e12cf39
 			barrier = Barrier(_renderer,0,200);
 			barrier.setImage("Paddle.png");
 			_paddle = Paddle(_renderer);
@@ -131,18 +146,25 @@ public:
 		}
 	}
 	void render() {
+		
 		SDL_RenderClear(_renderer);
 		if (_menu.getChose()) {
 			DrawInRenderer(_renderer, _grassBackground);
 			ball->draw();
+<<<<<<< HEAD
 			for (auto _brick : listBrick)
 				_brick.draw();
 			SDL_SetRenderDrawColor(_renderer, 255, 0, 255, NULL);
 
+=======
+			listBrick.drawBrickMap();
+			SDL_SetRenderDrawColor(_renderer, 255, 255, 255, NULL);
+>>>>>>> 8ed4979a960d86868c4f5c94c5f4598a6e12cf39
 			if (!ball->getIsLaunch()) {
 				line.draw();
 			}
 			_paddle.draw();
+<<<<<<< HEAD
 			barrier.draw();
 		}
 		else {
@@ -152,6 +174,12 @@ public:
 	
 
 
+=======
+		}
+		else {
+			_menu.draw(xMouse,yMouse,mouseActionClicked);
+		}
+>>>>>>> 8ed4979a960d86868c4f5c94c5f4598a6e12cf39
 
 		SDL_RenderPresent(_renderer);
 		//delete[] p;
@@ -173,6 +201,7 @@ public:
 	}
 	void update() {
 		if (_menu.getChose()) {
+<<<<<<< HEAD
 			line.setMouse(x, y);
 			line.setPaddle(_paddle.getX(), _paddle.getY(), _paddle.getSize());
 			//Khi nhan duoc tin hieu click chuot va trai banh chua bay
@@ -289,8 +318,93 @@ public:
 				float offset = (ball->getY() - ball->getRadius() - (barrier.getY() + barrier.getHeight())) + 10;
 				ball->setDegree(-ball->getDegree());
 				ball->setY(ball->getY() + offset);
+=======
+			line.setMouse(xMouse, yMouse);
+			line.setPaddle(_paddle.getX(), _paddle.getY(), _paddle.getSize());
+			//Khi nhan duoc tin hieu click chuot va trai banh chua bay
+			if (mouseActionClicked == true && !ball->getIsLaunch() &&
+				(_menu.getCurrentChoose() == 1 || _menu.getCurrentChoose() == 2)) {
+				ball->setIsLaunch(true);
+				float degree = atan(line.getHeSoGoc()) * 180 / PI;
+				if (degree > 0) {
+					degree = 180 - degree;
+				}
+				else {
+					degree = abs(degree);
+				}
+				//cout << degree << endl;
+				ball->setDegree(degree);
+			}
+			//Khi bi reset va chuot chua nhan
+			if (isResetState == true) {
+				if (!mouseActionClicked) {
+					ball->setX(_paddle.getX() + _paddle.getSize() / 2);
+					ball->setY(_paddle.getY() - ball->getRadius());
+				}
+				else {
+					isResetState = false;
+				}
+			}
+			if (ball->getIsLaunch()) {
+				if (ball->getY() - ball->getRadius() <= 0) {
+					ball->setDegree(-ball->getDegree());
 
+				}
+				if (ball->getY() + ball->getRadius() > 800) {
 
+					ball->reset(_paddle.getX() + 60, _paddle.getY());
+					isResetState = true;
+
+				}
+				if (ball->getX() - ball->getRadius() < 0 || ball->getX() + ball->getRadius() > 500) {
+					ball->setDegree(180 - ball->getDegree());
+				}
+			}
+
+			listBrick.handleCollision();
+
+			ball->move();
+			//cout << _paddle.getDeltaX() << endl;
+			if (isBoundFromPaddle()) {
+				cout << ball->getDegree() << endl;
+				float offset = abs(ball->getY() + ball->getRadius() - _paddle.getY());
+				ball->setY(ball->getY() - offset);
+				//Set lai goc cho ball khi paddle co van toc
+				if (abs(_paddle.getDeltaX())!=0) {					
+					/*if (ball->getDegree() < 0) {*/
+						
+						if (_paddle.getDeltaX() > 0) {
+
+							ball->setDegree(int(ball->getDegree()) % 360);
+							//cout << ball->getDegree() << endl;
+
+							if (abs(ball->getDegree()) + 15 < 150) {
+							//	cout << "del>0" << endl;
+								ball->setDegree(abs(-ball->getDegree()) + 15);
+								//_paddle.resetDeltaX();
+								//Debug
+								//cout << ball->getDegree() << endl;
+							}
+							else {
+								ball->setDegree(-ball->getDegree());
+							}
+						}
+						else if (_paddle.getDeltaX() < 0) {
+
+							ball->setDegree(int(ball->getDegree()) % 360);
+							//cout << ball->getDegree() << endl;
+>>>>>>> 8ed4979a960d86868c4f5c94c5f4598a6e12cf39
+
+							if (abs(ball->getDegree()) - 15 > 20) {							
+								//cout << "Del<0"<<endl;
+								ball->setDegree(abs(ball->getDegree()) - 15);
+								//cout << ball->getDegree() << endl;
+							//	_paddle.resetDeltaX();
+							}
+							else {
+								ball->setDegree(-ball->getDegree());
+
+<<<<<<< HEAD
 			}*/
 			//Va cham voi paddle
 
@@ -330,6 +444,29 @@ public:
 				_paddle.move(float(x * 1.0));
 			}
 		}
+=======
+							}
+						}
+						
+					//}
+					ball->setY(ball->getY() - offset);
+				
+
+				}
+				else {
+					ball->setDegree(-ball->getDegree());
+				}
+			}
+		
+			if (ball->getIsLaunch()) {
+				_paddle.move(xMouse);
+			}
+			
+		}
+		
+	
+
+>>>>>>> 8ed4979a960d86868c4f5c94c5f4598a6e12cf39
 		
 	}
 
@@ -365,7 +502,7 @@ public:
 			}
 		}
 		else if (Events.type == SDL_MOUSEMOTION || Events.type == SDL_MOUSEBUTTONUP || Events.type == SDL_MOUSEBUTTONDOWN) {
-			SDL_GetMouseState(&x, &y);
+			SDL_GetMouseState(&xMouse, &yMouse);
 			switch (Events.type)
 			{
 			case SDL_MOUSEBUTTONDOWN:

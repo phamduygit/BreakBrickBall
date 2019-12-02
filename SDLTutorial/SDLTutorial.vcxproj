@@ -129,9 +129,15 @@
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Line.cpp" />
+    <ClCompile Include="ListBrick.cpp" />
     <ClCompile Include="MagicBall.cpp" />
+<<<<<<< HEAD
+=======
+    <ClCompile Include="Map.cpp" />
+>>>>>>> 8ed4979a960d86868c4f5c94c5f4598a6e12cf39
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Paddle.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
@@ -142,9 +148,15 @@
     <ClInclude Include="Functions.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Line.h" />
+    <ClInclude Include="ListBrick.h" />
     <ClInclude Include="MagicBall.h" />
+<<<<<<< HEAD
+=======
+    <ClInclude Include="Map.h" />
+>>>>>>> 8ed4979a960d86868c4f5c94c5f4598a6e12cf39
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Paddle.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="TextureManager.h" />
   </ItemGroup>
   <ItemGroup>

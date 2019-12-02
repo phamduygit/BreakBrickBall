@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <iostream>
 #include <vector>
+#include "MagicBall.h"
 using namespace std;
 class Line
 {
@@ -85,7 +86,7 @@ public:
 				A.y = paddle.y;
 				B.x = 0;
 				B.y = hsTuDo;
-				SDL_RenderDrawLineF(renderer, A.x + paddleSize/2, A.y, B.x, B.y);
+				SDL_RenderDrawLineF(renderer, A.x + paddleSize/2, A.y - Ball::Instance(renderer)->getRadius(), B.x, B.y);
 				//Vẽ tia đối xứng
 				hsGoc = -hsGoc;
 				A.x = 0;
@@ -100,7 +101,7 @@ public:
 				A.y = paddle.y;
 				B.x = width;
 				B.y = hsGoc * B.x + hsTuDo;
-				SDL_RenderDrawLineF(renderer, A.x + paddleSize/2, A.y, B.x, B.y);
+				SDL_RenderDrawLineF(renderer, A.x + paddleSize/2, A.y - Ball::Instance(renderer)->getRadius(), B.x, B.y);
 				hsGoc = -hsGoc;
 				hsTuDo = B.y - B.x * hsGoc;
 				A.y = 0;
@@ -114,7 +115,7 @@ public:
 				A.y = paddle.y;
 				B.x = -hsTuDo/hsGoc;
 				B.y = 0;
-				SDL_RenderDrawLineF(renderer, A.x + paddleSize/2, A.y, B.x, B.y);
+				SDL_RenderDrawLineF(renderer, A.x + paddleSize/2, A.y - Ball::Instance(renderer)->getRadius(), B.x, B.y);
 				//Vẽ tia đối xứng
 				hsGoc = -hsGoc;
 				hsTuDo = B.y - hsGoc * B.x;
@@ -128,7 +129,7 @@ public:
 				A.y = paddle.y;
 				B.x = -hsTuDo/hsGoc;
 				B.y = 0;
-				SDL_RenderDrawLineF(renderer, A.x + paddleSize/2, A.y, B.x, B.y);
+				SDL_RenderDrawLineF(renderer, A.x + paddleSize/2, A.y-Ball::Instance(renderer)->getRadius(), B.x, B.y);
 				hsGoc = -hsGoc;
 				hsTuDo = B.y - hsGoc * B.x;
 				A.x = width;
