@@ -4,6 +4,7 @@
 #include "MagicBall.h";
 #include <string>
 #include <sstream>
+#include "Player.h"
 #include <fstream>
 using namespace std;
 class ListBrick
@@ -50,7 +51,7 @@ public:
 			if (map[k] == 1) {
 				Brick brick(renderer);
 				brick.setX(i * 50);
-				brick.setY(j * 50);
+				brick.setY((j+1) * 50);
 				list.push_back(brick);
 			}
 		}
@@ -130,6 +131,9 @@ public:
 
 				if (list[i].getFrame() == 4) {
 					list.erase(list.begin() + i);
+					int currentScore = Player::Instance()->getScore();
+					currentScore++;
+					Player::Instance()->setScore(currentScore);
 				}
 			}
 		}

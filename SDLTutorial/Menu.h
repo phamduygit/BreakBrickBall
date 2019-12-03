@@ -74,6 +74,7 @@ public:
 				currentChoose = 4;
 				Chose = true;
 				mouseActionClick = false;
+				exit(0);
 
 			}
 		}

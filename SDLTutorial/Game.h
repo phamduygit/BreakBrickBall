@@ -16,7 +16,7 @@
 #include "Map.h"
 #include "Menu.h"
 #include "Player.h"
-
+#include <map>
 #define PI 3.141592
 
 //int time = 0;
@@ -50,6 +50,14 @@ private:
 	bool isCollision = false;
 	int _currentMap = 1;
 	vector<string> fileMapName;
+	map<string, bool > listScreen;
+	/*
+	-["MenuScreen"]
+	-["MapDiagramScreen"]
+	-["SettingScreen"]
+	-["GameOverScreen"]
+	-["GamePlayScreen"]
+	*/
 	Player *player;
 	Game() {
 		player = Player::Instance();
@@ -60,6 +68,7 @@ private:
 		_running = false;
 		_grassBackground = NULL;
 		degrees = 0;
+		listScreen["MenuScreen"] = true;
 		
 	}
 	static Game* instance;
@@ -133,24 +142,63 @@ public:
 
 		}
 	}
-	void render() {
 
+	void render() {
+		/*
+	-["MenuScreen"]
+	-["MapDiagramScreen"]
+	-["SettingScreen"]
+	-["GameOverScreen"]
+	-["GamePlayScreen"]
+	*/
 		SDL_RenderClear(_renderer);
-		if (_menu.getChose()) {
+		if (listScreen["MenuScreen"]) {
+			_menu.draw(xMouse,yMouse,mouseActionClicked);
+			if (_menu.getChose()) {
+				if (_menu.getCurrentChoose() == 1 || _menu.getCurrentChoose() == 2) {
+				
+					listScreen["GamePlayScreen"] = true;
+				}
+				else if (_menu.getCurrentChoose() == 3) {
+					listScreen["SettingScreen"] = true;
+				}
+				else if (_menu.getCurrentChoose() == 4) {
+					exit(0);
+				}
+				listScreen["MenuScreen"] = false;
+			}
+		}
+		else if (listScreen["MapDiagramScreen"]) {
+
+		}
+		else if (listScreen["SettingScreen"]) {
+
+		}
+		else if (listScreen["GameOverScreen"]) {
+
+		}
+		else if (listScreen["GamePlayScreen"]) {
+		
 			DrawInRenderer(_renderer, _grassBackground);
 			ball->draw();
-		//	listBrick.drawBrickMap();
-			
+
 			_map.draw();
 			SDL_SetRenderDrawColor(_renderer, 255, 255, 255, NULL);
 			if (!ball->getIsLaunch()) {
 				line.draw();
 			}
 			_paddle->draw();
+			player->setRenderer(_renderer);
+			player->draw();
+
+		}
+		/*if (_menu.getChose()) {
+			mapScreen();
+			
 		}
 		else {
 			_menu.draw(xMouse, yMouse, mouseActionClicked);
-		}
+		}*/
 
 		SDL_RenderPresent(_renderer);
 		//delete[] p;
@@ -212,25 +260,14 @@ public:
 				if (ball->getX() - ball->getRadius() < 0 || ball->getX() + ball->getRadius() > 500) {
 					ball->setDegree(180 - ball->getDegree());
 				}
-			}		
-			//listBrick.handleCollision();
-		/*	if (_map.isCompleted()) {
-				int index = _currentMap % fileMapName.size();
-				if (index != 0)
-					_map.loadData(fileMapName[index]);
-				index++;
-
-			}*/
-
+			}	
 			_map.update();
-
 			ball->move();
 			if (isBoundFromPaddle()&&ball->getIsLaunch()) {
 				int degree = (int)ball->getDegree()%360;
 				if (degree > 0&&degree<300) {
 					degree -= 360;
-				}
-								
+				}								
 				float offset = abs(ball->getY() + ball->getRadius() - _paddle->getY());
 				ball->setY(ball->getY() - 1.1*offset);
 				//Doi huong cho bong trong dieu kien paddle khong co van toc

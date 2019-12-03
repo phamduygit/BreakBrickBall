@@ -78,7 +78,7 @@ public:
 			if (map[k] != 0 && map[k] != 1) {
 				int i = k % 10;
 				int j = k / 10;
-				Amulet amulet(renderer, i * 50, j * 50, map[k]);
+				Amulet amulet(renderer, i * 50, (j+1) * 50, map[k]);
 				list.push_back(amulet);
 			}
 		}
@@ -128,6 +128,7 @@ public:
 				}
 				else if (DecreaseSpeedBall == list[i].getType()) {
 					//havingEffection = true;
+					startTime = clock();
 					mapEffect["SlowSpeed"] = true;
 					Ball::Instance(renderer)->setSpeed(Ball::Instance(renderer)->getSpeed() * 0.6);
 
