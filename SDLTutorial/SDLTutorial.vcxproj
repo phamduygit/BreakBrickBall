@@ -133,6 +133,7 @@
     <ClCompile Include="ListBrick.cpp" />
     <ClCompile Include="MagicBall.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="MapDiagram.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Paddle.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="ListBrick.h" />
     <ClInclude Include="MagicBall.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="MapDiagram.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Paddle.h" />
     <ClInclude Include="Player.h" />

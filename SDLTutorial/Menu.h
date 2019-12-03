@@ -90,6 +90,12 @@ public:
 	Menu() {
 	}
 	~Menu() {
+		/*SDL_DestroyTexture(BT_Continue);
+		SDL_DestroyTexture(BT_NewGame);
+		SDL_DestroyTexture(BT_Setting);
+		SDL_DestroyTexture(BT_Exit);*/
+
+		
 		
 	}
 };

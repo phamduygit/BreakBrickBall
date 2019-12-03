@@ -22,6 +22,8 @@ public:
 		listAmulet.createListWithMapText(dataFileName);
 	}
 	void loadData(string fileName) {
+		listBrick.ClearMap();
+		listAmulet.clearAllAmulet();
 		listBrick.setRenderer(renderer);
 		listBrick.createListWithMapText(fileName);
 		listAmulet.createListWithMapText(fileName);

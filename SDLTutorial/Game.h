@@ -17,6 +17,7 @@
 #include "Menu.h"
 #include "Player.h"
 #include <map>
+#include "MapDiagram.h"
 #define PI 3.141592
 
 //int time = 0;
@@ -51,6 +52,7 @@ private:
 	int _currentMap = 1;
 	vector<string> fileMapName;
 	map<string, bool > listScreen;
+	MapDiagram mapDiagram;
 	/*
 	-["MenuScreen"]
 	-["MapDiagramScreen"]
@@ -68,7 +70,8 @@ private:
 		_running = false;
 		_grassBackground = NULL;
 		degrees = 0;
-		listScreen["MenuScreen"] = true;
+		listScreen["MenuScreen"] =true;
+	//	listScreen["MapDiagramScreen"] = true;
 		
 	}
 	static Game* instance;
@@ -119,6 +122,7 @@ public:
 				_running = true;
 			}
 			_menu = Menu(_renderer);
+			mapDiagram.setRenderer(_renderer);
 			TextureManager::GetInstance()->load("Brick.png", "Brick", _renderer);
 			TextureManager::GetInstance()->load("amulet.png", "Amulet", _renderer);
 			_grassBackground = LoadImage("GrassBackground.png", _renderer);
@@ -134,6 +138,10 @@ public:
 			barrier.setImage("Paddle.png");
 			_paddle = Paddle::Instance(_renderer);
 			_paddle->setImage("Paddle.png");
+			fileMapName.push_back("");
+			fileMapName.push_back("map1.txt");
+			fileMapName.push_back("map2.txt");
+			fileMapName.push_back("map3.txt");
 	
 
 
@@ -154,31 +162,20 @@ public:
 		SDL_RenderClear(_renderer);
 		if (listScreen["MenuScreen"]) {
 			_menu.draw(xMouse,yMouse,mouseActionClicked);
-			if (_menu.getChose()) {
-				if (_menu.getCurrentChoose() == 1 || _menu.getCurrentChoose() == 2) {
-				
-					listScreen["GamePlayScreen"] = true;
-				}
-				else if (_menu.getCurrentChoose() == 3) {
-					listScreen["SettingScreen"] = true;
-				}
-				else if (_menu.getCurrentChoose() == 4) {
-					exit(0);
-				}
-				listScreen["MenuScreen"] = false;
-			}
 		}
 		else if (listScreen["MapDiagramScreen"]) {
+			mapDiagram.draw(xMouse, yMouse, mouseActionClicked);	
 
 		}
 		else if (listScreen["SettingScreen"]) {
+
 
 		}
 		else if (listScreen["GameOverScreen"]) {
 
 		}
 		else if (listScreen["GamePlayScreen"]) {
-		
+
 			DrawInRenderer(_renderer, _grassBackground);
 			ball->draw();
 
@@ -192,16 +189,7 @@ public:
 			player->draw();
 
 		}
-		/*if (_menu.getChose()) {
-			mapScreen();
-			
-		}
-		else {
-			_menu.draw(xMouse, yMouse, mouseActionClicked);
-		}*/
-
 		SDL_RenderPresent(_renderer);
-		//delete[] p;
 	}
 	bool isBoundFromPaddle() {
 		float t1;
@@ -219,12 +207,46 @@ public:
 
 	}
 	void update() {
-		if (_menu.getChose()) {
+		if (listScreen["MenuScreen"]) {
+			if (_menu.getChose()) {
+			
+				if (_menu.getCurrentChoose() == 1) {
+					listScreen["MapDiagramScreen"] = true;
+				}
+				else if (_menu.getCurrentChoose() == 2) {
+					listScreen["MapDiagramScreen"] = true;
+				}
+				else if (_menu.getCurrentChoose() == 3) {
+					listScreen["SettingScreen"] = true;
+				}
+				else if (_menu.getCurrentChoose() == 4) {					
+					exit(0);				
+				}
+				listScreen["MenuScreen"] = false;
+			}
+			
+		}
+		else if (listScreen["MapDiagramScreen"]) {
+			mapDiagram.draw(xMouse, yMouse, mouseActionClicked);
+			if (mapDiagram.getSelectedMap() != 0) {
+				listScreen["MapDiagramScreen"] = false;
+				int currentMap = mapDiagram.getSelectedMap();
+				_map.loadData(fileMapName[currentMap]);
+				listScreen["GamePlayScreen"] = true;
+			}
+
+		}
+		else if (listScreen["SettingScreen"]) {
+
+		}
+		else if (listScreen["GameOverScreen"]) {
+
+		}
+		else if (listScreen["GamePlayScreen"]) {
 			line.setMouse(xMouse, yMouse);
 			line.setPaddle(_paddle->getX(), _paddle->getY(), _paddle->getWidth());
 			//Khi nhan duoc tin hieu click chuot va trai banh chua bay
-			if (mouseActionClicked == true && !ball->getIsLaunch() &&
-				(_menu.getCurrentChoose() == 1 || _menu.getCurrentChoose() == 2)) {
+			if (mouseActionClicked == true && !ball->getIsLaunch()) {
 				ball->setIsLaunch(true);
 				float degree = atan(line.getHeSoGoc()) * 180 / PI;
 				if (degree > 0) {
@@ -233,11 +255,11 @@ public:
 				else {
 					degree = abs(degree);
 				}
-				
+
 				ball->setDegree(degree);
 			}
 			if (isResetState == true) {
-				
+
 				if (!mouseActionClicked) {
 					ball->setX(_paddle->getX() + _paddle->getWidth() / 2);
 					ball->setY(_paddle->getY() - ball->getRadius());
@@ -253,29 +275,29 @@ public:
 				}
 				if (ball->getY() + ball->getRadius() > 800) {
 
-					ball->reset(_paddle->getX() +_paddle->getWidth()/2, _paddle->getY());
+					ball->reset(_paddle->getX() + _paddle->getWidth() / 2, _paddle->getY());
 					isResetState = true;
 
 				}
 				if (ball->getX() - ball->getRadius() < 0 || ball->getX() + ball->getRadius() > 500) {
 					ball->setDegree(180 - ball->getDegree());
 				}
-			}	
+			}
 			_map.update();
 			ball->move();
-			if (isBoundFromPaddle()&&ball->getIsLaunch()) {
-				int degree = (int)ball->getDegree()%360;
-				if (degree > 0&&degree<300) {
+			if (isBoundFromPaddle() && ball->getIsLaunch()) {
+				int degree = (int)ball->getDegree() % 360;
+				if (degree > 0 && degree < 300) {
 					degree -= 360;
-				}								
+				}
 				float offset = abs(ball->getY() + ball->getRadius() - _paddle->getY());
-				ball->setY(ball->getY() - 1.1*offset);
+				ball->setY(ball->getY() - 1.1 * offset);
 				//Doi huong cho bong trong dieu kien paddle khong co van toc
 
-				if(abs(_paddle->getDeltaX())>ball->getSpeed()*1.0/3){
-					
+				if (abs(_paddle->getDeltaX()) > ball->getSpeed() * 1.0 / 3) {
+
 					if (_paddle->getDeltaX() > 0) {
-						if (abs(degree)+15<160) {
+						if (abs(degree) + 15 < 160) {
 							ball->setDegree(-degree + 15);
 
 						}
@@ -284,8 +306,8 @@ public:
 
 						}
 					}
-					else if(_paddle->getDeltaX()<0) {
-						if (abs(degree)-15>45) {
+					else if (_paddle->getDeltaX() < 0) {
+						if (abs(degree) - 15 > 45) {
 							ball->setDegree(-degree - 15);
 						}
 						else {
@@ -301,15 +323,14 @@ public:
 			}
 
 			if (ball->getIsLaunch()) {
-				_paddle->move(ball->getX(),_paddle->getWidth(), true);
+				_paddle->move(ball->getX(), _paddle->getWidth(), true);
 				//_paddle->move(xMouse);
 			}
 
+			
+
 		}
-
-
-
-
+		//////////////////////////////////////////////////////
 	}
 
 	void handleEvents() {
@@ -345,6 +366,8 @@ public:
 		}
 		else if (Events.type == SDL_MOUSEMOTION || Events.type == SDL_MOUSEBUTTONUP || Events.type == SDL_MOUSEBUTTONDOWN) {
 			SDL_GetMouseState(&xMouse, &yMouse);
+			//d
+			cout << "X:" << xMouse << endl << "Y:" << yMouse << endl;
 			switch (Events.type)
 			{
 			case SDL_MOUSEBUTTONDOWN:
