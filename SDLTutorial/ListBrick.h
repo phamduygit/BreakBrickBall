@@ -46,7 +46,7 @@ public:
 			}
 
 		}
-		for (size_t k = 0; k < map.size(); k++) {
+		for (int k = 0; k < int(map.size()); k++) {
 			int i = k % 10;
 			int j = k / 10;
 			if (map[k] == 1) {
@@ -101,6 +101,7 @@ public:
 					float offset = abs(ball->getY() - ball->getRadius() - (float(list[i].getY()) + list[i].getSize()));
 					ball->setDegree(-ball->getDegree());
 					ball->setY(ball->getY() + offset * float(1.1));
+					Mix_PlayChannel(-1, LoadSound("medium.wav"), 0);
 				}else if (ball->getY() + ball->getRadius() > float(list[i].getY()) &&
 					ball->getY() < float(list[i].getY())
 					&&
@@ -110,6 +111,7 @@ public:
 					float offset = abs(ball->getY() + ball->getRadius() - float(list[i].getY()));
 					ball->setDegree(-ball->getDegree());
 					ball->setY(ball->getY() - offset * float(1.1));
+					Mix_PlayChannel(-1, LoadSound("medium.wav"), 0);
 				}else if (
 					ball->getX() - ball->getRadius() < float(list[i].getX()) + list[i].getSize() &&
 					ball->getX() > float(list[i].getX())+list[i].getSize()&&
@@ -119,6 +121,7 @@ public:
 					float offset = abs(ball->getX() - ball->getRadius() - float(list[i].getX()) - list[i].getSize());
 					ball->setDegree(180 - ball->getDegree());
 					ball->setX(ball->getX() + offset * float(1.1));
+					Mix_PlayChannel(-1, LoadSound("medium.wav"), 0);
 				}
 				else if (ball->getX() + ball->getRadius() > float(list[i].getX()) &&
 					ball->getX() < float(list[i].getX()) &&
@@ -127,6 +130,7 @@ public:
 					float offset = abs(ball->getX() + ball->getRadius() - float(list[i].getX()));
 					ball->setDegree(180 - ball->getDegree());
 					ball->setX(ball->getX() - offset * float(1.1));
+					Mix_PlayChannel(-1, LoadSound("medium.wav"), 0);
 				}
 				list[i].setFrame(list[i].getFrame() + 1);
 

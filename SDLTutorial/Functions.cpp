@@ -64,3 +64,18 @@ void DrawInRendererRotate(SDL_Renderer* Renderer, SDL_Texture* Texture, float x,
 void DrawInRenderer(SDL_Renderer* Renderer, SDL_Texture* Texture) {
 	SDL_RenderCopyF(Renderer, Texture, NULL, NULL);
 }
+Mix_Chunk* LoadSound(string filepath) {
+	Mix_Chunk* Sound = Mix_LoadWAV(filepath.c_str());
+	return Sound;
+}
+Mix_Music* LoadMusic(string filepath) {
+	Mix_Music* Music = Mix_LoadMUS(filepath.c_str());
+	return Music;
+}
+void PlaySound(Mix_Chunk* Sound) {
+	Mix_PlayChannel(-1, Sound, 0);
+}
+
+void PlayMusic(Mix_Music* Music) {
+	Mix_PlayMusic(Music, -1);
+}
