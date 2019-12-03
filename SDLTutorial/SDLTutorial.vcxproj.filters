@@ -60,9 +60,11 @@
     <ClCompile Include="ListAmulet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+
     <ClCompile Include="MapDiagram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Functions.h">
@@ -107,9 +109,11 @@
     <ClInclude Include="ListAmulet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+
     <ClInclude Include="MapDiagram.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -34,26 +34,18 @@ public:
 		return false;
 
 	}
-	/*void draw(string id, int x, int y, int width, int height, SDL_Renderer* renderer, SDL_RendererFlip flip = SDL_FLIP_NONE) {
-		SDL_Rect source, destination;
-		source.x = 0;
-		source.y = 0;
-		source.w = destination.w = width;
-		source.h = destination.h = height;
-		destination.x = x;
-		destination.y = y;
-		SDL_RenderCopyExF(renderer, textureMap[id], &source, &destination, 0, 0, flip);
-
-	}*/
-	void drawFrame(string id, float x,float y,float width, float height, int currentRow, int currentFrame, SDL_Renderer* renderer, SDL_RendererFlip flip = SDL_FLIP_NONE) {
-		SDL_Rect  dest;
+	void drawFrame(string id, float x, float y, float width, float height, int currentRow, int currentFrame, SDL_Renderer* renderer, SDL_RendererFlip flip = SDL_FLIP_NONE) {
 		SDL_Rect source;
-		source.x = width * (currentFrame-1);
-		source.y = height * (currentRow - 1);
-		source.w = dest.w = width;
-		source.h = dest.h = height;
+		SDL_FRect dest;
+		source.x = int(width * (currentFrame-1));
+		source.y = int(height * (currentRow - 1));
+		source.w = int(width);
+		source.h = int(height);
+		dest.w = width;
+		dest.h = height;
+
 		dest.x = x;
 		dest.y = y;
-		SDL_RenderCopyEx(renderer, textureMap[id], &source, &dest, 0, 0, flip);
+		SDL_RenderCopyExF(renderer, textureMap[id], &source, &dest, 0, 0, flip);
 	}
 };

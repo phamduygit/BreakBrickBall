@@ -19,7 +19,13 @@ private:
 	int endTime;
 	map <string, bool> mapEffect;
 public:
-	ListAmulet() {}
+	ListAmulet() {
+		startTime = 0;
+		endTime = 0;
+		this->renderer = NULL;
+		currentBallSpeed = 0;
+		numberOfBrick = 0;
+	}
 	ListAmulet(SDL_Renderer* renderer) {
 		/*	mapEffect["Magnet"] = false;
 			mapEffect["IncreasePaddle"] = false;
@@ -28,6 +34,8 @@ public:
 		startTime = 0;
 		endTime = 0;
 		this->renderer = renderer;
+		currentBallSpeed = 0;
+		numberOfBrick = 0;
 	}
 	map<string, bool> getMapEffect() {
 		return mapEffect;
@@ -46,7 +54,8 @@ public:
 	void drawListAmulet() {
 
 
-		for (int i = 0; i < list.size(); i++) {
+		
+		for(size_t i = 0; i < list.size(); i++) {
 			list[i].draw();
 		}
 	}
@@ -73,7 +82,7 @@ public:
 
 		file.close();
 		//numberOfBrick = 0;
-		for (int k = 0; k < map.size(); k++) {
+		for (int k = 0; k < int(map.size()); k++) {
 			if (map[k] != 0 && map[k] != 1) {
 				int i = k % 10;
 				int j = k / 10;
@@ -86,13 +95,15 @@ public:
 		list.push_back(amulet);
 	}
 	bool  handleCollision() {
+
 		if (this->getTime() < 6000 && mapEffect["Magnet"]) {
 			Ball* ball = Ball::Instance(renderer);
 			Paddle* paddle = Paddle::Instance(renderer);
 			ball->setX(paddle->getX() + paddle->getWidth() / 2);
 		}
-		for (int i = 0; i < list.size(); i++) {
-			if (Ball::Instance(renderer)->isCollision(list[i].getX(), list[i].getY(), list[i].getSize())) {
+		for (size_t i = 0; i < list.size(); i++) {
+			if (Ball::Instance(renderer)->isCollision(float(list[i].getX()), float(list[i].getY()), list[i].getSize())) {
+
 
 				if (list[i].getType() == Double) {
 					mapEffect["Double"] = true;
@@ -114,14 +125,14 @@ public:
 				else if (list[i].getType() == IncreasePaddle) {
 					mapEffect["IncreasePaddle"] = true;
 					startTime = clock();
-					Paddle::Instance(renderer)->setWidth(Paddle::Instance(renderer)->getWidth() * 1.5);
+					Paddle::Instance(renderer)->setWidth(Paddle::Instance(renderer)->getWidth() * float(1.5));
 
 				}
 				else if (list[i].getType() == IncreaseSizeBall) {
 					//	havingEffection = true;
 					mapEffect["IncreaseSizeBall"] = true;
 					startTime = clock();
-					Ball::Instance(renderer)->setRadius(Ball::Instance(renderer)->getRadius() * 1.3);
+					Ball::Instance(renderer)->setRadius(Ball::Instance(renderer)->getRadius() * float(1.3));
 
 				}
 				else if (HalveScore == list[i].getType()) {
@@ -137,7 +148,7 @@ public:
 					//havingEffection = true;
 					startTime = clock();
 					mapEffect["SlowSpeed"] = true;
-					Ball::Instance(renderer)->setSpeed(Ball::Instance(renderer)->getSpeed() * 0.6);
+					Ball::Instance(renderer)->setSpeed(Ball::Instance(renderer)->getSpeed() * float(0.6));
 
 				}
 				else if (IncreaseLife == list[i].getType()) {
@@ -161,14 +172,14 @@ public:
 	}
 	void resetSizeBall() {
 		Ball* ball = Ball::Instance(renderer);
-		ball->setRadius(ball->getRadius() / 1.3);
+		ball->setRadius(ball->getRadius() / float(1.3));
 		mapEffect["IncreaseSizeBall"] = false;
 
 
 	}
 	void resetWidthPaddle() {
 		Paddle* paddle = Paddle::Instance(renderer);
-		paddle->setWidth(paddle->getWidth() / 1.5);
+		paddle->setWidth(paddle->getWidth() / float(1.5));
 		mapEffect["IncreasePaddle"] = false;
 
 	}

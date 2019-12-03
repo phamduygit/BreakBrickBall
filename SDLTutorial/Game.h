@@ -63,16 +63,21 @@ private:
 	Player* player;
 	Game() {
 		player = Player::Instance();
-
+		ball = NULL;
 		_screenSurface = NULL;
 		_window = NULL;
 		_renderer = NULL;
 		_running = false;
 		_grassBackground = NULL;
 		degrees = 0;
+
 		listScreen["MenuScreen"] = true;
 		//	listScreen["MapDiagramScreen"] = true;
 
+		xMouse = 0;
+		yMouse = 0;
+		_paddle = NULL;
+    
 	}
 	static Game* instance;
 public:
@@ -117,6 +122,10 @@ public:
 					// Khởi tạo để tải chữ viết lên màn hình
 					if (TTF_Init()) {
 						cout << "SDL_ttf could not initialize! SDL_ttf Error: " << TTF_GetError();
+					}
+					if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+					{
+						cout << "SDL_mixer could not initialize! SDL_mixer Error: %s\n" << Mix_GetError();
 					}
 				}
 				_running = true;
@@ -207,6 +216,7 @@ public:
 
 	}
 	void update() {
+
 		if (listScreen["MenuScreen"]) {
 			if (_menu.getChose()) {
 
@@ -243,12 +253,21 @@ public:
 
 		}
 		else if (listScreen["GamePlayScreen"]) {
+
+		if (Mix_PlayingMusic() == 0)
+		{
+			//Play the music
+			Mix_PlayMusic(LoadMusic("Theme.mp3"), -1);
+		}
+		//If music is being played
+		if (_menu.getChose()) {
+
 			line.setMouse(xMouse, yMouse);
 			line.setPaddle(_paddle->getX(), _paddle->getY(), _paddle->getWidth());
 			//Khi nhan duoc tin hieu click chuot va trai banh chua bay
 			if (mouseActionClicked == true && !ball->getIsLaunch()) {
 				ball->setIsLaunch(true);
-				float degree = atan(line.getHeSoGoc()) * 180 / PI;
+				float degree = atan(line.getHeSoGoc()) * 180 / float(PI);
 				if (degree > 0) {
 					degree = 180 - degree;
 				}
@@ -291,7 +310,9 @@ public:
 					degree -= 360;
 				}
 				float offset = abs(ball->getY() + ball->getRadius() - _paddle->getY());
-				ball->setY(ball->getY() - 1.1 * offset);
+
+				ball->setY(ball->getY() - float(1.1)*offset);
+
 				//Doi huong cho bong trong dieu kien paddle khong co van toc
 				if (_paddle->getDeltaX() > 0 && abs(degree) + 15 < 180) {					
 						ball->setDegree(-degree + 15);		
@@ -300,6 +321,28 @@ public:
 				else if (_paddle->getDeltaX() < 0&& abs(degree) - 15 > 0) {				
 						ball->setDegree(-degree - 15);					
 					
+
+					if (_paddle->getDeltaX() > 0) {
+						if (abs(degree)+15<160) {
+							ball->setDegree(float(-degree + 15));
+
+						}
+						else {
+							ball->setDegree(-ball->getDegree());
+
+						}
+					}
+					else if(_paddle->getDeltaX()<0) {
+						if (abs(degree)-15>45) {
+							ball->setDegree(float(-degree - 15));
+						}
+						else {
+							ball->setDegree(-ball->getDegree());
+						}
+
+					}
+
+
 				}
 				else {
 					ball->setDegree(-ball->getDegree());
@@ -307,7 +350,11 @@ public:
 			}
 
 			if (ball->getIsLaunch()) {
+
 				//_paddle->move(ball->getX(), _paddle->getWidth(), true);
+
+				
+
 				_paddle->move(xMouse);
 			}
 		}

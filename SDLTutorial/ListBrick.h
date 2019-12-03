@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "Brick.h"
 #include <vector>
-#include "MagicBall.h";
+#include "MagicBall.h"
 #include <string>
 #include <sstream>
 #include "Player.h"
@@ -14,9 +14,11 @@ private:
 	SDL_Renderer* renderer;
 
 public:
-	ListBrick() {}
+	ListBrick() {
+		renderer = NULL;
+	}
 	int getSize() {
-		return list.size();
+		return int(list.size());
 	}
 	ListBrick(SDL_Renderer* _renderer) {
 		renderer = _renderer;
@@ -28,7 +30,7 @@ public:
 		list.clear();
 	}
 	void drawBrickMap() {
-		for (int i = 0; i < list.size(); i++) {
+		for (size_t i = 0; i < list.size(); i++) {
 			list[i].draw();
 		}
 	}
@@ -45,7 +47,7 @@ public:
 			}
 
 		}
-		for (int k = 0; k < map.size(); k++) {
+		for (int k = 0; k < int(map.size()); k++) {
 			int i = k % 10;
 			int j = k / 10;
 			if (map[k] == 1) {
@@ -87,45 +89,49 @@ public:
 	}
 	void handleCollision() {
 		Ball* ball = Ball::Instance(renderer);
-		for (int i = 0; i < list.size(); i++) {
+		for (size_t i = 0; i < list.size(); i++) {
 			//Khi phát hiện có va chạm 
-			if (ball->isCollision(list[i].getX(), list[i].getY(), list[i].getSize())) {	//
-				if (ball->getY() - ball->getRadius() < list[i].getY() + list[i].getSize() &&
-					ball->getY() > list[i].getY() + list[i].getSize()
+			if (ball->isCollision(float(list[i].getX()), float(list[i].getY()), list[i].getSize())) {	//
+				if (ball->getY() - ball->getRadius() < float(list[i].getY()) + list[i].getSize() &&
+					ball->getY() > float(list[i].getY()) + list[i].getSize()
 					&& 
-					intersectionLineAndCircle(list[i].getX(),list[i].getY()+list[i].getSize(),
-						list[i].getX()+list[i].getSize(), list[i].getY() + list[i].getSize())
+					intersectionLineAndCircle(float(list[i].getX()),float(list[i].getY())+list[i].getSize(),
+						float(list[i].getX())+list[i].getSize(), float(list[i].getY()) + list[i].getSize())
 					) {
 					//Vi tri cua banh khi va cham la o ben duoi 
-					float offset = abs(ball->getY() - ball->getRadius() - (list[i].getY() + list[i].getSize()));
+					float offset = abs(ball->getY() - ball->getRadius() - (float(list[i].getY()) + list[i].getSize()));
 					ball->setDegree(-ball->getDegree());
-					ball->setY(ball->getY() + offset * 1.1);
-				}else if (ball->getY() + ball->getRadius() > list[i].getY() &&
-					ball->getY() < list[i].getY()
+					ball->setY(ball->getY() + offset * float(1.1));
+					Mix_PlayChannel(-1, LoadSound("medium.wav"), 0);
+				}else if (ball->getY() + ball->getRadius() > float(list[i].getY()) &&
+					ball->getY() < float(list[i].getY())
 					&&
-					intersectionLineAndCircle(list[i].getX(),list[i].getY(),
-						list[i].getX()+list[i].getSize(), list[i].getY())
+					intersectionLineAndCircle(float(list[i].getX()),float(list[i].getY()),
+						float(list[i].getX())+list[i].getSize(), float(list[i].getY()))
 					) {//Vi tri cua trai banh khi va cham la o ben tren vat the
-					float offset = abs(ball->getY() + ball->getRadius() - list[i].getY());
+					float offset = abs(ball->getY() + ball->getRadius() - float(list[i].getY()));
 					ball->setDegree(-ball->getDegree());
-					ball->setY(ball->getY() - offset * 1.1);
+					ball->setY(ball->getY() - offset * float(1.1));
+					Mix_PlayChannel(-1, LoadSound("medium.wav"), 0);
 				}else if (
-					ball->getX() - ball->getRadius() < list[i].getX() + list[i].getSize() &&
-					ball->getX() > list[i].getX()+list[i].getSize()&&
-					intersectionLineAndCircle(list[i].getX()+list[i].getSize(),list[i].getY(),
-						list[i].getX() + list[i].getSize(), list[i].getY()+list[i].getSize())
+					ball->getX() - ball->getRadius() < float(list[i].getX()) + list[i].getSize() &&
+					ball->getX() > float(list[i].getX())+list[i].getSize()&&
+					intersectionLineAndCircle(float(list[i].getX())+list[i].getSize(),float(list[i].getY()),
+						float(list[i].getX()) + list[i].getSize(), float(list[i].getY())+list[i].getSize())
 					) { // Bên phải
-					float offset = abs(ball->getX() - ball->getRadius() - list[i].getX() - list[i].getSize());
+					float offset = abs(ball->getX() - ball->getRadius() - float(list[i].getX()) - list[i].getSize());
 					ball->setDegree(180 - ball->getDegree());
-					ball->setX(ball->getX() + offset * 1.1);
+					ball->setX(ball->getX() + offset * float(1.1));
+					Mix_PlayChannel(-1, LoadSound("medium.wav"), 0);
 				}
-				else if (ball->getX() + ball->getRadius() > list[i].getX() &&
-					ball->getX() < list[i].getX() &&
-					intersectionLineAndCircle(list[i].getX(),list[i].getY(), list[i].getX(), list[i].getY()+list[i].getSize())
+				else if (ball->getX() + ball->getRadius() > float(list[i].getX()) &&
+					ball->getX() < float(list[i].getX()) &&
+					intersectionLineAndCircle(float(list[i].getX()),float(list[i].getY()), float(list[i].getX()), float(list[i].getY())+list[i].getSize())
 					) { //Bên trái
-					float offset = abs(ball->getX() + ball->getRadius() - list[i].getX());
+					float offset = abs(ball->getX() + ball->getRadius() - float(list[i].getX()));
 					ball->setDegree(180 - ball->getDegree());
-					ball->setX(ball->getX() - offset * 1.1);
+					ball->setX(ball->getX() - offset * float(1.1));
+					Mix_PlayChannel(-1, LoadSound("medium.wav"), 0);
 				}
 				list[i].setFrame(list[i].getFrame() + 1);
 

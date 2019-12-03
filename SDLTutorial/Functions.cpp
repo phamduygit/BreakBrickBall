@@ -39,7 +39,6 @@ SDL_Texture* LoadFont(string Text, SDL_Renderer* Renderer, string Font) {
 	}
 	return newTexture;
 }
-
 void DrawInRenderer(SDL_Renderer* Renderer, SDL_Texture* Texture, float x, float y, float w, float h) {
 	SDL_FRect Size;
 	Size.x = x;

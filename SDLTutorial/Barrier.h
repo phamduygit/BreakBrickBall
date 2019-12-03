@@ -3,10 +3,12 @@
 class Barrier:public Paddle
 {
 private:
-	int deltaX;
+	float deltaX;
 public:
-	Barrier(){}
-	Barrier(SDL_Renderer*&,int ,int );
+	Barrier(){
+		deltaX = 0;
+	}
+	Barrier(SDL_Renderer*&,float ,float );
 	void move() {
 	
 		if (x +width> 500||x<0) {

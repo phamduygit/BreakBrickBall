@@ -26,7 +26,8 @@ protected:
 		image = NULL;
 		renderer = NULL;
 		deltaX = 0;
-		previousX = x;
+
+		previousX = 0;
 
 	}
 	Paddle(SDL_Renderer* RenderValue) {
@@ -37,7 +38,10 @@ protected:
 		speed = 5;
 		image = NULL;
 		renderer = RenderValue;
-		previousX = x;
+
+		deltaX = 0;
+		previousX = 0;
+
 	}
 public:
 	static Paddle* Instance(SDL_Renderer * renderer) {
@@ -49,10 +53,10 @@ public:
 	}
 	
 	
-	virtual int getHeight() {
+	virtual float getHeight() {
 		return height;
 	}
-	virtual int getWidth() {
+	virtual float getWidth() {
 		return width;
 	}
 	void setWidth(float newwidth) {
@@ -83,7 +87,7 @@ public:
 		DrawInRenderer(renderer, image, x, y, width, height);
 	}
 	
-	void move(int X,float sizePaddle = 120,bool autoPlay = false) {
+	void move(float X,float sizePaddle = 120,bool autoPlay = false) {
 		if (autoPlay == false) {
 			X = X - sizePaddle/2;
 			previousX = x;
