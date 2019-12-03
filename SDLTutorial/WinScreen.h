@@ -7,6 +7,7 @@ class WinScreen:public GameOver
 private:
 	SDL_Texture* nextButton;
 	SDL_Texture* retryButton;
+	SDL_Texture* imageOfStar;
 
 
 public:
@@ -46,6 +47,35 @@ public:
 		SDL_DestroyTexture(tempImage);
 		SDL_DestroyTexture(tempRetryButton);
 		SDL_DestroyTexture(tempNextButton);
+	}
+	void drawStar(int life) {
+		auto imageTemp = imageOfStar;
+		SDL_Rect dest;
+		dest.x = 150;
+		dest.y = 360;
+		dest.w = 210;
+		dest.h = 100;
+		switch (life)
+		{
+		case 1:
+			imageOfStar = LoadImage("1start.png", renderer);
+			break;
+		case 2:
+			imageOfStar = LoadImage("2start.png", renderer);
+			break;
+		case 3:
+			imageOfStar = LoadImage("3start.png", renderer);
+			break;
+		default:
+			imageOfStar = LoadImage("1start.png", renderer);
+			break;
+		}
+
+		SDL_RenderCopy(renderer, imageOfStar, NULL, &dest);
+		SDL_DestroyTexture(imageTemp);
+		
+
+		
 	}
 	~WinScreen(){}
 

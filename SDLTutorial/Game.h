@@ -21,10 +21,7 @@
 #include "WinScreen.h"
 #include "EndScreen.h"
 #define PI 3.141592
-
-//int time = 0;
 using namespace std;
-
 class Game
 {
 private:
@@ -36,8 +33,6 @@ private:
 	bool _running;
 	SDL_Texture* _grassBackground;
 	Ball* ball;
-	/*vector<Brick> listBrick;*/
-//	ListBrick listBrick;
 	Map _map;
 	double degrees;
 	Paddle* _paddle;
@@ -203,6 +198,7 @@ public:
 		}
 		else if (listScreen["WinScreen"]) {			
 			winScreen.draw(xMouse, yMouse, mouseActionClicked);
+			winScreen.drawStar(player->getLife());
 
 		}
 		else if (listScreen["EndScreen"]) {
@@ -488,7 +484,7 @@ public:
 		else if (Events.type == SDL_MOUSEMOTION || Events.type == SDL_MOUSEBUTTONUP || Events.type == SDL_MOUSEBUTTONDOWN) {
 			SDL_GetMouseState(&xMouse, &yMouse);
 			//d
-			//cout << "X:" << xMouse << endl << "Y:" << yMouse << endl;
+			cout << "X:" << xMouse << endl << "Y:" << yMouse << endl;
 			switch (Events.type)
 			{
 			case SDL_MOUSEBUTTONDOWN:

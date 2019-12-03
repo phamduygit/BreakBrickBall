@@ -73,7 +73,6 @@ public:
 		//Debug
 
 		file.close();
-		//numberOfBrick = 0;
 		for (int k = 0; k < int(map.size()); k++) {
 			if (map[k] != 0 && map[k] != 1) {
 				int i = k % 10;
