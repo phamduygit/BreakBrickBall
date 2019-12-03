@@ -106,6 +106,7 @@ public:
 
 					mapAmuletEffect["Magnet"] = true;
 					startTime = clock();
+					Ball::Instance(renderer)->setBackupSpeed(Ball::Instance(renderer)->getSpeed());
 					Ball::Instance(renderer)->setX(Paddle::Instance(renderer)->getX() + Paddle::Instance(renderer)->getWidth() / 2);
 					Ball::Instance(renderer)->setY(Paddle::Instance(renderer)->getY()+10);
 					Ball::Instance(renderer)->setSpeed(0);
@@ -157,8 +158,6 @@ public:
 	void resetMagnet() {
 		Ball::Instance(renderer)->setDegree(120);
 		Ball::Instance(renderer)->setSpeed(Ball::Instance(renderer)->getBackupSpeed());
-		//d
-		cout << "Speed" << Ball::Instance(renderer)->getSpeed()<<endl;
 		mapAmuletEffect["Magnet"] = false;
 	}
 	void resetSizeBall() {
@@ -176,7 +175,8 @@ public:
 	}
 	void resetSpeed() {
 		Ball* ball = Ball::Instance(renderer);
-		ball->setSpeed(ball->getBackupSpeed());
+		
+		ball->setSpeed(ball->getSpeed()/float(0.6));
 		mapAmuletEffect["SlowSpeed"] = false;
 	}
 	void resetDoubleScore() {

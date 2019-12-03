@@ -9,7 +9,6 @@
 #include <vector>
 #include "Paddle.h"
 #include "Line.h"
-#include "Barrier.h"
 #include <cmath>
 #include <math.h>
 #include "ListBrick.h"
@@ -42,7 +41,6 @@ private:
 	Map _map;
 	double degrees;
 	Paddle* _paddle;
-	Barrier barrier;
 	bool MoveLR[2] = { false, false };
 	int xMouse;
 	int yMouse;
@@ -156,8 +154,6 @@ public:
 			//	listBrick.createWithMapText("map.txt");
 			_menu.setFont("MachineGunk-nyqg.ttf");
 			_menu.setImage("GrassBackground.png");
-			barrier = Barrier(_renderer, 0, 200);
-			barrier.setImage("Paddle.png");
 			_paddle = Paddle::Instance(_renderer);
 			_paddle->setImage("Paddle.png");
 

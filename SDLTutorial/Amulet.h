@@ -13,11 +13,18 @@ enum TypeAmulet {
 };
 class Amulet:public Brick
 {
+private:
+	int startTime;
+
 public:
 
-	Amulet() {}
+	Amulet() { startTime = 0; }
 	Amulet(SDL_Renderer* renderer, int x, int y,int typeAmulet) :Brick(renderer, x, y) {
 		this->currentFrame = typeAmulet - 1;
+		startTime = 0;
+	}
+	void setStartTime(int value) {
+		startTime = value;
 	}
 	TypeAmulet getType() {
 		int result = currentFrame + 1;
