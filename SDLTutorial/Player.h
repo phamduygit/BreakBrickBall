@@ -20,7 +20,7 @@ private:
 	Player() {
 		_score = 0;
 		_currentMap = 1;
-		_life = 3;
+		_life = 1;
 		rateOfScore = 10;
 		renderer = 0;
 		scoreTexture = 0;

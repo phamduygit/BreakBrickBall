@@ -17,7 +17,7 @@ private:
 	float currentBallSpeed;
 	int startTime;
 	int endTime;
-	map <string, bool> mapEffect;
+	map <string, bool> mapAmuletEffect;
 public:
 	ListAmulet() {
 		startTime = 0;
@@ -27,10 +27,6 @@ public:
 		numberOfBrick = 0;
 	}
 	ListAmulet(SDL_Renderer* renderer) {
-		/*	mapEffect["Magnet"] = false;
-			mapEffect["IncreasePaddle"] = false;
-			mapEffect["IncreaseSizeBall"] = false;
-			mapEffect["SlowSpeed"] = false;*/
 		startTime = 0;
 		endTime = 0;
 		this->renderer = renderer;
@@ -38,11 +34,11 @@ public:
 		numberOfBrick = 0;
 	}
 	map<string, bool> getMapEffect() {
-		return mapEffect;
+		return mapAmuletEffect;
 	}
 
 	void setMapEffectToFalse(string key) {
-		mapEffect[key] = false;
+		mapAmuletEffect[key] = false;
 	}
 	void setRenderer(SDL_Renderer* renderer) {
 		this->renderer = renderer;
@@ -52,9 +48,6 @@ public:
 
 	}
 	void drawListAmulet() {
-
-
-		
 		for(size_t i = 0; i < list.size(); i++) {
 			list[i].draw();
 		}
@@ -68,7 +61,6 @@ public:
 		fstream file(fileName, ios::in);
 		if (!file) {
 			cout << "\nCan't open file map data";
-
 
 		}
 		else {
@@ -94,19 +86,17 @@ public:
 	void addAmulet(const Amulet amulet) {
 		list.push_back(amulet);
 	}
-	bool  handleCollision() {
+	void  handleCollision() {
 
-		if (this->getTime() < 6000 && mapEffect["Magnet"]) {
+		if (this->getTime() < 6000 && mapAmuletEffect["Magnet"]) {
 			Ball* ball = Ball::Instance(renderer);
 			Paddle* paddle = Paddle::Instance(renderer);
 			ball->setX(paddle->getX() + paddle->getWidth() / 2);
 		}
 		for (size_t i = 0; i < list.size(); i++) {
 			if (Ball::Instance(renderer)->isCollision(float(list[i].getX()), float(list[i].getY()), list[i].getSize())) {
-
-
 				if (list[i].getType() == Double) {
-					mapEffect["Double"] = true;
+					mapAmuletEffect["Double"] = true;
 					startTime = clock();
 					int rateOfScore = Player::Instance()->getRateOfScore();
 					rateOfScore *= 2;
@@ -114,30 +104,30 @@ public:
 				}
 				else if (list[i].getType() == Magnet) {
 
-					mapEffect["Magnet"] = true;
+					mapAmuletEffect["Magnet"] = true;
 					startTime = clock();
 					Ball::Instance(renderer)->setX(Paddle::Instance(renderer)->getX() + Paddle::Instance(renderer)->getWidth() / 2);
-					Ball::Instance(renderer)->setY(Paddle::Instance(renderer)->getY());
+					Ball::Instance(renderer)->setY(Paddle::Instance(renderer)->getY()+10);
 					Ball::Instance(renderer)->setSpeed(0);
 
 
 				}
 				else if (list[i].getType() == IncreasePaddle) {
-					mapEffect["IncreasePaddle"] = true;
+					mapAmuletEffect["IncreasePaddle"] = true;
 					startTime = clock();
 					Paddle::Instance(renderer)->setWidth(Paddle::Instance(renderer)->getWidth() * float(1.5));
 
 				}
 				else if (list[i].getType() == IncreaseSizeBall) {
 					//	havingEffection = true;
-					mapEffect["IncreaseSizeBall"] = true;
+					mapAmuletEffect["IncreaseSizeBall"] = true;
 					startTime = clock();
-					Ball::Instance(renderer)->setRadius(Ball::Instance(renderer)->getRadius() * float(1.3));
+					Ball::Instance(renderer)->setRadius(Ball::Instance(renderer)->getRadius() * float(2));
 
 				}
 				else if (HalveScore == list[i].getType()) {
 
-					mapEffect["HalveScore"] = true;
+					mapAmuletEffect["HalveScore"] = true;
 					startTime = clock();
 					int rateOfScore = Player::Instance()->getRateOfScore();
 					rateOfScore /= 2;
@@ -147,7 +137,7 @@ public:
 				else if (DecreaseSpeedBall == list[i].getType()) {
 					//havingEffection = true;
 					startTime = clock();
-					mapEffect["SlowSpeed"] = true;
+					mapAmuletEffect["SlowSpeed"] = true;
 					Ball::Instance(renderer)->setSpeed(Ball::Instance(renderer)->getSpeed() * float(0.6));
 
 				}
@@ -158,43 +148,44 @@ public:
 
 				}
 				list.erase(list.begin() + i);
+				break;
 
 			}
 		}
-		return false;
+	
 	}
 	void resetMagnet() {
-		Ball::Instance(renderer)->setDegree(80);
+		Ball::Instance(renderer)->setDegree(120);
 		Ball::Instance(renderer)->setSpeed(Ball::Instance(renderer)->getBackupSpeed());
 		//d
-		// << "Speed" << Ball::Instance(renderer)->getSpeed();
-		mapEffect["Magnet"] = false;
+		cout << "Speed" << Ball::Instance(renderer)->getSpeed()<<endl;
+		mapAmuletEffect["Magnet"] = false;
 	}
 	void resetSizeBall() {
 		Ball* ball = Ball::Instance(renderer);
-		ball->setRadius(ball->getRadius() / float(1.3));
-		mapEffect["IncreaseSizeBall"] = false;
+		ball->setRadius(ball->getRadius() / float(2));
+		mapAmuletEffect["IncreaseSizeBall"] = false;
 
 
 	}
 	void resetWidthPaddle() {
 		Paddle* paddle = Paddle::Instance(renderer);
 		paddle->setWidth(paddle->getWidth() / float(1.5));
-		mapEffect["IncreasePaddle"] = false;
+		mapAmuletEffect["IncreasePaddle"] = false;
 
 	}
 	void resetSpeed() {
 		Ball* ball = Ball::Instance(renderer);
 		ball->setSpeed(ball->getBackupSpeed());
-		mapEffect["SlowSpeed"] = false;
+		mapAmuletEffect["SlowSpeed"] = false;
 	}
 	void resetDoubleScore() {
-		mapEffect["Double"] = false;
+		mapAmuletEffect["Double"] = false;
 		Player::Instance()->setRateOfScore(Player::Instance()->getRateOfScore() / 2);
 
 	}
 	void resetHalveScore() {
-		mapEffect["HalveScore"] = false;
+		mapAmuletEffect["HalveScore"] = false;
 		Player::Instance()->setRateOfScore(Player::Instance()->getRateOfScore() * 2);
 
 	}

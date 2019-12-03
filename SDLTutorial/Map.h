@@ -51,22 +51,24 @@ public:
 		if (listAmulet.getTime() >= limitTime) {
 		
 			if (mapEffect["Magnet"]) {
+				cout << "Magnet" << endl;
 				listAmulet.resetMagnet();
 			}
-			else if (mapEffect["IncreasePaddle"]) {
+			if (mapEffect["IncreasePaddle"]) {
 				listAmulet.resetWidthPaddle();
 
 			}
-			else if (mapEffect["IncreaseSizeBall"]) {
+			if (mapEffect["IncreaseSizeBall"]) {
 				listAmulet.resetSizeBall();
 			}
-			else if (mapEffect["SlowSpeed"]) {
+			if (mapEffect["SlowSpeed"]) {
+				cout << "SlowSpeed\n";
 				listAmulet.resetSpeed();
 			}
-			else if (mapEffect["Double"]) {
+			if (mapEffect["Double"]) {
 				listAmulet.resetDoubleScore();
 			}
-			else if (mapEffect["HalveScore"]) {
+			if (mapEffect["HalveScore"]) {
 				listAmulet.resetHalveScore();
 			}
 			

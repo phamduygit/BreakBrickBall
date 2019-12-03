@@ -20,6 +20,9 @@ public:
 		return selectedMap;
 
 	}
+	void setSelectedMap(int value) {
+		selectedMap = value;
+	}
 	bool isInCircle(int xMouse, int yMouse, int xCircle, int yCircle, int radius) {
 		float deltaX = xMouse - xCircle;
 		float deltaY = yMouse - yCircle;

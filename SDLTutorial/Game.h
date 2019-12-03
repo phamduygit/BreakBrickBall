@@ -18,6 +18,9 @@
 #include "Player.h"
 #include <map>
 #include "MapDiagram.h"
+#include "GameOver.h"
+#include "WinScreen.h"
+#include "EndScreen.h"
 #define PI 3.141592
 
 //int time = 0;
@@ -53,6 +56,9 @@ private:
 	vector<string> fileMapName;
 	map<string, bool > listScreen;
 	MapDiagram mapDiagram;
+	GameOver gameOver;
+	WinScreen winScreen;
+	EndScreen endScreen;
 	/*
 	-["MenuScreen"]
 	-["MapDiagramScreen"]
@@ -131,7 +137,14 @@ public:
 				_running = true;
 			}
 			_menu = Menu(_renderer);
+			//Set renderer cho object
+
 			mapDiagram.setRenderer(_renderer);
+			winScreen.setRenderer(_renderer);
+			gameOver.setRenderer(_renderer);
+			player->setRenderer(_renderer);
+			endScreen.setRenderer(_renderer);
+
 			TextureManager::GetInstance()->load("Brick.png", "Brick", _renderer);
 			TextureManager::GetInstance()->load("amulet.png", "Amulet", _renderer);
 			_grassBackground = LoadImage("GrassBackground.png", _renderer);
@@ -147,15 +160,11 @@ public:
 			barrier.setImage("Paddle.png");
 			_paddle = Paddle::Instance(_renderer);
 			_paddle->setImage("Paddle.png");
+
 			fileMapName.push_back("");
 			fileMapName.push_back("map1.txt");
 			fileMapName.push_back("map2.txt");
 			fileMapName.push_back("map3.txt");
-
-
-
-
-
 
 		}
 	}
@@ -180,35 +189,45 @@ public:
 
 
 		}
-		else if (listScreen["GameOverScreen"]) {
-
+		else if (listScreen["GameOverScreen"]) {		
+			gameOver.draw(xMouse, yMouse, mouseActionClicked);
 		}
 		else if (listScreen["GamePlayScreen"]) {
 
 			DrawInRenderer(_renderer, _grassBackground);
 			ball->draw();
-
 			_map.draw();
 			SDL_SetRenderDrawColor(_renderer, 255, 255, 255, NULL);
 			if (!ball->getIsLaunch()) {
 				line.draw();
 			}
-			_paddle->draw();
-			player->setRenderer(_renderer);
+			_paddle->draw();			
 			player->draw();
+
+		}
+		else if (listScreen["WinScreen"]) {			
+			winScreen.draw(xMouse, yMouse, mouseActionClicked);
+
+		}
+		else if (listScreen["EndScreen"]) {
+			endScreen.draw();
 
 		}
 		SDL_RenderPresent(_renderer);
 	}
 	bool isBoundFromPaddle() {
 		float t1;
-		float t2;
+	//	float t2;
 		if (ball->getRadius() * ball->getRadius() - (_paddle->getY() - ball->getY()) * (_paddle->getY() - ball->getY()) >= 0) {
 			float sq = sqrt(abs(ball->getRadius() * ball->getRadius() - (_paddle->getY() - ball->getY()) * (_paddle->getY() - ball->getY())));
 			t1 = (sq - _paddle->getX() + ball->getX()) / (float)_paddle->getWidth();
-			t2 = (-sq - _paddle->getX() + ball->getX()) / (float)_paddle->getWidth();
-			if ((t1 >= 0 && t1 <= 1) || (t2 >= 0 && t2 <= 1))
+			//t2 = (-sq - _paddle->getX() + ball->getX()) / (float)_paddle->getWidth();
+			/*if ((t1 >= 0 && t1 <= 1) || (t2 >= 0 && t2 <= 1)) {
 				return true;
+			}*/
+			if ((t1 >= 0 && t1 <= 1)) {
+				return true;
+			}
 		}
 		return false;
 
@@ -222,25 +241,26 @@ public:
 
 				if (_menu.getCurrentChoose() == 1) {
 					listScreen["MapDiagramScreen"] = true;
+					listScreen["MenuScreen"] = false;
 				}
 				else if (_menu.getCurrentChoose() == 2) {
 					listScreen["MapDiagramScreen"] = true;
+					listScreen["MenuScreen"] = false;
 				}
 				else if (_menu.getCurrentChoose() == 3) {
 					listScreen["SettingScreen"] = true;
+					listScreen["MenuScreen"] = false;
 				}
 				else if (_menu.getCurrentChoose() == 4) {
 					exit(0);
 				}
-				listScreen["MenuScreen"] = false;
+				
 			}
-
 		}
 		else if (listScreen["MapDiagramScreen"]) {
-			mapDiagram.draw(xMouse, yMouse, mouseActionClicked);
 			if (mapDiagram.getSelectedMap() != 0) {
 				listScreen["MapDiagramScreen"] = false;
-				int currentMap = mapDiagram.getSelectedMap();
+				currentMap = mapDiagram.getSelectedMap();
 				_map.loadData(fileMapName[currentMap]);
 				listScreen["GamePlayScreen"] = true;
 			}
@@ -249,116 +269,190 @@ public:
 		else if (listScreen["SettingScreen"]) {
 
 		}
+		else if (listScreen["EndScreen"]) {
+
+		}
 		else if (listScreen["GameOverScreen"]) {
 
+			if (gameOver.getAction() == retry) {
+				
+				_map.loadData(fileMapName[currentMap]);				
+				listScreen["GamePlayScreen"] = true;
+				listScreen["GameOverScreen"] = false;
+				//cout << "D" << listScreen["GamePlayScreen"];
+				player->setLife(3);
+				player->setScore(0);
+				ball->reset(_paddle->getX() + 0.5 * _paddle->getWidth() / 2, _paddle->getY());
+				isResetState = true;
+				gameOver.setAction(none);
+				
+			}
+			else if (gameOver.getAction() == back) {
+
+				listScreen["MapDiagramScreen"] = true;
+				listScreen["GameOverScreen"] = false;
+				player->setLife(3);
+				player->setScore(0);
+				mapDiagram.setSelectedMap(0);
+				gameOver.setAction(none);
+
+			}
+			
+
+
+
+		}else if(listScreen["WinScreen"]){
+			if (winScreen.getAction() == retry) {
+				listScreen["WinScreen"] = false;
+				listScreen["GamePlayScreen"] = true;
+				player->setLife(3);
+				player->setScore(0);
+				player->setRateOfScore(10);
+				winScreen.setAction(none);
+				ball->reset(_paddle->getX() + 0.5 * _paddle->getWidth() / 2, _paddle->getY());
+				isResetState = true;
+				//ball->reset();
+				_map.loadData(fileMapName[currentMap]);
+
+			}
+			else if (winScreen.getAction() == nextMap) {
+				listScreen["WinScreen"] = false;
+				listScreen["GamePlayScreen"] = true;
+				player->setLife(3);
+				player->setRateOfScore(10);
+				currentMap = (currentMap+1);
+				winScreen.setAction(none);
+				//ball->reset();
+				if (currentMap == fileMapName.size()) {
+					listScreen["WinScreen"] = false;
+					listScreen["EndScreen"] = true;
+					listScreen["GamePlayScreen"] = false;
+
+				}
+				else {
+					_map.loadData(fileMapName[currentMap]);
+					ball->reset(_paddle->getX() + 0.5 * _paddle->getWidth() / 2, _paddle->getY());
+					isResetState = true;
+				}
+
+			}
+
 		}
+
 		else if (listScreen["GamePlayScreen"]) {
 
-		if (Mix_PlayingMusic() == 0)
-		{
-			//Play the music
-			Mix_PlayMusic(LoadMusic("Theme.mp3"), -1);
-		}
-		//If music is being played
-		if (_menu.getChose()) {
-
-			line.setMouse(xMouse, yMouse);
-			line.setPaddle(_paddle->getX(), _paddle->getY(), _paddle->getWidth());
-			//Khi nhan duoc tin hieu click chuot va trai banh chua bay
-			if (mouseActionClicked == true && !ball->getIsLaunch()) {
-				ball->setIsLaunch(true);
-				float degree = atan(line.getHeSoGoc()) * 180 / float(PI);
-				if (degree > 0) {
-					degree = 180 - degree;
-				}
-				else {
-					degree = abs(degree);
-				}
-
-				ball->setDegree(degree);
+			if (Mix_PlayingMusic() == 0)
+			{
+				Mix_PlayMusic(LoadMusic("Theme.mp3"), -1);
 			}
-			if (isResetState == true) {
-
-				if (!mouseActionClicked) {
-					ball->setX(_paddle->getX() + _paddle->getWidth() / 2);
-					ball->setY(_paddle->getY() - ball->getRadius());
+			//If music is being played
+			if (_menu.getChose()) {
+				if (_map.isCompleted()) {
+					listScreen["GamePlayScreen"] = false;
+					listScreen["WinScreen"] = true;
 				}
-				else {
-					isResetState = false;
+				if (player->getLife() == 0) {
+					listScreen["GamePlayScreen"] = false;
+					listScreen["GameOverScreen"] = true;
 				}
-			}
-			if (ball->getIsLaunch()) {
-				if (ball->getY() - ball->getRadius() <= 0) {
-					ball->setDegree(-ball->getDegree());
-
-				}
-				if (ball->getY() + ball->getRadius() > 800) {
-
-					ball->reset(_paddle->getX() + _paddle->getWidth() / 2, _paddle->getY());
-					isResetState = true;
-
-				}
-				if (ball->getX() - ball->getRadius() < 0 || ball->getX() + ball->getRadius() > 500) {
-					ball->setDegree(180 - ball->getDegree());
-				}
-			}
-			_map.update();
-			ball->move();
-			if (isBoundFromPaddle() && ball->getIsLaunch() == true) {
-				int degree = (int)ball->getDegree() % 360;
-				if (degree > 0 && degree < 300) {
-					degree -= 360;
-				}
-				float offset = abs(ball->getY() + ball->getRadius() - _paddle->getY());
-
-				ball->setY(ball->getY() - float(1.1)*offset);
-
-				//Doi huong cho bong trong dieu kien paddle khong co van toc
-				if (_paddle->getDeltaX() > 0 && abs(degree) + 15 < 180) {					
-						ball->setDegree(-degree + 15);		
-					
-				}
-				else if (_paddle->getDeltaX() < 0&& abs(degree) - 15 > 0) {				
-						ball->setDegree(-degree - 15);					
-					
-
-					if (_paddle->getDeltaX() > 0) {
-						if (abs(degree)+15<160) {
-							ball->setDegree(float(-degree + 15));
-
-						}
-						else {
-							ball->setDegree(-ball->getDegree());
-
-						}
+				line.setMouse(xMouse, yMouse);
+				line.setPaddle(_paddle->getX(), _paddle->getY(), _paddle->getWidth());
+				//Khi nhan duoc tin hieu click chuot va trai banh chua bay
+				if (mouseActionClicked == true && !ball->getIsLaunch()) {
+					ball->setIsLaunch(true);
+					float degree = atan(line.getHeSoGoc()) * 180 / float(PI);
+					if (degree > 0) {
+						degree = 180 - degree;
 					}
-					else if(_paddle->getDeltaX()<0) {
-						if (abs(degree)-15>45) {
-							ball->setDegree(float(-degree - 15));
-						}
-						else {
-							ball->setDegree(-ball->getDegree());
-						}
-
+					else {
+						degree = abs(degree);
 					}
 
-
+					ball->setDegree(degree);
 				}
-				else {
-					ball->setDegree(-ball->getDegree());
+				if (isResetState == true) {
+
+					if (!mouseActionClicked) {
+						ball->setX(_paddle->getX() + _paddle->getWidth() / 2);
+						ball->setY(_paddle->getY() - ball->getRadius());
+					}
+					else {
+						isResetState = false;
+					}
+				}
+				if (ball->getIsLaunch()) {
+					if (ball->getY() - ball->getRadius() <= 0) {
+						ball->setDegree(-ball->getDegree());
+
+					}
+					if (ball->getY() + ball->getRadius() > 800) {
+
+						ball->reset(_paddle->getX() + _paddle->getWidth() / 2, _paddle->getY());
+						
+						player->setLife(player->getLife() - 1);
+						isResetState = true;
+
+					}
+					if (ball->getX() - ball->getRadius() < 0 || ball->getX() + ball->getRadius() > 500) {
+						ball->setDegree(180 - ball->getDegree());
+					}
+				}
+				_map.update();
+				ball->move();
+				if (isBoundFromPaddle() && ball->getIsLaunch() == true) {
+					int degree = (int)ball->getDegree() % 360;
+					if (degree > 0 && degree < 300) {
+						degree -= 360;
+					}
+					float offset = abs(ball->getY() + ball->getRadius() - _paddle->getY());
+
+					ball->setY(ball->getY() - float(1.1) * offset);
+
+					//Doi huong cho bong trong dieu kien paddle khong co van toc
+					if (_paddle->getDeltaX() > 0 && abs(degree) + 15 < 180) {
+						ball->setDegree(-degree + 15);
+
+					}
+					else if (_paddle->getDeltaX() < 0 && abs(degree) - 15 > 0) {
+						ball->setDegree(-degree - 15);
+
+
+						if (_paddle->getDeltaX() > 0) {
+							if (abs(degree) + 15 < 160) {
+								ball->setDegree(float(-degree + 15));
+
+							}
+							else {
+								ball->setDegree(-ball->getDegree());
+
+							}
+						}
+						else if (_paddle->getDeltaX() < 0) {
+							if (abs(degree) - 15 > 45) {
+								ball->setDegree(float(-degree - 15));
+							}
+							else {
+								ball->setDegree(-ball->getDegree());
+							}
+
+						}
+
+
+					}
+					else {
+						ball->setDegree(-ball->getDegree());
+					}
+					
+					//ball->setDegree(-ball->getDegree());
+				}
+
+				if (ball->getIsLaunch()) {
+
+					_paddle->move(xMouse);
 				}
 			}
-
-			if (ball->getIsLaunch()) {
-
-				//_paddle->move(ball->getX(), _paddle->getWidth(), true);
-
-				
-
-				_paddle->move(xMouse);
-			}
+			//////////////////////////////////////////////////////
 		}
-		//////////////////////////////////////////////////////
 	}
 
 	void handleEvents() {

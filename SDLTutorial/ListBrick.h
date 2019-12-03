@@ -54,8 +54,7 @@ public:
 				Brick brick(renderer);
 				brick.setX(i * 50);
 				brick.setY((j+1) * 50);
-				list.push_back(brick);
-			}
+				list.push_back(brick);			}
 		}
 
 
@@ -91,7 +90,8 @@ public:
 		Ball* ball = Ball::Instance(renderer);
 		for (size_t i = 0; i < list.size(); i++) {
 			//Khi phát hiện có va chạm 
-			if (ball->isCollision(float(list[i].getX()), float(list[i].getY()), list[i].getSize())) {	//
+			if (ball->isCollision(float(list[i].getX()), float(list[i].getY()), list[i].getSize())) {
+
 				if (ball->getY() - ball->getRadius() < float(list[i].getY()) + list[i].getSize() &&
 					ball->getY() > float(list[i].getY()) + list[i].getSize()
 					&& 
@@ -141,6 +141,7 @@ public:
 					currentScore = currentScore+Player::Instance()->getRateOfScore();
 					Player::Instance()->setScore(currentScore);
 				}
+				break;
 			}
 		}
 	}

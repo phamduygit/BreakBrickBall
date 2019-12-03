@@ -56,10 +56,7 @@ void DrawInRendererRotate(SDL_Renderer* Renderer, SDL_Texture* Texture, float x,
 	Size.y = y;
 	Size.w = w;
 	Size.h = h;
-	SDL_FPoint P;
-	P.x = radius;
-	P.y = radius;
-	SDL_RenderCopyExF(Renderer, Texture, NULL, &Size, degree, &P, SDL_FLIP_NONE);
+	SDL_RenderCopyF(Renderer, Texture, NULL, &Size);
 }
 void DrawInRenderer(SDL_Renderer* Renderer, SDL_Texture* Texture) {
 	SDL_RenderCopyF(Renderer, Texture, NULL, NULL);

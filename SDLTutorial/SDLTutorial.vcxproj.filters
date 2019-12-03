@@ -60,11 +60,18 @@
     <ClCompile Include="ListAmulet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-
     <ClCompile Include="MapDiagram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-
+    <ClCompile Include="GameOver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WinScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EndScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Functions.h">
@@ -109,11 +116,18 @@
     <ClInclude Include="ListAmulet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-
     <ClInclude Include="MapDiagram.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-
+    <ClInclude Include="GameOver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WinScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EndScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

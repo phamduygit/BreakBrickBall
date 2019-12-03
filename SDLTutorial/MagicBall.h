@@ -34,7 +34,7 @@ private:
 		x = 250;
 		y = 700;
 		radius = 15;
-		speed = 8;
+		speed = 4;
 		backupSpeed = speed;
 		image = NULL;
 		degree = 60;
