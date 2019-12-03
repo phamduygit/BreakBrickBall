@@ -11,7 +11,7 @@ class Brick
 protected: 
 	int x;
 	int y;
-	int size;
+	float size;
 	//SDL_Texture* image;
 	SDL_Renderer* renderer;
 	int currentFrame;
@@ -58,10 +58,10 @@ public:
 	virtual void setY(int yValue) {
 		y = yValue;
 	}
-	virtual int getSize() {
+	virtual float getSize() {
 		return size;
 	}
-	virtual void setSize(int sizeValue) {
+	virtual void setSize(float sizeValue) {
 		size = sizeValue;
 	}
 	void setImage(string name) {
@@ -80,7 +80,7 @@ public:
 	
 	virtual void draw() {
 		//DrawInRenderer(renderer, image, x, y, size, size);
-		TextureManager::GetInstance()->drawFrame("Brick", x, y, size, size, 1, currentFrame, renderer);
+		TextureManager::GetInstance()->drawFrame("Brick", float(x), float(y), size, size, 1, currentFrame, renderer);
 	}
 
 

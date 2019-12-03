@@ -6,8 +6,8 @@
 #include "Functions.h"
 //#include"Game.h"
 struct Point2D {
-	int x;
-	int y;
+	float x;
+	float y;
 
 };
 struct Cirle {
@@ -46,8 +46,8 @@ public:
 	float getBackupSpeed() {
 		return backupSpeed;
 	}
-	void reset(int x,int y) {
-		this->x =x ;
+	void reset(float x,float y) {
+		this->x = x ;
 		this->y = y;
 	
 		isLaunch = false;
@@ -100,24 +100,24 @@ public:
 	void setDegree(float value) {
 		degree = value;
 	}
-	double distanceSquared(int x1, int y1, int x2, int y2)
+	float distanceSquared(float x1, float y1, float x2, float y2)
 	{
-		int deltaX = x2 - x1;
-		int deltaY = y2 - y1;
+		float deltaX = x2 - x1;
+		float deltaY = y2 - y1;
 		return deltaX * deltaX + deltaY * deltaY;
 	}
 	//x y cua vien gach
-	bool isCollision(int _x,int _y,int size) {
+	bool isCollision(float _x,float _y,float size) {
 		Cirle a;
 		a.x =this->x;
 		a.y = y;
 		a.r = radius;
-		SDL_Rect b;
+		SDL_FRect b;
 		b.x = _x;
 		b.y = _y;
 		b.w = size;
 		b.h = size;
-		int cX, cY;
+		float cX, cY;
 
 		//Find closest x offset
 		if (a.x < b.x)
@@ -147,7 +147,7 @@ public:
 			cY = a.y;
 		}
 
-		//If the closest point is inside the circle
+		//If the closest pofloat is inside the circle
 		if (distanceSquared(a.x, a.y, cX, cY) < a.r *a.r)
 		{
 			//This box and the circle have collided
@@ -160,17 +160,17 @@ public:
 
 
 	}
-	bool isCollision(int _x, int _y, int width,int height) {
+	bool isCollision(float _x, float _y, float width,float height) {
 		Cirle a;
 		a.x = this->x;
 		a.y = y;
 		a.r = radius;
-		SDL_Rect b;
+		SDL_FRect b;
 		b.x = _x;
 		b.y = _y;
 		b.w = width;
 		b.h = height;
-		int cX, cY;
+		float cX, cY;
 
 		//Find closest x offset
 		if (a.x < b.x)
@@ -200,7 +200,7 @@ public:
 			cY = a.y;
 		}
 
-		//If the closest point is inside the circle
+		//If the closest pofloat is inside the circle
 		if (distanceSquared(a.x, a.y, cX, cY) < a.r * a.r)
 		{
 			//This box and the circle have collided

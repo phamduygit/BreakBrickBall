@@ -53,14 +53,16 @@ private:
 	Player *player;
 	Game() {
 		player = Player::Instance();
-
+		ball = NULL;
 		_screenSurface = NULL;
 		_window = NULL;
 		_renderer = NULL;
 		_running = false;
 		_grassBackground = NULL;
 		degrees = 0;
-		
+		xMouse = 0;
+		yMouse = 0;
+		_paddle = NULL;
 	}
 	static Game* instance;
 public:
@@ -178,7 +180,7 @@ public:
 			if (mouseActionClicked == true && !ball->getIsLaunch() &&
 				(_menu.getCurrentChoose() == 1 || _menu.getCurrentChoose() == 2)) {
 				ball->setIsLaunch(true);
-				float degree = atan(line.getHeSoGoc()) * 180 / PI;
+				float degree = atan(line.getHeSoGoc()) * 180 / float(PI);
 				if (degree > 0) {
 					degree = 180 - degree;
 				}
@@ -232,14 +234,14 @@ public:
 				}
 								
 				float offset = abs(ball->getY() + ball->getRadius() - _paddle->getY());
-				ball->setY(ball->getY() - 1.1*offset);
+				ball->setY(ball->getY() - float(1.1)*offset);
 				//Doi huong cho bong trong dieu kien paddle khong co van toc
 
 				if(abs(_paddle->getDeltaX())>ball->getSpeed()*1.0/3){
 					
 					if (_paddle->getDeltaX() > 0) {
 						if (abs(degree)+15<160) {
-							ball->setDegree(-degree + 15);
+							ball->setDegree(float(-degree + 15));
 
 						}
 						else {
@@ -249,7 +251,7 @@ public:
 					}
 					else if(_paddle->getDeltaX()<0) {
 						if (abs(degree)-15>45) {
-							ball->setDegree(-degree - 15);
+							ball->setDegree(float(-degree - 15));
 						}
 						else {
 							ball->setDegree(-ball->getDegree());

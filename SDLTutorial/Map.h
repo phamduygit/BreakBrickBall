@@ -11,7 +11,9 @@ protected:
 	SDL_Renderer* renderer;
 
 public:
-	Map(){}
+	Map(){
+		renderer = NULL;
+	}
 	
 	Map(SDL_Renderer* _renderer,string dataFileName) {
 		this->dataFileName = dataFileName;

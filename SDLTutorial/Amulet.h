@@ -24,7 +24,7 @@ public:
 		return TypeAmulet(result);
 	}
 	void draw() {
-		TextureManager::GetInstance()->drawFrame("Amulet", x, y, size, size, 1, currentFrame, renderer);
+		TextureManager::GetInstance()->drawFrame("Amulet", float(x), float(y), float(size), float(size), 1, currentFrame, renderer);
 	}
 };
 

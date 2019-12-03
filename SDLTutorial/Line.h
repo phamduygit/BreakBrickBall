@@ -7,8 +7,8 @@ using namespace std;
 class Line
 {
 private:
-	int width;
-	int height;
+	float width;
+	float height;
 	SDL_FPoint paddle;
 	SDL_Point mouse;
 	SDL_FPoint target;
@@ -21,7 +21,12 @@ public:
 		sizePaddle = 120;
 		width = 500;
 		height = 800;
-		//heSoGoc;
+		heSoGoc = 0;
+		mouse = { 0, 0 };
+		paddle = { 0 , 0 };
+		paddleSize = 0;
+		renderer = NULL;
+		target = { 0, 0 };
 	}
 	float getHeSoGoc() {
 		return heSoGoc;
@@ -34,9 +39,14 @@ public:
 		height = 800;
 		sizePaddle = 120;
 		this->renderer = renderer;
+		heSoGoc = 0;
+		mouse = { 0, 0 };
+		paddle = { 0 , 0 };
+		paddleSize = 0;
+		target = { 0, 0 };
 	}
 
-	void setPaddle(double x, double y,float _paddleSize) {
+	void setPaddle(float x, float y,float _paddleSize) {
 		paddle.x = x;
 		paddle.y = y;
 		paddleSize = _paddleSize;
@@ -63,11 +73,11 @@ public:
 	void draw(float hsGoc, float hsTuDo) {
 		SDL_FPoint A;
 		SDL_FPoint B;
-		SDL_Point topLeft = { 0,0 };
-		SDL_Point bottomLeft = { 0,height };
-		SDL_Point topRight = { width,0 };
-		SDL_Point bottomRight = { width,height };
-		SDL_FPoint mouseF = { mouse.x,mouse.y };
+		SDL_FPoint topLeft = { 0,0 };
+		SDL_FPoint bottomLeft = { 0,height };
+		SDL_FPoint topRight = { width,0 };
+		SDL_FPoint bottomRight = { width,height };
+		SDL_Point mouseF = { mouse.x,mouse.y };
 		if (calc(paddle, topLeft, bottomLeft) * calc(paddle, topLeft, mouse) > 0 || calc(paddle, topRight, bottomRight) * calc(paddle, topRight, mouse) > 0) {
 			if (hsGoc >= 0) {
 
