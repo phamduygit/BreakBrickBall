@@ -276,8 +276,8 @@ public:
 			}
 
 			if (ball->getIsLaunch()) {
-				_paddle->move(ball->getX(),_paddle->getWidth(), true);
-				//_paddle->move(xMouse);
+				//_paddle->move(ball->getX(),_paddle->getWidth(), true);
+				_paddle->move(xMouse);
 			}
 
 		}
