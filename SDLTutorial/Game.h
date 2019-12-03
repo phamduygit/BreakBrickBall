@@ -264,9 +264,13 @@ public:
 		else if (listScreen["SettingScreen"]) {
 			if (settingScreen.getSettingAction() == turnOnSpeaker) {
 				//Turn on speaker
+				listScreen["SettingScreen"] = false;
+				settingScreen.resetData();
 			}
 			else if (settingScreen.getSettingAction() == turnOffSpeaker) {
 				//Turn offSpeaker
+				listScreen["SettingScreen"] = false;
+				settingScreen.resetData();
 
 			}
 			else if (settingScreen.getSettingAction() == loadMapDiagramScreen) {
