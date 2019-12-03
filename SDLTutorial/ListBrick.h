@@ -17,7 +17,7 @@ public:
 		renderer = NULL;
 	}
 	int getSize() {
-		return list.size();
+		return int(list.size());
 	}
 	ListBrick(SDL_Renderer* _renderer) {
 		renderer = _renderer;

@@ -82,7 +82,7 @@ public:
 
 		file.close();
 		//numberOfBrick = 0;
-		for (size_t k = 0; k < map.size(); k++) {
+		for (int k = 0; k < int(map.size()); k++) {
 			if (map[k] != 0 && map[k] != 1) {
 				int i = k % 10;
 				int j = k / 10;
