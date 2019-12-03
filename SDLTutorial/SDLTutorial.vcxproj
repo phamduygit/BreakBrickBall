@@ -138,6 +138,7 @@
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Paddle.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="SettingScreen.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="WinScreen.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Paddle.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="SettingScreen.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="WinScreen.h" />
   </ItemGroup>

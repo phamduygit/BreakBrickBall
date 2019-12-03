@@ -45,6 +45,10 @@ public:
 		Chose = false;
 		currentChoose = 0;
 	}
+	void resetData() {
+		currentChoose = 0;
+		Chose = false;
+	}
 	void draw(int x, int y, bool &mouseActionClick) {
 		DrawInRenderer(renderer, backGround);
 		if (x > SizeNewGame.x && x < SizeNewGame.x + SizeNewGame.w && y > SizeNewGame.y && y < SizeNewGame.y + SizeNewGame.h) {

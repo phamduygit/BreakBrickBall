@@ -16,6 +16,9 @@ public:
 		this->renderer = renderer;
 		selectedMap = 0;
 	}
+	void resetData() {
+		selectedMap = 0;
+	}
 	int getSelectedMap() {
 		return selectedMap;
 

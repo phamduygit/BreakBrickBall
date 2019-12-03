@@ -20,6 +20,7 @@
 #include "GameOver.h"
 #include "WinScreen.h"
 #include "EndScreen.h"
+#include "SettingScreen.h"
 #define PI 3.141592
 using namespace std;
 class Game
@@ -52,6 +53,7 @@ private:
 	GameOver gameOver;
 	WinScreen winScreen;
 	EndScreen endScreen;
+	SettingScreen settingScreen;
 	/*
 	-["MenuScreen"]
 	-["MapDiagramScreen"]
@@ -137,6 +139,7 @@ public:
 			gameOver.setRenderer(_renderer);
 			player->setRenderer(_renderer);
 			endScreen.setRenderer(_renderer);
+			settingScreen.setRenderer(_renderer);
 
 			TextureManager::GetInstance()->load("Brick.png", "Brick", _renderer);
 			TextureManager::GetInstance()->load("amulet.png", "Amulet", _renderer);
@@ -177,6 +180,7 @@ public:
 
 		}
 		else if (listScreen["SettingScreen"]) {
+			settingScreen.draw(xMouse, yMouse, mouseActionClicked);
 
 
 		}
@@ -203,7 +207,6 @@ public:
 		}
 		else if (listScreen["EndScreen"]) {
 			endScreen.draw();
-
 		}
 		SDL_RenderPresent(_renderer);
 	}
@@ -259,6 +262,26 @@ public:
 
 		}
 		else if (listScreen["SettingScreen"]) {
+			if (settingScreen.getSettingAction() == turnOnSpeaker) {
+				//Turn on speaker
+			}
+			else if (settingScreen.getSettingAction() == turnOffSpeaker) {
+				//Turn offSpeaker
+
+			}
+			else if (settingScreen.getSettingAction() == loadMapDiagramScreen) {
+				listScreen["MapDiagramScreen"] = true;
+				listScreen["SettingScreen"] = false;
+				settingScreen.setSettingAction(noneSetting);
+
+			}
+			else if (settingScreen.getSettingAction() == backToMenu) {
+				listScreen["MenuScreen"] = true;
+
+				listScreen["SettingScreen"] = false;
+				_menu.resetData();
+				settingScreen.setSettingAction(noneSetting);
+			}
 
 		}
 		else if (listScreen["EndScreen"]) {
