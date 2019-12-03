@@ -22,6 +22,9 @@ private:
 		_currentMap = 1;
 		_life = 3;
 		rateOfScore = 10;
+		renderer = 0;
+		scoreTexture = 0;
+		lifeTexture = 0;
 
 	}
 	static Player* instance;

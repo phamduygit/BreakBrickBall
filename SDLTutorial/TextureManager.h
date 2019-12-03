@@ -34,7 +34,7 @@ public:
 		return false;
 
 	}
-	void draw(string id, int x, int y, int width, int height, SDL_Renderer* renderer, SDL_RendererFlip flip = SDL_FLIP_NONE) {
+	/*void draw(string id, int x, int y, int width, int height, SDL_Renderer* renderer, SDL_RendererFlip flip = SDL_FLIP_NONE) {
 		SDL_Rect source, destination;
 		source.x = 0;
 		source.y = 0;
@@ -42,11 +42,12 @@ public:
 		source.h = destination.h = height;
 		destination.x = x;
 		destination.y = y;
-		SDL_RenderCopyEx(renderer, textureMap[id], &source, &destination, 0, 0, flip);
+		SDL_RenderCopyExF(renderer, textureMap[id], &source, &destination, 0, 0, flip);
 
-	}
-	void drawFrame(string id, int x, int y, int width, int height, int currentRow, int currentFrame, SDL_Renderer* renderer, SDL_RendererFlip flip = SDL_FLIP_NONE) {
-		SDL_Rect source, dest;
+	}*/
+	void drawFrame(string id, float x,float y,float width, float height, int currentRow, int currentFrame, SDL_Renderer* renderer, SDL_RendererFlip flip = SDL_FLIP_NONE) {
+		SDL_Rect  dest;
+		SDL_Rect source;
 		source.x = width * (currentFrame-1);
 		source.y = height * (currentRow - 1);
 		source.w = dest.w = width;

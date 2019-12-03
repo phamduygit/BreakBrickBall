@@ -42,7 +42,9 @@ public:
 	virtual void update() {
 		listBrick.handleCollision();
 		listAmulet.handleCollision();
-		int limitTime = 4000;
+		int limitTime = 6000;
+		//d
+		cout << listAmulet.getTime()<<endl;
 		map<string, bool> mapEffect = listAmulet.getMapEffect();
 		if (listAmulet.getTime() >= limitTime) {
 		
@@ -58,6 +60,12 @@ public:
 			}
 			else if (mapEffect["SlowSpeed"]) {
 				listAmulet.resetSpeed();
+			}
+			else if (mapEffect["Double"]) {
+				listAmulet.resetDoubleScore();
+			}
+			else if (mapEffect["HalveScore"]) {
+				listAmulet.resetHalveScore();
 			}
 			
 

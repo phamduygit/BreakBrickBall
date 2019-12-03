@@ -38,7 +38,7 @@ private:
 //	ListBrick listBrick;
 	Map _map;
 	double degrees;
-	Paddle *_paddle;
+	Paddle* _paddle;
 	Barrier barrier;
 	bool MoveLR[2] = { false, false };
 	int xMouse;
@@ -60,7 +60,7 @@ private:
 	-["GameOverScreen"]
 	-["GamePlayScreen"]
 	*/
-	Player *player;
+	Player* player;
 	Game() {
 		player = Player::Instance();
 
@@ -70,9 +70,9 @@ private:
 		_running = false;
 		_grassBackground = NULL;
 		degrees = 0;
-		listScreen["MenuScreen"] =true;
-	//	listScreen["MapDiagramScreen"] = true;
-		
+		listScreen["MenuScreen"] = true;
+		//	listScreen["MapDiagramScreen"] = true;
+
 	}
 	static Game* instance;
 public:
@@ -130,8 +130,8 @@ public:
 			ball->setImage("Ball.png");
 			line = Line(_renderer);
 			_map = Map(_renderer, "map2.txt");
-		//	listBrick.setRenderer(_renderer);
-		//	listBrick.createWithMapText("map.txt");
+			//	listBrick.setRenderer(_renderer);
+			//	listBrick.createWithMapText("map.txt");
 			_menu.setFont("MachineGunk-nyqg.ttf");
 			_menu.setImage("GrassBackground.png");
 			barrier = Barrier(_renderer, 0, 200);
@@ -142,7 +142,7 @@ public:
 			fileMapName.push_back("map1.txt");
 			fileMapName.push_back("map2.txt");
 			fileMapName.push_back("map3.txt");
-	
+
 
 
 
@@ -161,10 +161,10 @@ public:
 	*/
 		SDL_RenderClear(_renderer);
 		if (listScreen["MenuScreen"]) {
-			_menu.draw(xMouse,yMouse,mouseActionClicked);
+			_menu.draw(xMouse, yMouse, mouseActionClicked);
 		}
 		else if (listScreen["MapDiagramScreen"]) {
-			mapDiagram.draw(xMouse, yMouse, mouseActionClicked);	
+			mapDiagram.draw(xMouse, yMouse, mouseActionClicked);
 
 		}
 		else if (listScreen["SettingScreen"]) {
@@ -196,8 +196,8 @@ public:
 		float t2;
 		if (ball->getRadius() * ball->getRadius() - (_paddle->getY() - ball->getY()) * (_paddle->getY() - ball->getY()) >= 0) {
 			float sq = sqrt(abs(ball->getRadius() * ball->getRadius() - (_paddle->getY() - ball->getY()) * (_paddle->getY() - ball->getY())));
-			t1 = (sq - _paddle->getX() + ball->getX()) /(float)_paddle->getWidth();
-			t2 = (-sq - _paddle->getX() + ball->getX()) /(float) _paddle->getWidth();
+			t1 = (sq - _paddle->getX() + ball->getX()) / (float)_paddle->getWidth();
+			t2 = (-sq - _paddle->getX() + ball->getX()) / (float)_paddle->getWidth();
 			if ((t1 >= 0 && t1 <= 1) || (t2 >= 0 && t2 <= 1))
 				return true;
 		}
@@ -209,7 +209,7 @@ public:
 	void update() {
 		if (listScreen["MenuScreen"]) {
 			if (_menu.getChose()) {
-			
+
 				if (_menu.getCurrentChoose() == 1) {
 					listScreen["MapDiagramScreen"] = true;
 				}
@@ -219,12 +219,12 @@ public:
 				else if (_menu.getCurrentChoose() == 3) {
 					listScreen["SettingScreen"] = true;
 				}
-				else if (_menu.getCurrentChoose() == 4) {					
-					exit(0);				
+				else if (_menu.getCurrentChoose() == 4) {
+					exit(0);
 				}
 				listScreen["MenuScreen"] = false;
 			}
-			
+
 		}
 		else if (listScreen["MapDiagramScreen"]) {
 			mapDiagram.draw(xMouse, yMouse, mouseActionClicked);
@@ -285,7 +285,7 @@ public:
 			}
 			_map.update();
 			ball->move();
-			if (isBoundFromPaddle() && ball->getIsLaunch()) {
+			if (isBoundFromPaddle() && ball->getIsLaunch() == true) {
 				int degree = (int)ball->getDegree() % 360;
 				if (degree > 0 && degree < 300) {
 					degree -= 360;
@@ -293,29 +293,13 @@ public:
 				float offset = abs(ball->getY() + ball->getRadius() - _paddle->getY());
 				ball->setY(ball->getY() - 1.1 * offset);
 				//Doi huong cho bong trong dieu kien paddle khong co van toc
-
-				if (abs(_paddle->getDeltaX()) > ball->getSpeed() * 1.0 / 3) {
-
-					if (_paddle->getDeltaX() > 0) {
-						if (abs(degree) + 15 < 160) {
-							ball->setDegree(-degree + 15);
-
-						}
-						else {
-							ball->setDegree(-ball->getDegree());
-
-						}
-					}
-					else if (_paddle->getDeltaX() < 0) {
-						if (abs(degree) - 15 > 45) {
-							ball->setDegree(-degree - 15);
-						}
-						else {
-							ball->setDegree(-ball->getDegree());
-						}
-
-					}
-
+				if (_paddle->getDeltaX() > 0 && abs(degree) + 15 < 180) {					
+						ball->setDegree(-degree + 15);		
+					
+				}
+				else if (_paddle->getDeltaX() < 0&& abs(degree) - 15 > 0) {				
+						ball->setDegree(-degree - 15);					
+					
 				}
 				else {
 					ball->setDegree(-ball->getDegree());
@@ -323,12 +307,9 @@ public:
 			}
 
 			if (ball->getIsLaunch()) {
-				_paddle->move(ball->getX(), _paddle->getWidth(), true);
-				//_paddle->move(xMouse);
+				//_paddle->move(ball->getX(), _paddle->getWidth(), true);
+				_paddle->move(xMouse);
 			}
-
-			
-
 		}
 		//////////////////////////////////////////////////////
 	}
@@ -337,7 +318,10 @@ public:
 		SDL_Event Events;
 		SDL_PollEvent(&Events);
 		if (Events.type == SDL_QUIT)
-		{
+		{/*
+			fstream fileDataPlayer("dataplayer.txt", ios::out);
+			fileDataPlayer << "Hello 1";
+			fileDataPlayer.close();*/
 			_running = false;
 		}
 		else if (Events.type == SDL_KEYDOWN)
@@ -367,7 +351,7 @@ public:
 		else if (Events.type == SDL_MOUSEMOTION || Events.type == SDL_MOUSEBUTTONUP || Events.type == SDL_MOUSEBUTTONDOWN) {
 			SDL_GetMouseState(&xMouse, &yMouse);
 			//d
-			cout << "X:" << xMouse << endl << "Y:" << yMouse << endl;
+			//cout << "X:" << xMouse << endl << "Y:" << yMouse << endl;
 			switch (Events.type)
 			{
 			case SDL_MOUSEBUTTONDOWN:

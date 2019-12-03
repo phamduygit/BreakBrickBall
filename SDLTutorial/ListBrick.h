@@ -73,8 +73,8 @@ public:
 		float dy = yE - yS;
 		float a = dx * dx + dy * dy;
 		float b = 2 * (xS * dx - xBall * dx + yS * dy - yBall * dy);
-		float c = xS*xS + xBall * xBall + yS*yS + yBall * yBall - 2 * (xS * xBall + yS * yBall) - 
-			radius * radius;
+		float c = xS*xS + xBall * xBall + yS*yS + yBall * yBall - 2 * 
+			(xS * xBall + yS * yBall) - radius * radius;
 		float delta = b * b - 4 * a * c;
 		if (delta >= 0) {
 			float x1 = (-b + sqrt(delta)) / (2 * a);
@@ -132,7 +132,7 @@ public:
 				if (list[i].getFrame() == 4) {
 					list.erase(list.begin() + i);
 					int currentScore = Player::Instance()->getScore();
-					currentScore++;
+					currentScore = currentScore+Player::Instance()->getRateOfScore();
 					Player::Instance()->setScore(currentScore);
 				}
 			}
