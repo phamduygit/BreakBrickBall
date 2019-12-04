@@ -38,7 +38,7 @@ public:
 
 
 	}
-	ListAmulet(SDL_Renderer* renderer) {
+	ListAmulet(SDL_Renderer*& renderer) {
 		startTime = 0;
 		endTime = 0;
 		this->renderer = renderer;
@@ -52,7 +52,7 @@ public:
 	void setMapEffectToFalse(string key) {
 		mapAmuletEffect[key] = false;
 	}
-	void setRenderer(SDL_Renderer* renderer) {
+	void setRenderer(SDL_Renderer* &renderer) {
 		this->renderer = renderer;
 	}
 	void clearAllAmulet() {

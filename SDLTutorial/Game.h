@@ -56,6 +56,7 @@ private:
 	SettingScreen settingScreen;
 	bool isMusicOn;
 	string previousScreen;
+	SettingAction gameMode;
 	/*
 	-["MenuScreen"]
 	-["MapDiagramScreen"]
@@ -81,6 +82,7 @@ private:
 		xMouse = 0;
 		yMouse = 0;
 		_paddle = NULL;
+		gameMode = playWithMouse;
     
 	}
 	static Game* instance;
@@ -188,8 +190,9 @@ public:
 			_menu.draw(xMouse, yMouse, mouseActionClicked);
 		}
 		else if (listScreen["MapDiagramScreen"]) {
-			mapDiagram.draw(xMouse, yMouse, mouseActionClicked);
 			mapDiagram.setUnlockedMap(player->getUnlockedMap());
+			mapDiagram.draw(xMouse, yMouse, mouseActionClicked);
+		
 
 		}
 		else if (listScreen["SettingScreen"]) {
@@ -244,7 +247,7 @@ public:
 
 	}
 	void update() {
-		cout << "GamePlay: " << listScreen["GamePlayScreen"] << endl;
+		//cout << "GamePlay: " << listScreen["GamePlayScreen"] << endl;
 		//
 		if (Mix_PlayingMusic() == 0)
 		{		
@@ -340,13 +343,22 @@ public:
 			
 				settingScreen.setSettingAction(noneSetting);
 			}
+			else if (settingScreen.getSettingAction() == autoPlay) {
+				gameMode = autoPlay;
+			}
+			else if (settingScreen.getSettingAction() == playWithKeyboard) {
+				gameMode = playWithKeyboard;
+			}
+			else if (settingScreen.getSettingAction() == playWithMouse) {
+				gameMode = playWithMouse;
+			}
 
 		}
 		else if (listScreen["EndScreen"]) {
 
 		}
 		else if (listScreen["GameOverScreen"]) {
-
+			ball->setSpeed(4);
 			if (gameOver.getAction() == retry) {
 				currentMap = player->getCurrentMap();
 				
@@ -383,8 +395,8 @@ public:
 
 		}else if(listScreen["WinScreen"]){
 
-		
-
+		//resset speed 
+			ball->setSpeed(4);
 			if (winScreen.getAction() == retry) {				
 				listScreen["WinScreen"] = false;
 				listScreen["GamePlayScreen"] = true;
@@ -475,7 +487,7 @@ public:
 
 						ball->reset(_paddle->getX() + _paddle->getWidth() / 2, _paddle->getY());
 						
-						player->setLife(player->getLife() - 1);
+						player->setLife(player->getLife() -1);
 						isResetState = true;
 
 					}
@@ -491,50 +503,54 @@ public:
 						degree -= 360;
 					}
 					float offset = abs(ball->getY() + ball->getRadius() - _paddle->getY());
-
 					ball->setY(ball->getY() - float(1.1) * offset);
-
 					//Doi huong cho bong trong dieu kien paddle khong co van toc
-					if (_paddle->getDeltaX() > 0 && abs(degree) + 15 < 180) {
+					if (_paddle->getDeltaX() > 0 && -degree + 15 < 135) {
+						cout << "Xuoc1\n";
 						ball->setDegree(-degree + 15);
 
 					}
-					else if (_paddle->getDeltaX() < 0 && abs(degree) - 15 > 0) {
+					else if (_paddle->getDeltaX() < 0 && -degree - 15 > 180-135) {
+						cout << "Xuoc2\n";
 						ball->setDegree(-degree - 15);
 
 
-						if (_paddle->getDeltaX() > 0) {
-							if (abs(degree) + 15 < 160) {
-								ball->setDegree(float(-degree + 15));
+						//if (_paddle->getDeltaX() > 0) {
+						//	if (abs(degree) + 15 < 160) {
+						//		ball->setDegree(float(-degree + 15));
 
-							}
-							else {
-								ball->setDegree(-ball->getDegree());
+						//	}
+						//	else {
+						//		ball->setDegree(-ball->getDegree());
 
-							}
-						}
-						else if (_paddle->getDeltaX() < 0) {
-							if (abs(degree) - 15 > 45) {
-								ball->setDegree(float(-degree - 15));
-							}
-							else {
-								ball->setDegree(-ball->getDegree());
-							}
+						//	}
+						//}
+						//else if (_paddle->getDeltaX() < 0) {
+						//	if (abs(degree) - 15 > 45) {
+						//		ball->setDegree(float(-degree - 15));
+						//	}
+						//	else {
+						//		ball->setDegree(-ball->getDegree());
+						//	}
 
-						}
+						//}
 
 
 					}
 					else {
 						ball->setDegree(-ball->getDegree());
 					}
+					if (ball->getSpeed() <= 15) {
 					
+						ball->setSpeed(ball->getSpeed() * (float)1.1);
+
+					}
 					//ball->setDegree(-ball->getDegree());
 				}
 
 				if (ball->getIsLaunch()) {
 
-					_paddle->move(xMouse);
+					_paddle->move(xMouse,MoveLR,ball->getX(),gameMode);
 				}
 			}
 			//////////////////////////////////////////////////////

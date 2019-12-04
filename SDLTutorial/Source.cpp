@@ -21,12 +21,12 @@ int main(int argc, char* argv[]) {
 		game->update();
 		//game->render();
 		/*time = (clock() - time)/CLOCKS_PER_SEC;*/
-		frameTime = SDL_GetTicks() - frameStart;
-		if (frameTime < DELAY_TIME)
+	//	frameTime = SDL_GetTicks() - frameStart;
+		/*if (frameTime < DELAY_TIME)
 		{
 			SDL_Delay(DELAY_TIME - frameTime);
-		}
-		//SDL_Delay(10);
+		}*/
+		SDL_Delay(10);
 	}
 	
 	return 0;

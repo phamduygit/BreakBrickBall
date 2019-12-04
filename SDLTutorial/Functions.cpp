@@ -21,7 +21,7 @@ SDL_Texture* LoadFont(string Text, SDL_Renderer* Renderer, string Font) {
 	if (font == NULL) {
 		cout << "Not open ttf!" << endl;
 	}
-	SDL_Color fg = { 255, 255, 255 };
+	SDL_Color fg = { 255, 255, 100 };
 
 	SDL_Surface* loadedSurface = TTF_RenderText_Solid(font, Text.c_str(), fg);
 	if (loadedSurface == NULL)

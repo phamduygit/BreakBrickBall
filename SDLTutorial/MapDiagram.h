@@ -11,10 +11,10 @@ private:
 public:
 
 	MapDiagram() {}
-	void setRenderer(SDL_Renderer* renderer) {
+	void setRenderer(SDL_Renderer* & renderer) {
 		this->renderer = renderer;
 	}
-	MapDiagram(SDL_Renderer* renderer) {
+	MapDiagram(SDL_Renderer* &renderer) {
 		this->renderer = renderer;
 		selectedMap = 0;
 	}

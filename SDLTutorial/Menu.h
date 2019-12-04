@@ -31,7 +31,7 @@ public:
 		BT_Setting = LoadFont("SETTING", renderer, NameFont);
 		BT_Exit = LoadFont("EXIT", renderer, NameFont);
 	}
-	Menu(SDL_Renderer* Renderer) {
+	Menu(SDL_Renderer*& Renderer) {
 		renderer = Renderer;
 		SizeNewGame = { 80, 100, 250, 50 };
 		SizeContinue = { 80, 100, 300, 50 };

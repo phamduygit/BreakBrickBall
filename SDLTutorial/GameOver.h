@@ -20,11 +20,11 @@ public:
 	GameOver() {
 		action = none;
 	}
-	GameOver(SDL_Renderer* renderer) {
+	GameOver(SDL_Renderer*& renderer) {
 		this->renderer = renderer;
 		action = none;
 	}
-	virtual void setRenderer(SDL_Renderer* renderer) {
+	virtual void setRenderer(SDL_Renderer*& renderer) {
 		this->renderer = renderer;
 	}
 	virtual Action getAction() {

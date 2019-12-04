@@ -3,6 +3,7 @@
 #include <SDL_image.h>
 #include "Functions.h"
 #include <string>
+#include "SettingScreen.h"
 using namespace std;
 class Paddle
 {
@@ -30,7 +31,7 @@ protected:
 		previousX = 0;
 
 	}
-	Paddle(SDL_Renderer* RenderValue) {
+	Paddle(SDL_Renderer* &RenderValue) {
 		x = 150;
 		y = 750;
 		width = 150;
@@ -44,15 +45,15 @@ protected:
 
 	}
 public:
-	static Paddle* Instance(SDL_Renderer * renderer) {
+	static Paddle* Instance(SDL_Renderer* &renderer) {
 		if (instance == NULL) {
-			instance =new  Paddle(renderer);
+			instance = new  Paddle(renderer);
 
 		}
 		return instance;
 	}
-	
-	
+
+
 	virtual float getHeight() {
 		return height;
 	}
@@ -86,29 +87,49 @@ public:
 	virtual void draw() {
 		DrawInRenderer(renderer, image, x, y, width, height);
 	}
-	
-	void move(float X,float sizePaddle = 120,bool autoPlay = false) {
-		if (autoPlay == false) {
-			X = X - sizePaddle/2;
-			previousX = x;
-			if (X < 0) {
+	//vector <int > generateXPos(float xBall) {
+	//	vector <int > result;
+	//	int start = xBall
+
+	//}
+
+	void move(float xMouse, bool moveLR[],float xBall, SettingAction setting) {
+		previousX = x;
+		if (setting == autoPlay) {
+			
+			if(xBall-width/2>=0&&xBall+width/2<=500)
+				x = xBall - width / 2;	
+
+		}
+		else if (setting == playWithMouse) {
+			xMouse = xMouse - width / 2;
+			if (xMouse < 0) {
 				this->x = 0;
 			}
-			else if (X + width > 500) {
+			else if (xMouse + width > 500) {
 				this->x = 500 - width;
 
 			}
 			else {
-				x = X;
+				x = xMouse;
 			}
 			deltaX = x - previousX;
 		}
-		else {
-			x = X-sizePaddle/2;
-			deltaX = x - previousX;
+		else if (setting == playWithKeyboard) {
+			if (moveLR[0]) {
+				if (x > 0) {
+					x -= speed;
+				}
+			}
 
+			if (moveLR[1]) {
+				if (x + width < 500) {
+					x += speed;
+				}
+			}
 
 		}
+		deltaX = x - previousX;
 
 
 	}
@@ -118,29 +139,6 @@ public:
 	void resetDeltaX() {
 		deltaX = 0;
 	}
-	virtual void Move(bool moveLR[]) {
-		if (moveLR[0]) {
-			if (x > 0) {
-				x -= speed;
-			}
-			else {
-				x += 0;
-			}
-		}
-		else {
-			x = x;
-		}
-		if (moveLR[1]) {
-			if (x + 120 < 500) {
-				x += speed;
-			}
-			else {
-				x += 0;
-			}
-		}
-		else {
-			x = x;
-		}
-	}
+
 };
 

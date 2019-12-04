@@ -12,7 +12,7 @@ private:
 
 public:
 	WinScreen():GameOver(){}
-	WinScreen(SDL_Renderer* renderer):GameOver(renderer){}
+	WinScreen(SDL_Renderer* &renderer):GameOver(renderer){}
 	void draw(int xMouse, int yMouse, bool& mouseActionClicked) {
 		auto tempImage = image;
 		auto tempNextButton = nextButton;

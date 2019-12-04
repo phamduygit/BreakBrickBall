@@ -71,7 +71,7 @@ public:
 	void turnOnMusic() {
 		listBrick.setIsMusicOn(true);
 	}
-	Map(SDL_Renderer* _renderer,string dataFileName) {
+	Map(SDL_Renderer* &_renderer,string dataFileName) {
 		this->dataFileName = dataFileName;
 		listBrick.setRenderer(_renderer);
 		listAmulet.setRenderer(_renderer);
@@ -102,12 +102,12 @@ public:
 		listAmulet.handleCollision();
 		int limitTime = 6000;
 		//d
-		cout << listAmulet.getTime()<<endl;
+		//cout << listAmulet.getTime()<<endl;
 		map<string, bool> mapEffect = listAmulet.getMapEffect();
 		if (listAmulet.getTime() >= limitTime) {
 		
 			if (mapEffect["Magnet"]) {
-				cout << "Magnet" << endl;
+				//cout << "Magnet" << endl;
 				listAmulet.resetMagnet();
 			}
 			if (mapEffect["IncreasePaddle"]) {
@@ -118,7 +118,7 @@ public:
 				listAmulet.resetSizeBall();
 			}
 			if (mapEffect["SlowSpeed"]) {
-				cout << "SlowSpeed\n";
+				//cout << "SlowSpeed\n";
 				listAmulet.resetSpeed();
 			}
 			if (mapEffect["Double"]) {

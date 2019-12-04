@@ -38,7 +38,7 @@ public:
 
 		return instance;
 	}
-	void setRenderer(SDL_Renderer* renderer) {
+	void setRenderer(SDL_Renderer* &renderer) {
 		this->renderer = renderer;
 	}
 	//score

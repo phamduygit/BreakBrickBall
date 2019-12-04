@@ -24,8 +24,7 @@ public:
 	}
 	string toString() {
 		stringstream out;
-		for (auto brick : list) {
-			
+		for (auto brick : list) {			
 			out<< brick.toString() << endl;
 		}
 		return out.str();
@@ -34,11 +33,11 @@ public:
 	int getSize() {
 		return int(list.size());
 	}
-	ListBrick(SDL_Renderer* _renderer) {
+	ListBrick(SDL_Renderer* &_renderer) {
 		renderer = _renderer;
 		isMusicOn = true;
 	}
-	void setRenderer(SDL_Renderer* renderer) {
+	void setRenderer(SDL_Renderer* &renderer) {
 		this->renderer = renderer;
 	}
 	void setIsMusicOn(bool value) {

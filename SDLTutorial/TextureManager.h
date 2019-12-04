@@ -20,7 +20,7 @@ public:
 
 	}
 	map<string, SDL_Texture*> textureMap;
-	bool load(string fileName, string id, SDL_Renderer* renderer) {
+	bool load(string fileName, string id, SDL_Renderer* &renderer) {
 		SDL_Surface* tempSurface = IMG_Load(fileName.c_str());
 		if (!tempSurface) {
 			return false;
@@ -34,7 +34,7 @@ public:
 		return false;
 
 	}
-	void drawFrame(string id, float x, float y, float width, float height, int currentRow, int currentFrame, SDL_Renderer* renderer, SDL_RendererFlip flip = SDL_FLIP_NONE) {
+	void drawFrame(string id, float x, float y, float width, float height, int currentRow, int currentFrame, SDL_Renderer* &renderer, SDL_RendererFlip flip = SDL_FLIP_NONE) {
 		SDL_Rect source;
 		SDL_FRect dest;
 		source.x = int(width * (currentFrame-1));
