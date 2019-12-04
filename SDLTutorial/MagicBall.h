@@ -6,8 +6,8 @@
 #include "Functions.h"
 //#include"Game.h"
 struct Point2D {
-	int x;
-	int y;
+	float x;
+	float y;
 
 };
 struct Cirle {
@@ -25,8 +25,11 @@ private:
 	float radius;
 	float speed;
 	float degree;
+	float backupSpeed;
 	SDL_Texture* image;
 	SDL_Renderer* renderer;
+	bool isLaunch;
+	float backupDegree;
 	
 	Ball(SDL_Renderer*& rendererValue) {
 		x = 250;
@@ -36,13 +39,28 @@ private:
 		image = NULL;
 		degree = 60;
 		renderer = rendererValue;
+		isLaunch = false;
 	}
 	static Ball* instance;
 public:
-	void reset() {
-		x = 250;
-		y = 250;
-		degree = 60;
+	float getBackupSpeed() {
+		return backupSpeed;
+	}
+	float getBackupDegree() {
+		return backupDegree;
+	}
+	void setBackupDegree(float value) {
+		backupDegree = value;
+
+	}
+	void setBackupSpeed(float value) {
+		backupSpeed = value;
+	}
+	void reset(float x,float y) {
+		this->x = x ;
+		this->y = y;
+	
+		isLaunch = false;
 	}
 	static Ball* Instance(SDL_Renderer*& rendererValue) {
 		if (instance == NULL) {
@@ -53,6 +71,13 @@ public:
 	Ball();
 
 	~Ball();
+	bool getIsLaunch() {
+		return isLaunch;
+	}
+	void setIsLaunch(bool val) {
+		isLaunch = val;
+
+	}
 	float getX() {
 		return x;
 	}
@@ -67,6 +92,7 @@ public:
 	}
 	void setSpeed(float value) {
 		speed = value;
+		
 	}
 	float getSpeed() {
 		return speed;
@@ -83,24 +109,24 @@ public:
 	void setDegree(float value) {
 		degree = value;
 	}
-	double distanceSquared(int x1, int y1, int x2, int y2)
+	float distanceSquared(float x1, float y1, float x2, float y2)
 	{
-		int deltaX = x2 - x1;
-		int deltaY = y2 - y1;
+		float deltaX = x2 - x1;
+		float deltaY = y2 - y1;
 		return deltaX * deltaX + deltaY * deltaY;
 	}
 	//x y cua vien gach
-	bool isCollision(int _x,int _y,int size) {
+	bool isCollision(float _x,float _y,float size) {
 		Cirle a;
 		a.x =this->x;
 		a.y = y;
 		a.r = radius;
-		SDL_Rect b;
+		SDL_FRect b;
 		b.x = _x;
 		b.y = _y;
 		b.w = size;
 		b.h = size;
-		int cX, cY;
+		float cX, cY;
 
 		//Find closest x offset
 		if (a.x < b.x)
@@ -130,8 +156,61 @@ public:
 			cY = a.y;
 		}
 
-		//If the closest point is inside the circle
+		//If the closest pofloat is inside the circle
 		if (distanceSquared(a.x, a.y, cX, cY) < a.r *a.r)
+		{
+			//This box and the circle have collided
+			return true;
+		}
+
+		//If the shapes have not collided
+		return false;
+
+
+
+	}
+	bool isCollision(float _x, float _y, float width,float height) {
+		Cirle a;
+		a.x = this->x;
+		a.y = y;
+		a.r = radius;
+		SDL_FRect b;
+		b.x = _x;
+		b.y = _y;
+		b.w = width;
+		b.h = height;
+		float cX, cY;
+
+		//Find closest x offset
+		if (a.x < b.x)
+		{
+			cX = b.x;
+		}
+		else if (a.x > b.x + b.w)
+		{
+			cX = b.x + b.w;
+		}
+		else
+		{
+			cX = a.x;
+		}
+
+		//Find closest y offset
+		if (a.y < b.y)
+		{
+			cY = b.y;
+		}
+		else if (a.y > b.y + b.h)
+		{
+			cY = b.y + b.h;
+		}
+		else
+		{
+			cY = a.y;
+		}
+
+		//If the closest pofloat is inside the circle
+		if (distanceSquared(a.x, a.y, cX, cY) < a.r * a.r)
 		{
 			//This box and the circle have collided
 			return true;
@@ -151,12 +230,20 @@ public:
 		DrawInRendererRotate(renderer, image, x - radius, y - radius, radius * 2, radius*2, radius, 90 - degree);
 
 	}
+	/*float getDeltaX() {
+		return float(cos(degree * 3.14 / 180) * speed);
+	}
+	float getDeltaY() {
+		return float(sin(degree * 3.14 / 180) * speed);
+	}*/
 
 
 
 	void move() {
-		x += float(cos(degree * 3.14 / 180) * speed);
-		y -= float(sin(degree * 3.14 / 180) * speed);
+		if (isLaunch) {
+			x += float(cos(degree * 3.14 / 180) * speed);
+			y -= float(sin(degree * 3.14 / 180) * speed);
+		}
 	}
 };
 

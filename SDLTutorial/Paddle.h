@@ -6,58 +6,119 @@
 using namespace std;
 class Paddle
 {
-private:
+protected:
 	float x;
 	float y;
-	float w;
-	float h;
+	float width;
+	float height;
 	float speed;
+	float deltaX;
+	float previousX;
 	SDL_Texture* image;
 	SDL_Renderer* renderer;
-public:
+	static Paddle* instance;
 	Paddle() {
 		x = 150;
 		y = 700;
-		w = 80;
-		h = 10;
+		width = 80;
+		height = 10;
 		speed = 5;
 		image = NULL;
 		renderer = NULL;
+		deltaX = 0;
+
+		previousX = 0;
+
 	}
 	Paddle(SDL_Renderer* RenderValue) {
 		x = 150;
 		y = 750;
-		w = 120;
-		h = 20;
+		width = 150;
+		height = 20;
 		speed = 5;
 		image = NULL;
 		renderer = RenderValue;
+
+		deltaX = 0;
+		previousX = 0;
+
 	}
-	float getX() {
+public:
+	static Paddle* Instance(SDL_Renderer * renderer) {
+		if (instance == NULL) {
+			instance =new  Paddle(renderer);
+
+		}
+		return instance;
+	}
+	
+	
+	virtual float getHeight() {
+		return height;
+	}
+	virtual float getWidth() {
+		return width;
+	}
+	void setWidth(float newwidth) {
+		this->width = newwidth;
+	}
+	virtual float getX() {
 		return x;
 	}
-	void setX(float value) {
+	virtual void setX(float value) {
 		x = value;
 	}
-	float getY() {
+	virtual float getY() {
 		return y;
 	}
-	void setY(float value) {
+	virtual void setY(float value) {
 		y = value;
 	}
-	void setSpeed(float value) {
+	virtual void setSpeed(float value) {
 		speed = value;
 	}
-	float getSpeed() {
+	virtual float getSpeed() {
 		return speed;
 	}
-	void setImage(string name) {
+	virtual void setImage(string name) {
 		image = LoadImage(name, renderer);
 	}
-	void draw() {
-		DrawInRenderer(renderer, image, x, y, w, h);
+	virtual void draw() {
+		DrawInRenderer(renderer, image, x, y, width, height);
 	}
-	void Move(bool moveLR[]) {
+	
+	void move(float X,float sizePaddle = 120,bool autoPlay = false) {
+		if (autoPlay == false) {
+			X = X - sizePaddle/2;
+			previousX = x;
+			if (X < 0) {
+				this->x = 0;
+			}
+			else if (X + width > 500) {
+				this->x = 500 - width;
+
+			}
+			else {
+				x = X;
+			}
+			deltaX = x - previousX;
+		}
+		else {
+			x = X-sizePaddle/2;
+			deltaX = x - previousX;
+
+
+		}
+
+
+	}
+	float getDeltaX() {
+		return deltaX;
+	}
+	void resetDeltaX() {
+		deltaX = 0;
+	}
+	virtual void Move(bool moveLR[]) {
 		if (moveLR[0]) {
 			if (x > 0) {
 				x -= speed;
