@@ -39,9 +39,6 @@
     <ClCompile Include="TextureManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Barrier.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Amulet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -58,6 +55,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ListAmulet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MapDiagram.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WinScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EndScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SettingScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -83,9 +95,6 @@
     <ClInclude Include="TextureManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Barrier.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Amulet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -102,6 +111,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ListAmulet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MapDiagram.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WinScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EndScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingScreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

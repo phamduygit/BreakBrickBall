@@ -9,19 +9,20 @@
 #include <vector>
 #include "Paddle.h"
 #include "Line.h"
-#include "Barrier.h"
 #include <cmath>
 #include <math.h>
 #include "ListBrick.h"
 #include "Map.h"
 #include "Menu.h"
 #include "Player.h"
-
+#include <map>
+#include "MapDiagram.h"
+#include "GameOver.h"
+#include "WinScreen.h"
+#include "EndScreen.h"
+#include "SettingScreen.h"
 #define PI 3.141592
-
-//int time = 0;
 using namespace std;
-
 class Game
 {
 private:
@@ -33,12 +34,9 @@ private:
 	bool _running;
 	SDL_Texture* _grassBackground;
 	Ball* ball;
-	/*vector<Brick> listBrick;*/
-//	ListBrick listBrick;
 	Map _map;
 	double degrees;
-	Paddle *_paddle;
-	Barrier barrier;
+	Paddle* _paddle;
 	bool MoveLR[2] = { false, false };
 	int xMouse;
 	int yMouse;
@@ -50,7 +48,22 @@ private:
 	bool isCollision = false;
 	int _currentMap = 1;
 	vector<string> fileMapName;
-	Player *player;
+	map<string, bool > listScreen;
+	MapDiagram mapDiagram;
+	GameOver gameOver;
+	WinScreen winScreen;
+	EndScreen endScreen;
+	SettingScreen settingScreen;
+	bool isMusicOn;
+	string previousScreen;
+	/*
+	-["MenuScreen"]
+	-["MapDiagramScreen"]
+	-["SettingScreen"]
+	-["GameOverScreen"]
+	-["GamePlayScreen"]
+	*/
+	Player* player;
 	Game() {
 		player = Player::Instance();
 		ball = NULL;
@@ -60,9 +73,15 @@ private:
 		_running = false;
 		_grassBackground = NULL;
 		degrees = 0;
+		isMusicOn = true;
+		previousScreen = "";
+		listScreen["MenuScreen"] = true;
+		//	listScreen["MapDiagramScreen"] = true;
+
 		xMouse = 0;
 		yMouse = 0;
 		_paddle = NULL;
+    
 	}
 	static Game* instance;
 public:
@@ -116,60 +135,108 @@ public:
 				_running = true;
 			}
 			_menu = Menu(_renderer);
+			//Set renderer cho object
+
+			mapDiagram.setRenderer(_renderer);
+			winScreen.setRenderer(_renderer);
+			gameOver.setRenderer(_renderer);
+			player->setRenderer(_renderer);
+			endScreen.setRenderer(_renderer);
+			settingScreen.setRenderer(_renderer);
+			//Load anh cho cac doi tuong chay theo frame
 			TextureManager::GetInstance()->load("Brick.png", "Brick", _renderer);
 			TextureManager::GetInstance()->load("amulet.png", "Amulet", _renderer);
+
+			//
 			_grassBackground = LoadImage("GrassBackground.png", _renderer);
 			ball = Ball::Instance(_renderer);
 			ball->setImage("Ball.png");
 			line = Line(_renderer);
 			_map = Map(_renderer, "map2.txt");
-		//	listBrick.setRenderer(_renderer);
-		//	listBrick.createWithMapText("map.txt");
+			//	listBrick.setRenderer(_renderer);
+			//	listBrick.createWithMapText("map.txt");
 			_menu.setFont("MachineGunk-nyqg.ttf");
 			_menu.setImage("GrassBackground.png");
-			barrier = Barrier(_renderer, 0, 200);
-			barrier.setImage("Paddle.png");
 			_paddle = Paddle::Instance(_renderer);
 			_paddle->setImage("Paddle.png");
-	
 
-
-
-
+			fileMapName.push_back("");
+			fileMapName.push_back("map1.txt");
+			fileMapName.push_back("map2.txt");
+			fileMapName.push_back("map3.txt");
+			fileMapName.push_back("map4.txt");
+			fileMapName.push_back("map5.txt");
+			fileMapName.push_back("map6.txt");
+			fileMapName.push_back("map7.txt");
+			fileMapName.push_back("map8.txt");
+			fileMapName.push_back("map9.txt");
 
 		}
 	}
-	void render() {
 
+	void render() {
+		
+		/*
+	-["MenuScreen"]
+	-["MapDiagramScreen"]
+	-["SettingScreen"]
+	-["GameOverScreen"]
+	-["GamePlayScreen"]
+	*/
 		SDL_RenderClear(_renderer);
-		if (_menu.getChose()) {
+		if (listScreen["MenuScreen"]) {
+			_menu.draw(xMouse, yMouse, mouseActionClicked);
+		}
+		else if (listScreen["MapDiagramScreen"]) {
+			mapDiagram.draw(xMouse, yMouse, mouseActionClicked);
+			mapDiagram.setUnlockedMap(player->getUnlockedMap());
+
+		}
+		else if (listScreen["SettingScreen"]) {
+			settingScreen.draw(xMouse, yMouse, mouseActionClicked);
+
+
+		}
+		else if (listScreen["GameOverScreen"]) {		
+			gameOver.draw(xMouse, yMouse, mouseActionClicked);
+		}
+		else if (listScreen["GamePlayScreen"]) {
+
 			DrawInRenderer(_renderer, _grassBackground);
 			ball->draw();
-		//	listBrick.drawBrickMap();
-			
 			_map.draw();
 			SDL_SetRenderDrawColor(_renderer, 255, 255, 255, NULL);
 			if (!ball->getIsLaunch()) {
 				line.draw();
 			}
-			_paddle->draw();
-		}
-		else {
-			_menu.draw(xMouse, yMouse, mouseActionClicked);
-		}
+			_paddle->draw();			
+			player->draw();
 
+		}
+		else if (listScreen["WinScreen"]) {			
+			winScreen.draw(xMouse, yMouse, mouseActionClicked);
+
+			winScreen.drawStar(player->getLife());
+
+		}
+		else if (listScreen["EndScreen"]) {
+			endScreen.draw();
+		}
 		SDL_RenderPresent(_renderer);
-		//delete[] p;
 	}
 	bool isBoundFromPaddle() {
 		float t1;
-		float t2;
+	//	float t2;
 		if (ball->getRadius() * ball->getRadius() - (_paddle->getY() - ball->getY()) * (_paddle->getY() - ball->getY()) >= 0) {
 			float sq = sqrt(abs(ball->getRadius() * ball->getRadius() - (_paddle->getY() - ball->getY()) * (_paddle->getY() - ball->getY())));
-			t1 = (sq - _paddle->getX() + ball->getX()) /(float)_paddle->getWidth();
-			t2 = (-sq - _paddle->getX() + ball->getX()) /(float) _paddle->getWidth();
-			if ((t1 >= 0 && t1 <= 1) || (t2 >= 0 && t2 <= 1))
+			t1 = (sq - _paddle->getX() + ball->getX()) / (float)_paddle->getWidth();
+			//t2 = (-sq - _paddle->getX() + ball->getX()) / (float)_paddle->getWidth();
+			/*if ((t1 >= 0 && t1 <= 1) || (t2 >= 0 && t2 <= 1)) {
 				return true;
+			}*/
+			if ((t1 >= 0 && t1 <= 1)) {
+				return true;
+			}
 		}
 		return false;
 
@@ -177,114 +244,301 @@ public:
 
 	}
 	void update() {
+		cout << "GamePlay: " << listScreen["GamePlayScreen"] << endl;
+		//
 		if (Mix_PlayingMusic() == 0)
-		{
-			//Play the music
-			Mix_PlayMusic(LoadMusic("Theme.mp3"), -1);
+		{		
+				Mix_PlayMusic(LoadMusic("Theme.mp3"), -1);
 		}
-		//If music is being played
-		if (_menu.getChose()) {
-			line.setMouse(xMouse, yMouse);
-			line.setPaddle(_paddle->getX(), _paddle->getY(), _paddle->getWidth());
-			//Khi nhan duoc tin hieu click chuot va trai banh chua bay
-			if (mouseActionClicked == true && !ball->getIsLaunch() &&
-				(_menu.getCurrentChoose() == 1 || _menu.getCurrentChoose() == 2)) {
-				ball->setIsLaunch(true);
-				float degree = atan(line.getHeSoGoc()) * 180 / float(PI);
-				if (degree > 0) {
-					degree = 180 - degree;
-				}
-				else {
-					degree = abs(degree);
-				}
-				
-				ball->setDegree(degree);
+		else {
+
+			if (!isMusicOn) {
+				Mix_PauseMusic();
+
 			}
-			if (isResetState == true) {
-				
-				if (!mouseActionClicked) {
-					ball->setX(_paddle->getX() + _paddle->getWidth() / 2);
-					ball->setY(_paddle->getY() - ball->getRadius());
+		}
+		if (listScreen["MenuScreen"]) {
+			if (_menu.getChose()) {
+				//NewGame
+				if (_menu.getCurrentChoose() == 1) {
+					listScreen["MapDiagramScreen"] = true;
+					mapDiagram.resetData();
+					listScreen["MenuScreen"] = false;
 				}
-				else {
-					isResetState = false;
+				//Load continue
+
+				else if (_menu.getCurrentChoose() == 2) {
+					/*listScreen["MapDiagramScreen"] = true;
+					mapDiagram.resetData();*/
+					_map.clearMap();
+					_map.loadData();
+					player->loadDataFromFile();
+					currentMap = player->getCurrentMap();
+					listScreen["MapDiagramScreen"] = true;
+					listScreen["MenuScreen"] = false;
 				}
-			}
-			if (ball->getIsLaunch()) {
-				if (ball->getY() - ball->getRadius() <= 0) {
-					ball->setDegree(-ball->getDegree());
-
+				else if (_menu.getCurrentChoose() == 3) {
+					listScreen["SettingScreen"] = true;
+					settingScreen.resetData();
+					listScreen["MenuScreen"] = false;
 				}
-				if (ball->getY() + ball->getRadius() > 800) {
-
-					ball->reset(_paddle->getX() +_paddle->getWidth()/2, _paddle->getY());
-					isResetState = true;
-
-				}
-				if (ball->getX() - ball->getRadius() < 0 || ball->getX() + ball->getRadius() > 500) {
-					ball->setDegree(180 - ball->getDegree());
-				}
-			}		
-			//listBrick.handleCollision();
-		/*	if (_map.isCompleted()) {
-				int index = _currentMap % fileMapName.size();
-				if (index != 0)
-					_map.loadData(fileMapName[index]);
-				index++;
-
-			}*/
-
-			_map.update();
-
-			ball->move();
-			if (isBoundFromPaddle()&&ball->getIsLaunch()) {
-				int degree = (int)ball->getDegree()%360;
-				if (degree > 0&&degree<300) {
-					degree -= 360;
-				}
-								
-				float offset = abs(ball->getY() + ball->getRadius() - _paddle->getY());
-				ball->setY(ball->getY() - float(1.1)*offset);
-				//Doi huong cho bong trong dieu kien paddle khong co van toc
-
-				if(abs(_paddle->getDeltaX())>ball->getSpeed()*1.0/3){
+				else if (_menu.getCurrentChoose() == 4) {
 					
-					if (_paddle->getDeltaX() > 0) {
-						if (abs(degree)+15<160) {
-							ball->setDegree(float(-degree + 15));
+					exit(0);
+				}
+				
+			}
+		}
+		else if (listScreen["MapDiagramScreen"]) {
 
-						}
-						else {
-							ball->setDegree(-ball->getDegree());
+			if (mapDiagram.getSelectedMap() != 0) {
+				listScreen["MapDiagramScreen"] = false;
+				currentMap = mapDiagram.getSelectedMap();
+				_map.loadData(fileMapName[currentMap]);
+				listScreen["GamePlayScreen"] = true;
+			}
 
-						}
-					}
-					else if(_paddle->getDeltaX()<0) {
-						if (abs(degree)-15>45) {
-							ball->setDegree(float(-degree - 15));
-						}
-						else {
-							ball->setDegree(-ball->getDegree());
-						}
+		}
+		else if (listScreen["SettingScreen"]) {
+			if (settingScreen.getSettingAction() == turnOnSpeaker) {
+				//Turn on speaker
+				isMusicOn = true;
+				_map.turnOnMusic();				
+				Mix_ResumeMusic();
+				//listScreen["SettingScreen"] = false;
+				//listScreen["MenuScreen"] = true;
+				settingScreen.setSettingAction(noneSetting);
+			}
+			else if (settingScreen.getSettingAction() == turnOffSpeaker) {
+				//Turn offSpeaker
+				isMusicOn = false;
+				_map.turnOffMusic();
+			//	listScreen["SettingScreen"] = false;
+				settingScreen.setSettingAction(noneSetting);
+				//settingScreen.resetData();
 
-					}
+			}
+			else if (settingScreen.getSettingAction() == loadMapDiagramScreen) {
+				listScreen["MapDiagramScreen"] = true;
+				listScreen["SettingScreen"] = false;
+				mapDiagram.resetData();
+				settingScreen.setSettingAction(noneSetting);
+
+			}
+			else if (settingScreen.getSettingAction() == backToMenu) {
+				if (previousScreen == "") {
+					listScreen["MenuScreen"] = true;
+					listScreen["SettingScreen"] = false;
+					_menu.resetData();
+				}
+				else {
+					listScreen[previousScreen] = true;
+					listScreen["SettingScreen"] = false;
+				}
+				
+
+			
+				settingScreen.setSettingAction(noneSetting);
+			}
+
+		}
+		else if (listScreen["EndScreen"]) {
+
+		}
+		else if (listScreen["GameOverScreen"]) {
+
+			if (gameOver.getAction() == retry) {
+				currentMap = player->getCurrentMap();
+				
+				_map.loadData(fileMapName[currentMap]);				
+				listScreen["GamePlayScreen"] = true;
+				listScreen["GameOverScreen"] = false;
+				//cout << "D" << listScreen["GamePlayScreen"];
+				player->setLife(3);
+				player->setScore(0);
+				ball->reset(_paddle->getX() + 0.5 * _paddle->getWidth() / 2, _paddle->getY());
+				isResetState = true;
+				gameOver.setAction(none);
+				
+			}
+			else if (gameOver.getAction() == back) {
+
+				listScreen["MapDiagramScreen"] = true;
+				listScreen["GameOverScreen"] = false;
+				player->setLife(3);
+				player->setScore(0);
+				mapDiagram.setSelectedMap(0);
+				gameOver.setAction(none);
+
+			}
+			else if (gameOver.getAction() == setting) {
+				listScreen["SettingScreen"] = true;
+				listScreen["GameOverScreen"] = false;
+				previousScreen = "GameOverScreen";
+				gameOver.setAction(none);
+			}
+			
+
+
+
+		}else if(listScreen["WinScreen"]){
+
+		
+
+			if (winScreen.getAction() == retry) {				
+				listScreen["WinScreen"] = false;
+				listScreen["GamePlayScreen"] = true;
+				player->setLife(3);
+				player->setRateOfScore(10);
+				winScreen.setAction(none);
+				ball->reset(_paddle->getX() + 0.5 * _paddle->getWidth() / 2, _paddle->getY());
+				isResetState = true;
+				//ball->reset();
+				_map.loadData(fileMapName[currentMap]);
+
+			}
+			else if (winScreen.getAction() == nextMap) {
+
+				listScreen["WinScreen"] = false;
+				listScreen["GamePlayScreen"] = true;
+				//3
+				player->setCurrentMap(currentMap + 1);
+				//
+				if (currentMap > player->getUnlockedMap()&&currentMap+1<=9) {
+					
+					player->setUnlockedMap(currentMap + 1);
+				}
+				player->setLife(3);
+				player->setRateOfScore(10);
+				currentMap = (currentMap+1);
+				winScreen.setAction(none);
+				//ball->reset();
+				if (currentMap == fileMapName.size()) {
+					listScreen["WinScreen"] = false;
+					listScreen["EndScreen"] = true;
+					listScreen["GamePlayScreen"] = false;
 
 				}
 				else {
-					ball->setDegree(-ball->getDegree());
+					_map.loadData(fileMapName[currentMap]);
+					ball->reset(_paddle->getX() + 0.5 * _paddle->getWidth() / 2, _paddle->getY());
+					isResetState = true;
 				}
-			}
 
-			if (ball->getIsLaunch()) {
-				//_paddle->move(ball->getX(),_paddle->getWidth(), true);
-				_paddle->move(xMouse);
 			}
 
 		}
 
+		else if (listScreen["GamePlayScreen"]) {
+			
+			//If music is being played
+			if (_menu.getChose()) {
+				if (_map.isCompleted()) {
+					listScreen["GamePlayScreen"] = false;
+					listScreen["WinScreen"] = true;
+				}
+				if (player->getLife() == 0) {
+					listScreen["GamePlayScreen"] = false;
+					listScreen["GameOverScreen"] = true;
+				}
+				line.setMouse(xMouse, yMouse);
+				line.setPaddle(_paddle->getX(), _paddle->getY(), _paddle->getWidth());
+				//Khi nhan duoc tin hieu click chuot va trai banh chua bay
+				if (mouseActionClicked == true && !ball->getIsLaunch()) {
+					ball->setIsLaunch(true);
+					float degree = atan(line.getHeSoGoc()) * 180 / float(PI);
+					if (degree > 0) {
+						degree = 180 - degree;
+					}
+					else {
+						degree = abs(degree);
+					}
+
+					ball->setDegree(degree);
+				}
+				if (isResetState == true) {
+
+					if (!mouseActionClicked) {
+						ball->setX(_paddle->getX() + _paddle->getWidth() / 2);
+						ball->setY(_paddle->getY() - ball->getRadius());
+					}
+					else {
+						isResetState = false;
+					}
+				}
+				if (ball->getIsLaunch()) {
+					if (ball->getY() - ball->getRadius() <= 0) {
+						ball->setDegree(-ball->getDegree());
+
+					}
+					if (ball->getY() + ball->getRadius() > 800) {
+
+						ball->reset(_paddle->getX() + _paddle->getWidth() / 2, _paddle->getY());
+						
+						player->setLife(player->getLife() - 1);
+						isResetState = true;
+
+					}
+					if (ball->getX() - ball->getRadius() < 0 || ball->getX() + ball->getRadius() > 500) {
+						ball->setDegree(180 - ball->getDegree());
+					}
+				}
+				_map.update();
+				ball->move();
+				if (isBoundFromPaddle() && ball->getIsLaunch() == true) {
+					int degree = (int)ball->getDegree() % 360;
+					if (degree > 0 && degree < 300) {
+						degree -= 360;
+					}
+					float offset = abs(ball->getY() + ball->getRadius() - _paddle->getY());
+
+					ball->setY(ball->getY() - float(1.1) * offset);
+
+					//Doi huong cho bong trong dieu kien paddle khong co van toc
+					if (_paddle->getDeltaX() > 0 && abs(degree) + 15 < 180) {
+						ball->setDegree(-degree + 15);
+
+					}
+					else if (_paddle->getDeltaX() < 0 && abs(degree) - 15 > 0) {
+						ball->setDegree(-degree - 15);
 
 
+						if (_paddle->getDeltaX() > 0) {
+							if (abs(degree) + 15 < 160) {
+								ball->setDegree(float(-degree + 15));
 
+							}
+							else {
+								ball->setDegree(-ball->getDegree());
+
+							}
+						}
+						else if (_paddle->getDeltaX() < 0) {
+							if (abs(degree) - 15 > 45) {
+								ball->setDegree(float(-degree - 15));
+							}
+							else {
+								ball->setDegree(-ball->getDegree());
+							}
+
+						}
+
+
+					}
+					else {
+						ball->setDegree(-ball->getDegree());
+					}
+					
+					//ball->setDegree(-ball->getDegree());
+				}
+
+				if (ball->getIsLaunch()) {
+
+					_paddle->move(xMouse);
+				}
+			}
+			//////////////////////////////////////////////////////
+		}
 	}
 
 	void handleEvents() {
@@ -292,6 +546,8 @@ public:
 		SDL_PollEvent(&Events);
 		if (Events.type == SDL_QUIT)
 		{
+			player->writeDataToFile();
+			_map.saveData();
 			_running = false;
 		}
 		else if (Events.type == SDL_KEYDOWN)
@@ -320,6 +576,8 @@ public:
 		}
 		else if (Events.type == SDL_MOUSEMOTION || Events.type == SDL_MOUSEBUTTONUP || Events.type == SDL_MOUSEBUTTONDOWN) {
 			SDL_GetMouseState(&xMouse, &yMouse);
+			//d
+			//cout << "X:" << xMouse << endl << "Y:" << yMouse << endl;
 			switch (Events.type)
 			{
 			case SDL_MOUSEBUTTONDOWN:

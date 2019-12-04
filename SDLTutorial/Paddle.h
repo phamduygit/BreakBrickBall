@@ -26,18 +26,22 @@ protected:
 		image = NULL;
 		renderer = NULL;
 		deltaX = 0;
+
 		previousX = 0;
+
 	}
 	Paddle(SDL_Renderer* RenderValue) {
 		x = 150;
 		y = 750;
-		width = 120;
+		width = 150;
 		height = 20;
 		speed = 5;
 		image = NULL;
 		renderer = RenderValue;
+
 		deltaX = 0;
 		previousX = 0;
+
 	}
 public:
 	static Paddle* Instance(SDL_Renderer * renderer) {

@@ -13,15 +13,27 @@ enum TypeAmulet {
 };
 class Amulet:public Brick
 {
+private:
+	int startTime;
+	TypeAmulet typeAmulet;
 public:
 
-	Amulet() {}
+	Amulet() { startTime = 0; }
 	Amulet(SDL_Renderer* renderer, int x, int y,int typeAmulet) :Brick(renderer, x, y) {
 		this->currentFrame = typeAmulet - 1;
+		this->typeAmulet = TypeAmulet(typeAmulet);
+		startTime = 0;
+	}
+	string toString() {
+		stringstream out;
+		out << x << " " << y << " " << int(typeAmulet);
+		return out.str();
+	}
+	void setStartTime(int value) {
+		startTime = value;
 	}
 	TypeAmulet getType() {
-		int result = currentFrame + 1;
-		return TypeAmulet(result);
+		return typeAmulet;
 	}
 	void draw() {
 		TextureManager::GetInstance()->drawFrame("Amulet", float(x), float(y), float(size), float(size), 1, currentFrame, renderer);

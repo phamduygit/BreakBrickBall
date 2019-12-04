@@ -45,6 +45,10 @@ public:
 		Chose = false;
 		currentChoose = 0;
 	}
+	void resetData() {
+		currentChoose = 0;
+		Chose = false;
+	}
 	void draw(int x, int y, bool &mouseActionClick) {
 		DrawInRenderer(renderer, backGround);
 		if (x > SizeNewGame.x && x < SizeNewGame.x + SizeNewGame.w && y > SizeNewGame.y && y < SizeNewGame.y + SizeNewGame.h) {
@@ -90,6 +94,10 @@ public:
 				currentChoose = 4;
 				Chose = true;
 				mouseActionClick = false;
+
+				exit(0);
+
+
 			}
 		}
 		else {
@@ -116,6 +124,12 @@ public:
 		currentChoose = 0;
 	}
 	~Menu() {
+		/*SDL_DestroyTexture(BT_Continue);
+		SDL_DestroyTexture(BT_NewGame);
+		SDL_DestroyTexture(BT_Setting);
+		SDL_DestroyTexture(BT_Exit);*/
+
+		
 		
 	}
 };

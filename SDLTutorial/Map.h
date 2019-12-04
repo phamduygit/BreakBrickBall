@@ -1,6 +1,9 @@
 #pragma once
 #include "ListBrick.h"
 #include "ListAmulet.h"
+#include <fstream>
+
+
 class Map
 {
 protected:
@@ -14,7 +17,60 @@ public:
 	Map(){
 		renderer = NULL;
 	}
-	
+	void turnOffMusic() {
+		listBrick.setIsMusicOn(false);
+	}
+	void saveData() {
+		fstream file("MapSavedData.txt",ios::out);
+		file << listBrick.toString()<<endl << listAmulet.toString();
+		file.close();
+		
+	}
+	void clearMap() {
+		listAmulet.clearAllAmulet();
+		listBrick.clearAllBrick();
+	}
+	void loadData() {
+		fstream file("MapSavedData.txt", ios::in);
+		if (!file) {
+			cout << "\nFile not found";
+			return;
+		}
+		string buffer;
+		vector <string> token;
+		while (!file.eof()) {
+			getline(file, buffer);
+			if (buffer == "") {
+				break;
+			}
+			stringstream source(buffer);
+			while (getline(source, buffer, ' ')) {
+				token.push_back(buffer);
+			}
+			Brick brick(renderer, stoi(token[0]), stoi(token[1]));
+			brick.setFrame(stoi(token[2]));
+			listBrick.addBrick(brick);
+			token.clear();
+
+		}
+		while (!file.eof()) {
+			getline(file, buffer);
+			if (buffer == "") {
+				break;
+			}
+			stringstream source(buffer);
+			while (getline(source, buffer, ' ') ){
+				token.push_back(buffer);
+			}
+			Amulet amulet(renderer, stoi(token[0]), stoi(token[1]), stoi(token[2]));
+			listAmulet.addAmulet(amulet);
+			token.clear();
+		}
+
+	}
+	void turnOnMusic() {
+		listBrick.setIsMusicOn(true);
+	}
 	Map(SDL_Renderer* _renderer,string dataFileName) {
 		this->dataFileName = dataFileName;
 		listBrick.setRenderer(_renderer);
@@ -24,6 +80,8 @@ public:
 		listAmulet.createListWithMapText(dataFileName);
 	}
 	void loadData(string fileName) {
+		listBrick.clearAllBrick();
+		listAmulet.clearAllAmulet();
 		listBrick.setRenderer(renderer);
 		listBrick.createListWithMapText(fileName);
 		listAmulet.createListWithMapText(fileName);
@@ -42,22 +100,32 @@ public:
 	virtual void update() {
 		listBrick.handleCollision();
 		listAmulet.handleCollision();
-		int limitTime = 4000;
+		int limitTime = 6000;
+		//d
+		cout << listAmulet.getTime()<<endl;
 		map<string, bool> mapEffect = listAmulet.getMapEffect();
 		if (listAmulet.getTime() >= limitTime) {
 		
 			if (mapEffect["Magnet"]) {
+				cout << "Magnet" << endl;
 				listAmulet.resetMagnet();
 			}
-			else if (mapEffect["IncreasePaddle"]) {
+			if (mapEffect["IncreasePaddle"]) {
 				listAmulet.resetWidthPaddle();
 
 			}
-			else if (mapEffect["IncreaseSizeBall"]) {
+			if (mapEffect["IncreaseSizeBall"]) {
 				listAmulet.resetSizeBall();
 			}
-			else if (mapEffect["SlowSpeed"]) {
+			if (mapEffect["SlowSpeed"]) {
+				cout << "SlowSpeed\n";
 				listAmulet.resetSpeed();
+			}
+			if (mapEffect["Double"]) {
+				listAmulet.resetDoubleScore();
+			}
+			if (mapEffect["HalveScore"]) {
+				listAmulet.resetHalveScore();
 			}
 			
 

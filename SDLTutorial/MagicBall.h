@@ -29,13 +29,13 @@ private:
 	SDL_Texture* image;
 	SDL_Renderer* renderer;
 	bool isLaunch;
+	float backupDegree;
 	
 	Ball(SDL_Renderer*& rendererValue) {
 		x = 250;
 		y = 700;
 		radius = 15;
-		speed = 8;
-		backupSpeed = speed;
+		speed = 4;
 		image = NULL;
 		degree = 60;
 		renderer = rendererValue;
@@ -45,6 +45,16 @@ private:
 public:
 	float getBackupSpeed() {
 		return backupSpeed;
+	}
+	float getBackupDegree() {
+		return backupDegree;
+	}
+	void setBackupDegree(float value) {
+		backupDegree = value;
+
+	}
+	void setBackupSpeed(float value) {
+		backupSpeed = value;
 	}
 	void reset(float x,float y) {
 		this->x = x ;
@@ -81,7 +91,6 @@ public:
 		y = value;
 	}
 	void setSpeed(float value) {
-		backupSpeed = speed;
 		speed = value;
 		
 	}

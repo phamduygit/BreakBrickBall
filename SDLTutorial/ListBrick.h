@@ -4,28 +4,47 @@
 #include "MagicBall.h"
 #include <string>
 #include <sstream>
+#include "Player.h"
 #include <fstream>
+#include <string>
+#include <sstream>
+
 using namespace std;
 class ListBrick
 {
 private:
 	vector<Brick> list;
 	SDL_Renderer* renderer;
+	bool isMusicOn;
 
 public:
 	ListBrick() {
 		renderer = NULL;
+		isMusicOn = true;
+	}
+	string toString() {
+		stringstream out;
+		for (auto brick : list) {
+			
+			out<< brick.toString() << endl;
+		}
+		return out.str();
+
 	}
 	int getSize() {
 		return int(list.size());
 	}
 	ListBrick(SDL_Renderer* _renderer) {
 		renderer = _renderer;
+		isMusicOn = true;
 	}
 	void setRenderer(SDL_Renderer* renderer) {
 		this->renderer = renderer;
 	}
-	void ClearMap() {
+	void setIsMusicOn(bool value) {
+		isMusicOn = value;
+	}
+	void clearAllBrick() {
 		list.clear();
 	}
 	void drawBrickMap() {
@@ -52,9 +71,8 @@ public:
 			if (map[k] == 1) {
 				Brick brick(renderer);
 				brick.setX(i * 50);
-				brick.setY(j * 50);
-				list.push_back(brick);
-			}
+				brick.setY((j+1) * 50);
+				list.push_back(brick);			}
 		}
 
 
@@ -74,8 +92,8 @@ public:
 		float dy = yE - yS;
 		float a = dx * dx + dy * dy;
 		float b = 2 * (xS * dx - xBall * dx + yS * dy - yBall * dy);
-		float c = xS*xS + xBall * xBall + yS*yS + yBall * yBall - 2 * (xS * xBall + yS * yBall) - 
-			radius * radius;
+		float c = xS*xS + xBall * xBall + yS*yS + yBall * yBall - 2 * 
+			(xS * xBall + yS * yBall) - radius * radius;
 		float delta = b * b - 4 * a * c;
 		if (delta >= 0) {
 			float x1 = (-b + sqrt(delta)) / (2 * a);
@@ -90,7 +108,10 @@ public:
 		Ball* ball = Ball::Instance(renderer);
 		for (size_t i = 0; i < list.size(); i++) {
 			//Khi phát hiện có va chạm 
-			if (ball->isCollision(float(list[i].getX()), float(list[i].getY()), list[i].getSize())) {	//
+			if (ball->isCollision(float(list[i].getX()), float(list[i].getY()), list[i].getSize())) {
+				if (isMusicOn) {
+					Mix_PlayChannel(-1, LoadSound("medium.wav"), 0);
+				}
 				if (ball->getY() - ball->getRadius() < float(list[i].getY()) + list[i].getSize() &&
 					ball->getY() > float(list[i].getY()) + list[i].getSize()
 					&& 
@@ -101,7 +122,7 @@ public:
 					float offset = abs(ball->getY() - ball->getRadius() - (float(list[i].getY()) + list[i].getSize()));
 					ball->setDegree(-ball->getDegree());
 					ball->setY(ball->getY() + offset * float(1.1));
-					Mix_PlayChannel(-1, LoadSound("medium.wav"), 0);
+					
 				}else if (ball->getY() + ball->getRadius() > float(list[i].getY()) &&
 					ball->getY() < float(list[i].getY())
 					&&
@@ -111,7 +132,7 @@ public:
 					float offset = abs(ball->getY() + ball->getRadius() - float(list[i].getY()));
 					ball->setDegree(-ball->getDegree());
 					ball->setY(ball->getY() - offset * float(1.1));
-					Mix_PlayChannel(-1, LoadSound("medium.wav"), 0);
+					//Mix_PlayChannel(-1, LoadSound("medium.wav"), 0);
 				}else if (
 					ball->getX() - ball->getRadius() < float(list[i].getX()) + list[i].getSize() &&
 					ball->getX() > float(list[i].getX())+list[i].getSize()&&
@@ -121,7 +142,7 @@ public:
 					float offset = abs(ball->getX() - ball->getRadius() - float(list[i].getX()) - list[i].getSize());
 					ball->setDegree(180 - ball->getDegree());
 					ball->setX(ball->getX() + offset * float(1.1));
-					Mix_PlayChannel(-1, LoadSound("medium.wav"), 0);
+				//	Mix_PlayChannel(-1, LoadSound("medium.wav"), 0);
 				}
 				else if (ball->getX() + ball->getRadius() > float(list[i].getX()) &&
 					ball->getX() < float(list[i].getX()) &&
@@ -130,13 +151,17 @@ public:
 					float offset = abs(ball->getX() + ball->getRadius() - float(list[i].getX()));
 					ball->setDegree(180 - ball->getDegree());
 					ball->setX(ball->getX() - offset * float(1.1));
-					Mix_PlayChannel(-1, LoadSound("medium.wav"), 0);
+				//	Mix_PlayChannel(-1, LoadSound("medium.wav"), 0);
 				}
 				list[i].setFrame(list[i].getFrame() + 1);
 
 				if (list[i].getFrame() == 4) {
 					list.erase(list.begin() + i);
+					int currentScore = Player::Instance()->getScore();
+					currentScore = currentScore+Player::Instance()->getRateOfScore();
+					Player::Instance()->setScore(currentScore);
 				}
+				break;
 			}
 		}
 	}
