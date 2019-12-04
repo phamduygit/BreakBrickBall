@@ -12,6 +12,7 @@ public:
 		auto tempImage = image;
 		image = LoadImage("EndScreen.png", renderer);
 		SDL_RenderCopy(renderer, image, NULL, NULL);
+		SDL_DestroyTexture(image);
 		SDL_DestroyTexture(tempImage);
 	}
 

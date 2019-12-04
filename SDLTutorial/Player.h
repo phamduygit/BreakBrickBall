@@ -64,6 +64,9 @@ public:
 	int getRateOfScore() {
 		return _rateOfScore;
 	}
+	void setCurrentMap(int value) {
+		_currentMap = value;
+	}
 	void setUnlockedMap(int value) {
 		if (value > _unlockedMap) {
 			_unlockedMap = value;
@@ -117,12 +120,14 @@ public:
 		destOfScore.w = 150;
 		destOfScore.h = 50;
 		SDL_RenderCopy(renderer, scoreTexture, NULL, &destOfScore);
+		SDL_DestroyTexture(scoreTexture);
 		SDL_Rect destOfLife;
 		destOfLife.x = 200;
 		destOfLife.y = 0;
 		destOfLife.w = 120;
 		destOfLife.h = 50;
 		SDL_RenderCopy(renderer, lifeTexture, NULL, &destOfLife);
+		SDL_DestroyTexture(lifeTexture);
 		SDL_DestroyTexture(temp1);
 		SDL_DestroyTexture(temp2);
 	}

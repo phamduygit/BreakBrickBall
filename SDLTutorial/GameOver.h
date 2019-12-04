@@ -53,6 +53,7 @@ public:
 
 		
 		SDL_RenderCopy(renderer, image, NULL, NULL);
+		SDL_DestroyTexture(image);
 		SDL_DestroyTexture(temp);
 	}
 	virtual ~GameOver(){}

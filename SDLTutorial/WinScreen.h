@@ -40,10 +40,11 @@ public:
 
 
 		SDL_RenderCopy(renderer, image, NULL, NULL);
+		SDL_DestroyTexture(image);
 		SDL_RenderCopy(renderer, nextButton, NULL, &destinationNext);
+		SDL_DestroyTexture(nextButton);
 		SDL_RenderCopy(renderer, retryButton, NULL, &destinationRetry);
-
-
+		SDL_DestroyTexture(retryButton);
 		SDL_DestroyTexture(tempImage);
 		SDL_DestroyTexture(tempRetryButton);
 		SDL_DestroyTexture(tempNextButton);
@@ -72,6 +73,7 @@ public:
 		}
 
 		SDL_RenderCopy(renderer, imageOfStar, NULL, &dest);
+		SDL_DestroyTexture(imageOfStar);
 		SDL_DestroyTexture(imageTemp);
 		
 

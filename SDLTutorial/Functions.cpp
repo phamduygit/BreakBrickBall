@@ -39,27 +39,30 @@ SDL_Texture* LoadFont(string Text, SDL_Renderer* Renderer, string Font) {
 	}
 	return newTexture;
 }
-void DrawInRenderer(SDL_Renderer* Renderer, SDL_Texture* Texture, float x, float y, float w, float h) {
+void DrawInRenderer(SDL_Renderer* Renderer, SDL_Texture* &Texture, float x, float y, float w, float h) {
 	SDL_FRect Size;
 	Size.x = x;
 	Size.y = y;
 	Size.w = w;
 	Size.h = h;
 	SDL_RenderCopyF(Renderer, Texture, NULL, &Size);
+	//SDL_DestroyTexture(Texture);
 }
-void DrawInRenderer(SDL_Renderer* Renderer, SDL_Texture* Texture, SDL_FRect Size) {
+void DrawInRenderer(SDL_Renderer* Renderer, SDL_Texture* &Texture, SDL_FRect Size) {
 	SDL_RenderCopyF(Renderer, Texture, NULL, &Size);
 }
-void DrawInRendererRotate(SDL_Renderer* Renderer, SDL_Texture* Texture, float x, float y, float w, float h, float radius, float degree) {
+void DrawInRendererRotate(SDL_Renderer* Renderer, SDL_Texture* &Texture, float x, float y, float w, float h, float radius, float degree) {
 	SDL_FRect Size;
 	Size.x = x;
 	Size.y = y;
 	Size.w = w;
 	Size.h = h;
 	SDL_RenderCopyF(Renderer, Texture, NULL, &Size);
+	//SDL_DestroyTexture(Texture);
 }
-void DrawInRenderer(SDL_Renderer* Renderer, SDL_Texture* Texture) {
+void DrawInRenderer(SDL_Renderer* Renderer, SDL_Texture* &Texture) {
 	SDL_RenderCopyF(Renderer, Texture, NULL, NULL);
+	//SDL_DestroyTexture(Texture);
 }
 Mix_Chunk* LoadSound(string filepath) {
 	Mix_Chunk* Sound = Mix_LoadWAV(filepath.c_str());

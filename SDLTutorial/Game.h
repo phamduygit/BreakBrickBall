@@ -146,6 +146,7 @@ public:
 			//Load anh cho cac doi tuong chay theo frame
 			TextureManager::GetInstance()->load("Brick.png", "Brick", _renderer);
 			TextureManager::GetInstance()->load("amulet.png", "Amulet", _renderer);
+
 			//
 			_grassBackground = LoadImage("GrassBackground.png", _renderer);
 			ball = Ball::Instance(_renderer);
@@ -246,15 +247,8 @@ public:
 		cout << "GamePlay: " << listScreen["GamePlayScreen"] << endl;
 		//
 		if (Mix_PlayingMusic() == 0)
-		{
-		
-		
+		{		
 				Mix_PlayMusic(LoadMusic("Theme.mp3"), -1);
-		
-
-
-
-
 		}
 		else {
 
@@ -271,13 +265,16 @@ public:
 					mapDiagram.resetData();
 					listScreen["MenuScreen"] = false;
 				}
+				//Load continue
+
 				else if (_menu.getCurrentChoose() == 2) {
 					/*listScreen["MapDiagramScreen"] = true;
 					mapDiagram.resetData();*/
 					_map.clearMap();
 					_map.loadData();
 					player->loadDataFromFile();
-					listScreen["GamePlayScreen"] = true;
+					currentMap = player->getCurrentMap();
+					listScreen["MapDiagramScreen"] = true;
 					listScreen["MenuScreen"] = false;
 				}
 				else if (_menu.getCurrentChoose() == 3) {
@@ -286,6 +283,7 @@ public:
 					listScreen["MenuScreen"] = false;
 				}
 				else if (_menu.getCurrentChoose() == 4) {
+					
 					exit(0);
 				}
 				
@@ -384,12 +382,13 @@ public:
 
 
 		}else if(listScreen["WinScreen"]){
-			player->setUnlockedMap(player->getCurrentMap());
-			if (winScreen.getAction() == retry) {
+
+		
+
+			if (winScreen.getAction() == retry) {				
 				listScreen["WinScreen"] = false;
 				listScreen["GamePlayScreen"] = true;
 				player->setLife(3);
-				player->setScore(0);
 				player->setRateOfScore(10);
 				winScreen.setAction(none);
 				ball->reset(_paddle->getX() + 0.5 * _paddle->getWidth() / 2, _paddle->getY());
@@ -399,8 +398,16 @@ public:
 
 			}
 			else if (winScreen.getAction() == nextMap) {
+
 				listScreen["WinScreen"] = false;
 				listScreen["GamePlayScreen"] = true;
+				//3
+				player->setCurrentMap(currentMap + 1);
+				//
+				if (currentMap > player->getUnlockedMap()&&currentMap+1<=9) {
+					
+					player->setUnlockedMap(currentMap + 1);
+				}
 				player->setLife(3);
 				player->setRateOfScore(10);
 				currentMap = (currentMap+1);
