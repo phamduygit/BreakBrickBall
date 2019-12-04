@@ -7,7 +7,9 @@ private:
 	SDL_Renderer* renderer;
 	SDL_Texture* mapDiagramImage;
 	int selectedMap;
+	int unlockedMap;
 public:
+
 	MapDiagram() {}
 	void setRenderer(SDL_Renderer* renderer) {
 		this->renderer = renderer;
@@ -18,6 +20,9 @@ public:
 	}
 	void resetData() {
 		selectedMap = 0;
+	}
+	void setUnlockedMap(int value) {
+		unlockedMap = value;
 	}
 	int getSelectedMap() {
 		return selectedMap;
@@ -49,37 +54,60 @@ public:
 	void draw(int xMouse, int yMouse, bool& mouseActionClicked) {
 		auto temp = mapDiagramImage;
 		mapDiagramImage = LoadImage("MapDiagram.png", renderer);
-		if (mouseActionClicked) {
-			if (isInRectangle(xMouse,yMouse,322,535,340-322,575-535)) {
+		if (isInRectangle(xMouse, yMouse, 322, 535, 340 - 322, 575 - 535)) {
+			//Phong to
+			if (mouseActionClicked && unlockedMap >= 1) {
 				selectedMap = 1;
 			}
-			else if (isInRectangle(xMouse,yMouse,242,564,272-242,615-564)) {
+		}
+		else if (isInRectangle(xMouse, yMouse, 242, 564, 272 - 242, 615 - 564)) {
+			//Phong to 
+
+			if (mouseActionClicked && unlockedMap >= 2) {
 				selectedMap = 2;
 			}
-			else if (isInRectangle(xMouse,yMouse,153,535,182-153,583-535)) {
+		}
+		else if (isInRectangle(xMouse, yMouse, 153, 535, 182 - 153, 583 - 535)) {
+			if (mouseActionClicked && unlockedMap >= 3) {
 				selectedMap = 3;
 			}
-			else if (isInRectangle(xMouse, yMouse, 85, 453, 130 - 85, 510 - 453)) {
+		}
+		else if (isInRectangle(xMouse, yMouse, 85, 453, 130 - 85, 510 - 453)) {
+			if (mouseActionClicked && unlockedMap >= 4) {
 				selectedMap = 4;
 			}
-			else if (isInRectangle(xMouse, yMouse, 87, 332, 129 - 87, 386 - 332)) {
+		}
+		else if (isInRectangle(xMouse, yMouse, 87, 332, 129 - 87, 386 - 332)) {
+			if (mouseActionClicked && unlockedMap >= 5) {
 				selectedMap = 5;
 			}
-			else if (isInRectangle(xMouse, yMouse, 87, 215, 125 - 87, 266 - 215)) {
+		}
+		else if (isInRectangle(xMouse, yMouse, 87, 215, 125 - 87, 266 - 215)) {
+			if (mouseActionClicked && unlockedMap >= 6) {
+
 				selectedMap = 6;
+
 			}
-			else if (isInRectangle(xMouse, yMouse, 364, 212, 414 - 364, 281 - 212)) {
+		}
+		else if (isInRectangle(xMouse, yMouse, 364, 212, 414 - 364, 281 - 212)) {
+			if (mouseActionClicked && unlockedMap >= 7) {
 				selectedMap = 7;
 			}
-			else if (isInRectangle(xMouse, yMouse, 364, 334, 409 - 364, 385 - 334)) {
+		}
+		else if (isInRectangle(xMouse, yMouse, 364, 334, 409 - 364, 385 - 334)) {
+			if (mouseActionClicked && unlockedMap >= 8) {
 				selectedMap = 8;
 			}
-			else if (isInRectangle(xMouse, yMouse, 366, 453, 405 - 366, 506 - 453)) {
+		}
+		else if (isInRectangle(xMouse, yMouse, 366, 453, 405 - 366, 506 - 453)) {
+			if (mouseActionClicked && unlockedMap >= 9) {
 				selectedMap = 9;
 			}
-			mouseActionClicked = false;
 		}
+		mouseActionClicked = false;
+
 		SDL_RenderCopy(renderer, mapDiagramImage, NULL, NULL);
+		SDL_DestroyTexture(mapDiagramImage);
 		SDL_DestroyTexture(temp);
 	}
 

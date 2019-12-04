@@ -26,7 +26,7 @@ private:
 		renderer = 0;
 		scoreTexture = 0;
 		lifeTexture = 0;
-		_unlockedMap = 0;
+		_unlockedMap = 1;
 	}
 	static Player* instance;
 
@@ -64,14 +64,18 @@ public:
 	int getRateOfScore() {
 		return _rateOfScore;
 	}
+	void setUnlockedMap(int value) {
+		if (value > _unlockedMap) {
+			_unlockedMap = value;
+		}
+	}
 	void writeDataToFile() {
 		string fileName = "PlayerData.txt";
 		fstream file(fileName, ios::out);
 		file << _score << endl;
 		file << _unlockedMap << endl;
 		file << _currentMap << endl;
-		file << _life << endl;
-	
+		file << _life << endl;	
 		file.close();
 	}
 	void loadDataFromFile() {

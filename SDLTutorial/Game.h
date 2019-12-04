@@ -143,9 +143,10 @@ public:
 			player->setRenderer(_renderer);
 			endScreen.setRenderer(_renderer);
 			settingScreen.setRenderer(_renderer);
-
+			//Load anh cho cac doi tuong chay theo frame
 			TextureManager::GetInstance()->load("Brick.png", "Brick", _renderer);
 			TextureManager::GetInstance()->load("amulet.png", "Amulet", _renderer);
+			//
 			_grassBackground = LoadImage("GrassBackground.png", _renderer);
 			ball = Ball::Instance(_renderer);
 			ball->setImage("Ball.png");
@@ -173,6 +174,7 @@ public:
 	}
 
 	void render() {
+		
 		/*
 	-["MenuScreen"]
 	-["MapDiagramScreen"]
@@ -186,6 +188,7 @@ public:
 		}
 		else if (listScreen["MapDiagramScreen"]) {
 			mapDiagram.draw(xMouse, yMouse, mouseActionClicked);
+			mapDiagram.setUnlockedMap(player->getUnlockedMap());
 
 		}
 		else if (listScreen["SettingScreen"]) {
@@ -211,6 +214,7 @@ public:
 		}
 		else if (listScreen["WinScreen"]) {			
 			winScreen.draw(xMouse, yMouse, mouseActionClicked);
+
 			winScreen.drawStar(player->getLife());
 
 		}
@@ -288,6 +292,7 @@ public:
 			}
 		}
 		else if (listScreen["MapDiagramScreen"]) {
+
 			if (mapDiagram.getSelectedMap() != 0) {
 				listScreen["MapDiagramScreen"] = false;
 				currentMap = mapDiagram.getSelectedMap();
@@ -379,6 +384,7 @@ public:
 
 
 		}else if(listScreen["WinScreen"]){
+			player->setUnlockedMap(player->getCurrentMap());
 			if (winScreen.getAction() == retry) {
 				listScreen["WinScreen"] = false;
 				listScreen["GamePlayScreen"] = true;
@@ -417,9 +423,6 @@ public:
 		}
 
 		else if (listScreen["GamePlayScreen"]) {
-		
-
-
 			
 			//If music is being played
 			if (_menu.getChose()) {
