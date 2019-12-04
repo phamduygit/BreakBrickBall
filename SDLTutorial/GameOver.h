@@ -5,6 +5,7 @@ enum Action {
 	nextMap,
 	retry,
 	back,
+	setting,
 	none
 	
 };
@@ -43,6 +44,9 @@ public:
 			else if (xMouse >= 210 && xMouse <= 210 + 80 && yMouse >= 525 && yMouse <= 525 + 80) {
 				action = back;
 
+			}
+			else if ((xMouse >= 210 && xMouse <= 210 + 80 && yMouse >= 685 && yMouse <= 685 + 80)) {
+				action = setting;
 			}
 			mouseActionClicked = false;
 		}

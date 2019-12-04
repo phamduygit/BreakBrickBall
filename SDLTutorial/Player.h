@@ -10,9 +10,10 @@ class Player
 {
 private:
 	int _score;
+	int _unlockedMap;
 	int _currentMap;
 	int _life;
-	int rateOfScore;
+	int _rateOfScore;
 	SDL_Renderer* renderer;
 	SDL_Texture* scoreTexture;
 	SDL_Texture* lifeTexture;
@@ -21,11 +22,11 @@ private:
 		_score = 0;
 		_currentMap = 1;
 		_life = 1;
-		rateOfScore = 10;
+		_rateOfScore = 10;
 		renderer = 0;
 		scoreTexture = 0;
 		lifeTexture = 0;
-
+		_unlockedMap = 0;
 	}
 	static Player* instance;
 
@@ -43,35 +44,54 @@ public:
 	//score
 	//currentMap
 	//life
+	//highScore
 	void setScore(int newScore) {
 		_score = newScore;
 	}
 	void setLife(int newValue) {
 		_life = newValue;
 	}
+	int getUnlockedMap() {
+		return _unlockedMap;
+	}
 	int getLife() { return _life; }
 	int getScore() {
 		return _score;
 	}
 	void setRateOfScore(int newRate) {
-		this->rateOfScore = newRate;
+		this->_rateOfScore = newRate;
 	}
 	int getRateOfScore() {
-		return rateOfScore;
+		return _rateOfScore;
+	}
+	void writeDataToFile() {
+		string fileName = "PlayerData.txt";
+		fstream file(fileName, ios::out);
+		file << _score << endl;
+		file << _unlockedMap << endl;
+		file << _currentMap << endl;
+		file << _life << endl;
+	
+		file.close();
 	}
 	void loadDataFromFile() {
 		string fileName = "PlayerData.txt";
 		fstream file(fileName, ios::in);
 		if (!file) {
 			cout << "\nKhong the mo file";
-
 		}
 		else {
 			string buffer;
 			getline(file, buffer);
-			_score = stoi(buffer);
+			//Doc diem player
+			_score = stoi(buffer);			
+			//Doc map da unlocked
+			getline(file, buffer);
+			_unlockedMap = stoi(buffer);
+			//Doc map hien tai nguoi choi dang choi
 			getline(file, buffer);
 			_currentMap = stoi(buffer);
+			//Doc 
 			getline(file, buffer);
 			_life = stoi(buffer);
 		}

@@ -4,6 +4,9 @@
 #include "Functions.h"
 #include "TextureManager.h"
 #include "MagicBall.h"
+#include <string>
+#include <sstream>
+
 using namespace std;
 
 class Brick
@@ -17,6 +20,12 @@ protected:
 	int currentFrame;
 	int currentRow;
 public:
+	virtual string toString() {
+		stringstream out;
+		out << x << " " << y << " " << currentFrame;
+		return out.str();
+
+	}
 	Brick() {
 		x = 100;
 		y = 100;

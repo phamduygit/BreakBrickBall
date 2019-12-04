@@ -5,6 +5,8 @@
 #include "Paddle.h"
 #include "Player.h"
 #include <time.h>
+#include <sstream>
+#include <string>
 #include <map>
 using namespace std;
 
@@ -14,23 +16,33 @@ private:
 	vector <Amulet> list;
 	SDL_Renderer* renderer;
 	int numberOfBrick;
-	float currentBallSpeed;
+	//float currentBallSpeed;
 	int startTime;
 	int endTime;
+
 	map <string, bool> mapAmuletEffect;
 public:
 	ListAmulet() {
 		startTime = 0;
 		endTime = 0;
 		this->renderer = NULL;
-		currentBallSpeed = 0;
+		//currentBallSpeed = 0;
 		numberOfBrick = 0;
+	}
+	string toString() {
+		stringstream out;
+		for (auto amulet : list) {
+			out << amulet.toString() << endl;
+		}
+		return out.str();
+
+
 	}
 	ListAmulet(SDL_Renderer* renderer) {
 		startTime = 0;
 		endTime = 0;
 		this->renderer = renderer;
-		currentBallSpeed = 0;
+		//currentBallSpeed = 0;
 		numberOfBrick = 0;
 	}
 	map<string, bool> getMapEffect() {

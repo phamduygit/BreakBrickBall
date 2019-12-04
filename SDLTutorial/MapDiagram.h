@@ -40,18 +40,42 @@ public:
 		}
 
 	}
+	bool isInRectangle(int xMouse, int yMouse, int x, int y, int width, int height) {
+		if (xMouse >= x && xMouse <= x + width && yMouse >= y && yMouse <= y + height) {
+			return true;
+		}
+		return false;
+	}
 	void draw(int xMouse, int yMouse, bool& mouseActionClicked) {
 		auto temp = mapDiagramImage;
 		mapDiagramImage = LoadImage("MapDiagram.png", renderer);
 		if (mouseActionClicked) {
-			if (isInCircle(xMouse, yMouse, 83, 562, 72)) {
+			if (isInRectangle(xMouse,yMouse,322,535,340-322,575-535)) {
 				selectedMap = 1;
 			}
-			else if (isInCircle(xMouse, yMouse, 83, 236, 72)) {
+			else if (isInRectangle(xMouse,yMouse,242,564,272-242,615-564)) {
 				selectedMap = 2;
 			}
-			else if (isInCircle(xMouse, yMouse, 421, 236, 72)) {
+			else if (isInRectangle(xMouse,yMouse,153,535,182-153,583-535)) {
 				selectedMap = 3;
+			}
+			else if (isInRectangle(xMouse, yMouse, 85, 453, 130 - 85, 510 - 453)) {
+				selectedMap = 4;
+			}
+			else if (isInRectangle(xMouse, yMouse, 87, 332, 129 - 87, 386 - 332)) {
+				selectedMap = 5;
+			}
+			else if (isInRectangle(xMouse, yMouse, 87, 215, 125 - 87, 266 - 215)) {
+				selectedMap = 6;
+			}
+			else if (isInRectangle(xMouse, yMouse, 364, 212, 414 - 364, 281 - 212)) {
+				selectedMap = 7;
+			}
+			else if (isInRectangle(xMouse, yMouse, 364, 334, 409 - 364, 385 - 334)) {
+				selectedMap = 8;
+			}
+			else if (isInRectangle(xMouse, yMouse, 366, 453, 405 - 366, 506 - 453)) {
+				selectedMap = 9;
 			}
 			mouseActionClicked = false;
 		}

@@ -54,6 +54,8 @@ private:
 	WinScreen winScreen;
 	EndScreen endScreen;
 	SettingScreen settingScreen;
+	bool isMusicOn;
+	string previousScreen;
 	/*
 	-["MenuScreen"]
 	-["MapDiagramScreen"]
@@ -71,7 +73,8 @@ private:
 		_running = false;
 		_grassBackground = NULL;
 		degrees = 0;
-
+		isMusicOn = true;
+		previousScreen = "";
 		listScreen["MenuScreen"] = true;
 		//	listScreen["MapDiagramScreen"] = true;
 
@@ -159,6 +162,12 @@ public:
 			fileMapName.push_back("map1.txt");
 			fileMapName.push_back("map2.txt");
 			fileMapName.push_back("map3.txt");
+			fileMapName.push_back("map4.txt");
+			fileMapName.push_back("map5.txt");
+			fileMapName.push_back("map6.txt");
+			fileMapName.push_back("map7.txt");
+			fileMapName.push_back("map8.txt");
+			fileMapName.push_back("map9.txt");
 
 		}
 	}
@@ -230,20 +239,46 @@ public:
 
 	}
 	void update() {
+		cout << "GamePlay: " << listScreen["GamePlayScreen"] << endl;
+		//
+		if (Mix_PlayingMusic() == 0)
+		{
+		
+		
+				Mix_PlayMusic(LoadMusic("Theme.mp3"), -1);
+		
 
+
+
+
+		}
+		else {
+
+			if (!isMusicOn) {
+				Mix_PauseMusic();
+
+			}
+		}
 		if (listScreen["MenuScreen"]) {
 			if (_menu.getChose()) {
-
+				//NewGame
 				if (_menu.getCurrentChoose() == 1) {
 					listScreen["MapDiagramScreen"] = true;
+					mapDiagram.resetData();
 					listScreen["MenuScreen"] = false;
 				}
 				else if (_menu.getCurrentChoose() == 2) {
-					listScreen["MapDiagramScreen"] = true;
+					/*listScreen["MapDiagramScreen"] = true;
+					mapDiagram.resetData();*/
+					_map.clearMap();
+					_map.loadData();
+					player->loadDataFromFile();
+					listScreen["GamePlayScreen"] = true;
 					listScreen["MenuScreen"] = false;
 				}
 				else if (_menu.getCurrentChoose() == 3) {
 					listScreen["SettingScreen"] = true;
+					settingScreen.resetData();
 					listScreen["MenuScreen"] = false;
 				}
 				else if (_menu.getCurrentChoose() == 4) {
@@ -264,26 +299,42 @@ public:
 		else if (listScreen["SettingScreen"]) {
 			if (settingScreen.getSettingAction() == turnOnSpeaker) {
 				//Turn on speaker
-				listScreen["SettingScreen"] = false;
-				settingScreen.resetData();
+				isMusicOn = true;
+				_map.turnOnMusic();				
+				Mix_ResumeMusic();
+				//listScreen["SettingScreen"] = false;
+				//listScreen["MenuScreen"] = true;
+				settingScreen.setSettingAction(noneSetting);
 			}
 			else if (settingScreen.getSettingAction() == turnOffSpeaker) {
 				//Turn offSpeaker
-				listScreen["SettingScreen"] = false;
-				settingScreen.resetData();
+				isMusicOn = false;
+				_map.turnOffMusic();
+			//	listScreen["SettingScreen"] = false;
+				settingScreen.setSettingAction(noneSetting);
+				//settingScreen.resetData();
 
 			}
 			else if (settingScreen.getSettingAction() == loadMapDiagramScreen) {
 				listScreen["MapDiagramScreen"] = true;
 				listScreen["SettingScreen"] = false;
+				mapDiagram.resetData();
 				settingScreen.setSettingAction(noneSetting);
 
 			}
 			else if (settingScreen.getSettingAction() == backToMenu) {
-				listScreen["MenuScreen"] = true;
+				if (previousScreen == "") {
+					listScreen["MenuScreen"] = true;
+					listScreen["SettingScreen"] = false;
+					_menu.resetData();
+				}
+				else {
+					listScreen[previousScreen] = true;
+					listScreen["SettingScreen"] = false;
+				}
+				
 
-				listScreen["SettingScreen"] = false;
-				_menu.resetData();
+			
 				settingScreen.setSettingAction(noneSetting);
 			}
 
@@ -294,6 +345,7 @@ public:
 		else if (listScreen["GameOverScreen"]) {
 
 			if (gameOver.getAction() == retry) {
+				currentMap = player->getCurrentMap();
 				
 				_map.loadData(fileMapName[currentMap]);				
 				listScreen["GamePlayScreen"] = true;
@@ -315,6 +367,12 @@ public:
 				mapDiagram.setSelectedMap(0);
 				gameOver.setAction(none);
 
+			}
+			else if (gameOver.getAction() == setting) {
+				listScreen["SettingScreen"] = true;
+				listScreen["GameOverScreen"] = false;
+				previousScreen = "GameOverScreen";
+				gameOver.setAction(none);
 			}
 			
 
@@ -359,11 +417,10 @@ public:
 		}
 
 		else if (listScreen["GamePlayScreen"]) {
+		
 
-			if (Mix_PlayingMusic() == 0)
-			{
-				Mix_PlayMusic(LoadMusic("Theme.mp3"), -1);
-			}
+
+			
 			//If music is being played
 			if (_menu.getChose()) {
 				if (_map.isCompleted()) {
@@ -478,10 +535,9 @@ public:
 		SDL_Event Events;
 		SDL_PollEvent(&Events);
 		if (Events.type == SDL_QUIT)
-		{/*
-			fstream fileDataPlayer("dataplayer.txt", ios::out);
-			fileDataPlayer << "Hello 1";
-			fileDataPlayer.close();*/
+		{
+			player->writeDataToFile();
+			_map.saveData();
 			_running = false;
 		}
 		else if (Events.type == SDL_KEYDOWN)
@@ -511,7 +567,7 @@ public:
 		else if (Events.type == SDL_MOUSEMOTION || Events.type == SDL_MOUSEBUTTONUP || Events.type == SDL_MOUSEBUTTONDOWN) {
 			SDL_GetMouseState(&xMouse, &yMouse);
 			//d
-			cout << "X:" << xMouse << endl << "Y:" << yMouse << endl;
+			//cout << "X:" << xMouse << endl << "Y:" << yMouse << endl;
 			switch (Events.type)
 			{
 			case SDL_MOUSEBUTTONDOWN:
