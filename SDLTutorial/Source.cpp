@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
 		{
 			SDL_Delay(DELAY_TIME - frameTime);
 		}*/
-		SDL_Delay(10);
+		SDL_Delay(5);
 		
 	}
 	
