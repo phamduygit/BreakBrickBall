@@ -1,5 +1,8 @@
 #pragma once
 #include "GameOver.h"
+#include <memory>
+#define  pt shared_ptr
+#define mk make_shared
 enum SettingAction {
 	turnOnSpeaker,
 	turnOffSpeaker,

@@ -1,6 +1,9 @@
 #pragma once
 #include <SDL.h>
 #include "Functions.h"
+#include <memory>
+#define  pt shared_ptr
+#define mk make_shared
 class MapDiagram
 {
 private:
@@ -11,7 +14,7 @@ private:
 public:
 
 	MapDiagram() {}
-	void setRenderer(SDL_Renderer* & renderer) {
+	void setRenderer(SDL_Renderer*& renderer) {
 		this->renderer = renderer;
 	}
 	MapDiagram(SDL_Renderer* &renderer) {
@@ -108,7 +111,12 @@ public:
 
 		SDL_RenderCopy(renderer, mapDiagramImage, NULL, NULL);
 		SDL_DestroyTexture(mapDiagramImage);
+		//delete mapDiagramImage;		
 		SDL_DestroyTexture(temp);
+		
+	}
+	~MapDiagram() {
+		delete mapDiagramImage;
 	}
 
 };

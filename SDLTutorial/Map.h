@@ -2,6 +2,9 @@
 #include "ListBrick.h"
 #include "ListAmulet.h"
 #include <fstream>
+#include <memory>
+#define  pt shared_ptr
+#define mk make_shared
 
 
 class Map
@@ -17,6 +20,7 @@ public:
 	Map(){
 		renderer = NULL;
 	}
+
 	void turnOffMusic() {
 		listBrick.setIsMusicOn(false);
 	}
@@ -47,9 +51,10 @@ public:
 			while (getline(source, buffer, ' ')) {
 				token.push_back(buffer);
 			}
-			Brick brick(renderer, stoi(token[0]), stoi(token[1]));
-			brick.setFrame(stoi(token[2]));
-			listBrick.addBrick(brick);
+			Brick *brick = new Brick(renderer, stoi(token[0]), stoi(token[1]));
+			brick->setFrame(stoi(token[2]));
+			listBrick.addBrick(*brick);
+			delete brick;
 			token.clear();
 
 		}
@@ -62,8 +67,9 @@ public:
 			while (getline(source, buffer, ' ') ){
 				token.push_back(buffer);
 			}
-			Amulet amulet(renderer, stoi(token[0]), stoi(token[1]), stoi(token[2]));
-			listAmulet.addAmulet(amulet);
+			Amulet* amulet = new Amulet(renderer, stoi(token[0]), stoi(token[1]), stoi(token[2]));
+			listAmulet.addAmulet(*amulet);
+			delete amulet;
 			token.clear();
 		}
 
@@ -130,11 +136,13 @@ public:
 			
 
 		}
+		mapEffect.clear();
 	}
 	int getNumberOfBrick() {
 		return listBrick.getSize();
 	}
-	virtual ~Map() {}
+	virtual ~Map() {
+	}
 
 };
 

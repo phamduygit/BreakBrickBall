@@ -4,6 +4,9 @@
 #include "Functions.h"
 #include <string>
 #include "SettingScreen.h"
+#include <memory>
+#define  pt shared_ptr
+#define mk make_shared
 using namespace std;
 class Paddle
 {
@@ -85,7 +88,9 @@ public:
 		image = LoadImage(name, renderer);
 	}
 	virtual void draw() {
+
 		DrawInRenderer(renderer, image, x, y, width, height);
+		
 	}
 	//vector <int > generateXPos(float xBall) {
 	//	vector <int > result;

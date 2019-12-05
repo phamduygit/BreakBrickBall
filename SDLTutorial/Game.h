@@ -21,14 +21,23 @@
 #include "WinScreen.h"
 #include "EndScreen.h"
 #include "SettingScreen.h"
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
 #define PI 3.141592
+#include <memory>
+#define  pt shared_ptr
+#define mk make_shared
+
+
 using namespace std;
 class Game
 {
 private:
 	Line line;
 	Menu _menu;
-	SDL_Surface* _screenSurface;
+	//SDL_Surface* _screenSurface;
 	SDL_Window* _window;
 	SDL_Renderer* _renderer;
 	bool _running;
@@ -68,7 +77,7 @@ private:
 	Game() {
 		player = Player::Instance();
 		ball = NULL;
-		_screenSurface = NULL;
+		//_screenSurface = NULL;
 		_window = NULL;
 		_renderer = NULL;
 		_running = false;
@@ -83,10 +92,14 @@ private:
 		yMouse = 0;
 		_paddle = NULL;
 		gameMode = playWithMouse;
-    
+
 	}
 	static Game* instance;
 public:
+	~Game() {
+		delete ball, _paddle, player, _window, _grassBackground, _renderer;
+
+	}
 	static Game* Instance() {
 		if (instance == NULL) {
 			instance = new Game();
@@ -107,7 +120,7 @@ public:
 				_running = false;
 			}
 			// Tạo cửa sỗ mới 
-			_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Width, Height, SDL_WINDOW_SHOWN);
+			_window = (SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Width, Height, SDL_WINDOW_SHOWN));
 			if (_window == NULL) {
 				cout << "Window could not be created! SDL Error: " << SDL_GetError() << endl;
 			}
@@ -133,6 +146,7 @@ public:
 					{
 						cout << "SDL_mixer could not initialize! SDL_mixer Error: %s\n" << Mix_GetError();
 					}
+					//SDL_FreeSurface(_window);
 				}
 				_running = true;
 			}
@@ -147,13 +161,11 @@ public:
 			settingScreen.setRenderer(_renderer);
 			//Load anh cho cac doi tuong chay theo frame
 			TextureManager::GetInstance()->load("Brick.png", "Brick", _renderer);
-			TextureManager::GetInstance()->load("amulet.png", "Amulet", _renderer);
-
-			//
+			TextureManager::GetInstance()->load("amulet.png", "Amulet", _renderer);			//
 			_grassBackground = LoadImage("GrassBackground.png", _renderer);
 			ball = Ball::Instance(_renderer);
 			ball->setImage("Ball.png");
-			line = Line(_renderer);
+			line.setRenderer(_renderer);
 			_map = Map(_renderer, "map2.txt");
 			//	listBrick.setRenderer(_renderer);
 			//	listBrick.createWithMapText("map.txt");
@@ -161,7 +173,6 @@ public:
 			_menu.setImage("GrassBackground.png");
 			_paddle = Paddle::Instance(_renderer);
 			_paddle->setImage("Paddle.png");
-
 			fileMapName.push_back("");
 			fileMapName.push_back("map1.txt");
 			fileMapName.push_back("map2.txt");
@@ -177,7 +188,7 @@ public:
 	}
 
 	void render() {
-		
+
 		/*
 	-["MenuScreen"]
 	-["MapDiagramScreen"]
@@ -186,23 +197,22 @@ public:
 	-["GamePlayScreen"]
 	*/
 		SDL_RenderClear(_renderer);
+		//Hiển thị màn hình menu game
+
 		if (listScreen["MenuScreen"]) {
 			_menu.draw(xMouse, yMouse, mouseActionClicked);
 		}
+		//Hiển thị màn hình chọn map
 		else if (listScreen["MapDiagramScreen"]) {
 			mapDiagram.setUnlockedMap(player->getUnlockedMap());
 			mapDiagram.draw(xMouse, yMouse, mouseActionClicked);
-		
 
 		}
+		//Hiển thị màn hình cài đặt
 		else if (listScreen["SettingScreen"]) {
 			settingScreen.draw(xMouse, yMouse, mouseActionClicked);
-
-
 		}
-		else if (listScreen["GameOverScreen"]) {		
-			gameOver.draw(xMouse, yMouse, mouseActionClicked);
-		}
+		//Hiển thị màn hình chơi game chính
 		else if (listScreen["GamePlayScreen"]) {
 
 			DrawInRenderer(_renderer, _grassBackground);
@@ -212,11 +222,15 @@ public:
 			if (!ball->getIsLaunch()) {
 				line.draw();
 			}
-			_paddle->draw();			
+			_paddle->draw();
 			player->draw();
+			_CrtDumpMemoryLeaks();
 
 		}
-		else if (listScreen["WinScreen"]) {			
+		else if (listScreen["GameOverScreen"]) {
+			gameOver.draw(xMouse, yMouse, mouseActionClicked);
+		}
+		else if (listScreen["WinScreen"]) {
 			winScreen.draw(xMouse, yMouse, mouseActionClicked);
 
 			winScreen.drawStar(player->getLife());
@@ -229,7 +243,7 @@ public:
 	}
 	bool isBoundFromPaddle() {
 		float t1;
-	//	float t2;
+		//	float t2;
 		if (ball->getRadius() * ball->getRadius() - (_paddle->getY() - ball->getY()) * (_paddle->getY() - ball->getY()) >= 0) {
 			float sq = sqrt(abs(ball->getRadius() * ball->getRadius() - (_paddle->getY() - ball->getY()) * (_paddle->getY() - ball->getY())));
 			t1 = (sq - _paddle->getX() + ball->getX()) / (float)_paddle->getWidth();
@@ -250,8 +264,8 @@ public:
 		//cout << "GamePlay: " << listScreen["GamePlayScreen"] << endl;
 		//
 		if (Mix_PlayingMusic() == 0)
-		{		
-				Mix_PlayMusic(LoadMusic("Theme.mp3"), -1);
+		{
+			Mix_PlayMusic(LoadMusic("Theme.mp3"), -1);
 		}
 		else {
 
@@ -286,10 +300,10 @@ public:
 					listScreen["MenuScreen"] = false;
 				}
 				else if (_menu.getCurrentChoose() == 4) {
-					
+
 					exit(0);
 				}
-				
+
 			}
 		}
 		else if (listScreen["MapDiagramScreen"]) {
@@ -306,7 +320,7 @@ public:
 			if (settingScreen.getSettingAction() == turnOnSpeaker) {
 				//Turn on speaker
 				isMusicOn = true;
-				_map.turnOnMusic();				
+				_map.turnOnMusic();
 				Mix_ResumeMusic();
 				//listScreen["SettingScreen"] = false;
 				//listScreen["MenuScreen"] = true;
@@ -316,7 +330,7 @@ public:
 				//Turn offSpeaker
 				isMusicOn = false;
 				_map.turnOffMusic();
-			//	listScreen["SettingScreen"] = false;
+				//	listScreen["SettingScreen"] = false;
 				settingScreen.setSettingAction(noneSetting);
 				//settingScreen.resetData();
 
@@ -338,9 +352,9 @@ public:
 					listScreen[previousScreen] = true;
 					listScreen["SettingScreen"] = false;
 				}
-				
 
-			
+
+
 				settingScreen.setSettingAction(noneSetting);
 			}
 			else if (settingScreen.getSettingAction() == autoPlay) {
@@ -361,8 +375,8 @@ public:
 			ball->setSpeed(4);
 			if (gameOver.getAction() == retry) {
 				currentMap = player->getCurrentMap();
-				
-				_map.loadData(fileMapName[currentMap]);				
+
+				_map.loadData(fileMapName[currentMap]);
 				listScreen["GamePlayScreen"] = true;
 				listScreen["GameOverScreen"] = false;
 				//cout << "D" << listScreen["GamePlayScreen"];
@@ -371,7 +385,7 @@ public:
 				ball->reset(_paddle->getX() + 0.5 * _paddle->getWidth() / 2, _paddle->getY());
 				isResetState = true;
 				gameOver.setAction(none);
-				
+
 			}
 			else if (gameOver.getAction() == back) {
 
@@ -389,15 +403,16 @@ public:
 				previousScreen = "GameOverScreen";
 				gameOver.setAction(none);
 			}
-			
 
 
 
-		}else if(listScreen["WinScreen"]){
 
-		//resset speed 
+		}
+		else if (listScreen["WinScreen"]) {
+
+			//resset speed 
 			ball->setSpeed(4);
-			if (winScreen.getAction() == retry) {				
+			if (winScreen.getAction() == retry) {
 				listScreen["WinScreen"] = false;
 				listScreen["GamePlayScreen"] = true;
 				player->setLife(3);
@@ -416,13 +431,13 @@ public:
 				//3
 				player->setCurrentMap(currentMap + 1);
 				//
-				if (currentMap > player->getUnlockedMap()&&currentMap+1<=9) {
-					
+				if (currentMap > player->getUnlockedMap() && currentMap + 1 <= 9) {
+
 					player->setUnlockedMap(currentMap + 1);
 				}
 				player->setLife(3);
 				player->setRateOfScore(10);
-				currentMap = (currentMap+1);
+				currentMap = (currentMap + 1);
 				winScreen.setAction(none);
 				//ball->reset();
 				if (currentMap == fileMapName.size()) {
@@ -442,7 +457,7 @@ public:
 		}
 
 		else if (listScreen["GamePlayScreen"]) {
-			
+
 			//If music is being played
 			if (_menu.getChose()) {
 				if (_map.isCompleted()) {
@@ -486,8 +501,8 @@ public:
 					if (ball->getY() + ball->getRadius() > 800) {
 
 						ball->reset(_paddle->getX() + _paddle->getWidth() / 2, _paddle->getY());
-						
-						player->setLife(player->getLife() -1);
+
+						player->setLife(player->getLife() - 1);
 						isResetState = true;
 
 					}
@@ -510,7 +525,7 @@ public:
 						ball->setDegree(-degree + 15);
 
 					}
-					else if (_paddle->getDeltaX() < 0 && -degree - 15 > 180-135) {
+					else if (_paddle->getDeltaX() < 0 && -degree - 15 > 180 - 135) {
 						cout << "Xuoc2\n";
 						ball->setDegree(-degree - 15);
 
@@ -541,7 +556,7 @@ public:
 						ball->setDegree(-ball->getDegree());
 					}
 					if (ball->getSpeed() <= 15) {
-					
+
 						ball->setSpeed(ball->getSpeed() * (float)1.1);
 
 					}
@@ -550,7 +565,7 @@ public:
 
 				if (ball->getIsLaunch()) {
 
-					_paddle->move(xMouse,MoveLR,ball->getX(),gameMode);
+					_paddle->move(xMouse, MoveLR, ball->getX(), gameMode);
 				}
 			}
 			//////////////////////////////////////////////////////

@@ -1,6 +1,6 @@
 #include "Functions.h"
 
-SDL_Texture* LoadImage(string NameImage, SDL_Renderer* Renderer) {
+SDL_Texture* LoadImage(string NameImage, SDL_Renderer*Renderer) {
 	SDL_Texture* newTexture = NULL;
 	SDL_Surface* loadSurface = IMG_Load(NameImage.c_str());
 	if (loadSurface == NULL) {
@@ -11,8 +11,10 @@ SDL_Texture* LoadImage(string NameImage, SDL_Renderer* Renderer) {
 		if (newTexture == NULL) {
 			cout << "Unable to create texture from " << NameImage << "! SDL error: " << SDL_GetError() << endl;
 		}
-		SDL_FreeSurface(loadSurface);
+		
 	}
+	//Fix
+	SDL_FreeSurface(loadSurface);
 	return newTexture;
 }
 SDL_Texture* LoadFont(string Text, SDL_Renderer* Renderer, string Font) {
@@ -22,7 +24,7 @@ SDL_Texture* LoadFont(string Text, SDL_Renderer* Renderer, string Font) {
 		cout << "Not open ttf!" << endl;
 	}
 	SDL_Color fg = { 255, 255, 100 };
-
+	
 	SDL_Surface* loadedSurface = TTF_RenderText_Solid(font, Text.c_str(), fg);
 	if (loadedSurface == NULL)
 	{
@@ -35,11 +37,14 @@ SDL_Texture* LoadFont(string Text, SDL_Renderer* Renderer, string Font) {
 		{
 			cout << "Unable to create texture from" << Font.c_str() << "! SDL Error: " << SDL_GetError() << endl;
 		}
-		SDL_FreeSurface(loadedSurface);
+		
 	}
+	//Fix
+	TTF_CloseFont(font);
+	SDL_FreeSurface(loadedSurface);
 	return newTexture;
 }
-void DrawInRenderer(SDL_Renderer* Renderer, SDL_Texture* &Texture, float x, float y, float w, float h) {
+void DrawInRenderer(SDL_Renderer* Renderer, SDL_Texture*&Texture, float x, float y, float w, float h) {
 	SDL_FRect Size;
 	Size.x = x;
 	Size.y = y;
@@ -48,10 +53,10 @@ void DrawInRenderer(SDL_Renderer* Renderer, SDL_Texture* &Texture, float x, floa
 	SDL_RenderCopyF(Renderer, Texture, NULL, &Size);
 	//SDL_DestroyTexture(Texture);
 }
-void DrawInRenderer(SDL_Renderer* Renderer, SDL_Texture* &Texture, SDL_FRect Size) {
+void DrawInRenderer(SDL_Renderer*Renderer, SDL_Texture*&Texture, SDL_FRect Size) {
 	SDL_RenderCopyF(Renderer, Texture, NULL, &Size);
 }
-void DrawInRendererRotate(SDL_Renderer* Renderer, SDL_Texture* &Texture, float x, float y, float w, float h, float radius, float degree) {
+void DrawInRendererRotate(SDL_Renderer* Renderer, SDL_Texture*&Texture, float x, float y, float w, float h, float radius, float degree) {
 	SDL_FRect Size;
 	Size.x = x;
 	Size.y = y;
@@ -60,7 +65,7 @@ void DrawInRendererRotate(SDL_Renderer* Renderer, SDL_Texture* &Texture, float x
 	SDL_RenderCopyF(Renderer, Texture, NULL, &Size);
 	//SDL_DestroyTexture(Texture);
 }
-void DrawInRenderer(SDL_Renderer* Renderer, SDL_Texture* &Texture) {
+void DrawInRenderer(SDL_Renderer*Renderer, SDL_Texture*&Texture) {
 	SDL_RenderCopyF(Renderer, Texture, NULL, NULL);
 	//SDL_DestroyTexture(Texture);
 }

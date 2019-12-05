@@ -6,6 +6,9 @@
 #include "MagicBall.h"
 #include <string>
 #include <sstream>
+#include <memory>
+#define  pt shared_ptr
+#define mk make_shared
 
 using namespace std;
 
@@ -91,7 +94,10 @@ public:
 		//DrawInRenderer(renderer, image, x, y, size, size);
 		TextureManager::GetInstance()->drawFrame("Brick", float(x), float(y), size, size, 1, currentFrame, renderer);
 	}
+	virtual ~Brick() {
+		//SDL_DestroyRenderer(renderer);
 
+	}
 
 };
 

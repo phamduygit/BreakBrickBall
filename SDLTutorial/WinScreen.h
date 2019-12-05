@@ -1,7 +1,9 @@
 #pragma once
 #include "GameOver.h"
 #include "Player.h"
-
+#include <memory>
+#define  pt shared_ptr
+#define mk make_shared
 class WinScreen:public GameOver
 {
 private:

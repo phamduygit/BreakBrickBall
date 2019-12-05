@@ -3,6 +3,9 @@
 #include <iostream>
 #include <vector>
 #include "MagicBall.h"
+#include <memory>
+#define  pt shared_ptr
+#define mk make_shared
 using namespace std;
 class Line
 {
@@ -32,7 +35,7 @@ public:
 		return heSoGoc;
 
 	}
-	Line(SDL_Renderer* &renderer) {
+	void setRenderer(SDL_Renderer* &renderer) {
 		sizePaddle = 120;
 
 		width = 500;

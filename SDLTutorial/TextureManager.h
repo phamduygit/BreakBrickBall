@@ -4,6 +4,9 @@
 #include <SDL_image.h>
 #include <iostream>
 #include <map>
+#include <memory>
+#define  pt shared_ptr
+#define mk make_shared
 using namespace std;
 class TextureManager {
 private:
@@ -26,13 +29,14 @@ public:
 			return false;
 		}
 		SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, tempSurface);
+		//Giai phong tempSurface
 		SDL_FreeSurface(tempSurface);
 		if (texture) {
 			textureMap[id] = texture;
+			//SDL_DestroyTexture(texture);
 			return true;
 		}
 		return false;
-
 	}
 	void drawFrame(string id, float x, float y, float width, float height, int currentRow, int currentFrame, SDL_Renderer* &renderer, SDL_RendererFlip flip = SDL_FLIP_NONE) {
 		SDL_Rect source;

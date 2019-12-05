@@ -4,6 +4,9 @@
 #include <SDL.h>
 #include <cmath>
 #include "Functions.h"
+#include <memory>
+#define  pt shared_ptr
+#define mk make_shared
 //#include"Game.h"
 struct Point2D {
 	float x;
@@ -29,8 +32,7 @@ private:
 	SDL_Texture* image;
 	SDL_Renderer* renderer;
 	bool isLaunch;
-	float backupDegree;
-	
+	float backupDegree;	
 	Ball(SDL_Renderer*& rendererValue) {
 		x = 250;
 		y = 700;
@@ -127,7 +129,6 @@ public:
 		b.w = size;
 		b.h = size;
 		float cX, cY;
-
 		//Find closest x offset
 		if (a.x < b.x)
 		{

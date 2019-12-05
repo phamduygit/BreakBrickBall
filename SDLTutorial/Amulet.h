@@ -1,6 +1,9 @@
 #pragma once
 #include "Brick.h"
 #include "MagicBall.h"
+#include <memory>
+#define  pt shared_ptr
+#define mk make_shared
 enum TypeAmulet {
 	Double = 2,
 	Magnet = 3,
@@ -19,7 +22,7 @@ private:
 public:
 
 	Amulet() { startTime = 0; }
-	Amulet(SDL_Renderer* renderer, int x, int y,int typeAmulet) :Brick(renderer, x, y) {
+	Amulet(SDL_Renderer* &renderer, int x, int y,int typeAmulet) :Brick(renderer, x, y) {
 		this->currentFrame = typeAmulet - 1;
 		this->typeAmulet = TypeAmulet(typeAmulet);
 		startTime = 0;

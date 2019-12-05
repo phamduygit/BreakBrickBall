@@ -1,6 +1,9 @@
 #pragma once
 #include "SDL.h"
 #include "Functions.h"
+#include <memory>
+#define  pt shared_ptr
+#define mk make_shared
 enum Action {
 	nextMap,
 	retry,

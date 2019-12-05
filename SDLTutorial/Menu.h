@@ -2,6 +2,10 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "Functions.h"
+
+#include <memory>
+#define  pt shared_ptr
+#define mk make_shared
 using namespace std;
 class Menu
 {
@@ -128,8 +132,7 @@ public:
 		SDL_DestroyTexture(BT_NewGame);
 		SDL_DestroyTexture(BT_Setting);
 		SDL_DestroyTexture(BT_Exit);*/
-
-		
+		delete backGround,renderer, BT_NewGame, BT_Continue, BT_Setting,BT_Exit;
 		
 	}
 };

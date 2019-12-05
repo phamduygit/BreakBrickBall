@@ -8,7 +8,9 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-
+#include <memory>
+#define  pt shared_ptr
+#define mk make_shared
 using namespace std;
 class ListBrick
 {

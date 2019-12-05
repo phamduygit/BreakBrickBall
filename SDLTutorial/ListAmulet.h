@@ -8,6 +8,9 @@
 #include <sstream>
 #include <string>
 #include <map>
+#include <memory>
+#define  pt shared_ptr
+#define mk make_shared
 using namespace std;
 
 class ListAmulet
@@ -31,8 +34,8 @@ public:
 	}
 	string toString() {
 		stringstream out;
-		for (auto amulet : list) {
-			out << amulet.toString() << endl;
+		for (size_t i = 0; i < list.size(); i++) {
+			out << list[i].toString() << endl;
 		}
 		return out.str();
 

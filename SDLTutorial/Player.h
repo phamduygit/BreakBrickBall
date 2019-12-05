@@ -4,6 +4,9 @@
 #include <iostream>
 #include "Functions.h"
 #include <SDL.h>
+#include <memory>
+#define  pt shared_ptr
+#define mk make_shared
 using namespace std;
 //PlayerData.txt
 class Player
@@ -121,6 +124,7 @@ public:
 		destOfScore.h = 50;
 		SDL_RenderCopy(renderer, scoreTexture, NULL, &destOfScore);
 		SDL_DestroyTexture(scoreTexture);
+
 		SDL_Rect destOfLife;
 		destOfLife.x = 200;
 		destOfLife.y = 0;
@@ -128,6 +132,7 @@ public:
 		destOfLife.h = 50;
 		SDL_RenderCopy(renderer, lifeTexture, NULL, &destOfLife);
 		SDL_DestroyTexture(lifeTexture);
+
 		SDL_DestroyTexture(temp1);
 		SDL_DestroyTexture(temp2);
 	}

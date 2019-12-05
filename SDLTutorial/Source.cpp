@@ -4,6 +4,7 @@
 #include <SDL_ttf.h>
 #include "Functions.h"
 #include "Game.h"
+
 using namespace std;
 
 int main(int argc, char* argv[]) {
@@ -27,6 +28,7 @@ int main(int argc, char* argv[]) {
 			SDL_Delay(DELAY_TIME - frameTime);
 		}*/
 		SDL_Delay(10);
+		
 	}
 	
 	return 0;
