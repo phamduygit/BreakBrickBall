@@ -3,25 +3,28 @@
 #include <iostream>
 #include <vector>
 #include "MagicBall.h"
-#include <memory>
-#define  pt shared_ptr
-#define mk make_shared
+
 using namespace std;
 class Line
 {
 private:
+	//Là chiều rộng của màn hình game
 	float width;
+	//Là chiều cao của màn hình game
 	float height;
+	//Vị trí hiện tại của paddle
 	SDL_FPoint paddle;
+	//Tọa độ của con trỏ chuột
 	SDL_Point mouse;
-	SDL_FPoint target;
-	int sizePaddle;
+	//Struct renderer
 	SDL_Renderer* renderer;
+	//Hệ số góc nối giữa paddle và con trỏ chuột
 	float heSoGoc;
+	//Kích thước của paddle
 	float paddleSize;
 public:
+	//Hàm khỏi tạo không đối số
 	Line() {
-		sizePaddle = 120;
 		width = 500;
 		height = 800;
 		heSoGoc = 0;
@@ -29,37 +32,36 @@ public:
 		paddle = { 0 , 0 };
 		paddleSize = 0;
 		renderer = NULL;
-		target = { 0, 0 };
+
 	}
+	//Lấy ra hệ số gốc
 	float getHeSoGoc() {
 		return heSoGoc;
 
 	}
-	void setRenderer(SDL_Renderer* &renderer) {
-		sizePaddle = 120;
-
+	//Thiết lập renderer cho đối tượng
+	void setRenderer(SDL_Renderer*& renderer) {
 		width = 500;
 		height = 800;
-		sizePaddle = 120;
 		this->renderer = renderer;
 		heSoGoc = 0;
 		mouse = { 0, 0 };
 		paddle = { 0 , 0 };
-		paddleSize = 0;
-		target = { 0, 0 };
+		paddleSize = 120;
 	}
-
-	void setPaddle(float x, float y,float _paddleSize) {
+	//Sét thống tin cho paddle gồm vị trí và kích thước
+	void setPaddle(float x, float y, float _paddleSize) {
 		paddle.x = x;
 		paddle.y = y;
 		paddleSize = _paddleSize;
 	}
+	//Set tọa độ con trỏ chuột
 	void setMouse(int x, int y) {
 		mouse.x = x;
 		mouse.y = y;
 	}
-	
-	
+
+	//Tính giá trị khi thay điểm c vào đường thẳng được vẽ bởi hai điểm a b 
 	float calc(SDL_FPoint a, SDL_FPoint b, SDL_FPoint c) {
 		return (c.x - a.x) / (b.x - a.x) - (c.y - a.y) / (b.y - a.y);
 
@@ -72,7 +74,7 @@ public:
 		return (c.x - a.x) / (b.x - a.x) - (c.y - a.y) / (b.y - a.y);
 
 	}
-	
+
 	void draw(float hsGoc, float hsTuDo) {
 		SDL_FPoint A;
 		SDL_FPoint B;
@@ -81,6 +83,9 @@ public:
 		SDL_FPoint topRight = { width,0 };
 		SDL_FPoint bottomRight = { width,height };
 		SDL_Point mouseF = { mouse.x,mouse.y };
+		//Kiểm tra xem con trỏ chuột và điểm bên dưới bên trái màn hình và vị trí con trỏ chuột có nằm cùng 
+		//bờ với đường thẳng vẽ từ paddle đến diểm trên cùng bên trái
+		//tương tự như vậy đối với bên phải 
 		if (calc(paddle, topLeft, bottomLeft) * calc(paddle, topLeft, mouse) > 0 || calc(paddle, topRight, bottomRight) * calc(paddle, topRight, mouse) > 0) {
 			if (hsGoc >= 0) {
 
@@ -88,9 +93,9 @@ public:
 				A.y = paddle.y;
 				B.x = 0;
 				B.y = hsTuDo;
-				SDL_RenderDrawLineF(renderer, A.x + paddleSize/2, A.y - Ball::Instance(renderer)->getRadius(), B.x, B.y);
+				SDL_RenderDrawLineF(renderer, A.x + paddleSize / 2, A.y - Ball::Instance(renderer)->getRadius(), B.x, B.y);
 				//Vẽ tia đối xứng
-				
+
 				hsGoc = -hsGoc;
 				A.x = 0;
 				A.y = A.x * hsGoc + hsTuDo;
@@ -98,13 +103,14 @@ public:
 				B.x = (B.y - hsTuDo) / hsGoc;
 				SDL_RenderDrawLineF(renderer, A.x, A.y, B.x, B.y);
 			}
+			//Ngược lại thì tia Ox sẽ là phần phản xạ đường thẳng từ paddle đến con trỏ chuột 
 			else
 			{
 				A.x = paddle.x;
 				A.y = paddle.y;
 				B.x = width;
 				B.y = hsGoc * B.x + hsTuDo;
-				SDL_RenderDrawLineF(renderer, A.x + paddleSize/2, A.y - Ball::Instance(renderer)->getRadius(), B.x, B.y);
+				SDL_RenderDrawLineF(renderer, A.x + paddleSize / 2, A.y - Ball::Instance(renderer)->getRadius(), B.x, B.y);
 				hsGoc = -hsGoc;
 				hsTuDo = B.y - B.x * hsGoc;
 				A.y = 0;
@@ -116,9 +122,9 @@ public:
 			if (hsGoc >= 0) {
 				A.x = paddle.x;
 				A.y = paddle.y;
-				B.x = -hsTuDo/hsGoc;
+				B.x = -hsTuDo / hsGoc;
 				B.y = 0;
-				SDL_RenderDrawLineF(renderer, A.x + paddleSize/2, A.y - Ball::Instance(renderer)->getRadius(), B.x, B.y);
+				SDL_RenderDrawLineF(renderer, A.x + paddleSize / 2, A.y - Ball::Instance(renderer)->getRadius(), B.x, B.y);
 				//Vẽ tia đối xứng
 				hsGoc = -hsGoc;
 				hsTuDo = B.y - hsGoc * B.x;
@@ -130,9 +136,9 @@ public:
 			{
 				A.x = paddle.x;
 				A.y = paddle.y;
-				B.x = -hsTuDo/hsGoc;
+				B.x = -hsTuDo / hsGoc;
 				B.y = 0;
-				SDL_RenderDrawLineF(renderer, A.x + paddleSize/2, A.y-Ball::Instance(renderer)->getRadius(), B.x, B.y);
+				SDL_RenderDrawLineF(renderer, A.x + paddleSize / 2, A.y - Ball::Instance(renderer)->getRadius(), B.x, B.y);
 				hsGoc = -hsGoc;
 				hsTuDo = B.y - hsGoc * B.x;
 				A.x = width;
@@ -143,23 +149,12 @@ public:
 		}
 	}
 
-		void draw() {
-			heSoGoc = (paddle.y - (float)mouse.y) / (paddle.x + paddleSize/2 - (float)mouse.x);
-			float hsTuDo = mouse.y - heSoGoc * mouse.x;
-			draw(heSoGoc, hsTuDo);		
-		}
-	
-
-
-
-
-
-
-
-	
-	void render() {
-
+	void draw() {
+		heSoGoc = (paddle.y - (float)mouse.y) / (paddle.x + paddleSize / 2 - (float)mouse.x);
+		float hsTuDo = mouse.y - heSoGoc * mouse.x;
+		draw(heSoGoc, hsTuDo);
 	}
+
 
 
 

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <SDL.h>
 #include <string>
 #include "Functions.h"
@@ -6,96 +6,102 @@
 #include "MagicBall.h"
 #include <string>
 #include <sstream>
-#include <memory>
-#define  pt shared_ptr
-#define mk make_shared
 
 using namespace std;
 
 class Brick
 {
 protected: 
-	int x;
-	int y;
-	float size;
-	//SDL_Texture* image;
-	SDL_Renderer* renderer;
-	int currentFrame;
-	int currentRow;
+	//x y là vị trí sẽ render đối tượng lên màn hình game
+	int _x;
+	int _y;
+	//Kích thước của vật thể 
+	//ở đây ta dùng size do gạch là một hình vuông
+	float _size;
+	SDL_Renderer* _renderer;
+	//Khung hiện tại của gạch trên ảnh có kích thước 150x50
+	//Trong đó ứng với một khung có width 50 thì ta có một trạng thái của gạch
+	int _currentFrame;
+	int _currentRow;
 public:
+	//Xuất ra những thuộc tính cần thiết của gạch để save game
 	virtual string toString() {
 		stringstream out;
-		out << x << " " << y << " " << currentFrame;
+		out << _x << " " << _y << " " << _currentFrame;
 		return out.str();
 
 	}
-	Brick() {
-		x = 100;
-		y = 100;
-		size = 50;
-		//image = NULL;
-		renderer = NULL;
-		currentRow = 1;
-		currentFrame = 4;
-	}
-	Brick(SDL_Renderer*& renderValue) {
-		
-		x = 370;
-		y = 50;
-		size =50 ;
-		//image = NULL;
-		renderer = renderValue;
-		currentRow = 1;
-		currentFrame = 1;
-	}
-	Brick(SDL_Renderer*& renderValue,int _x,int _y) {
 
-		x = _x;
-		y = _y;
-		size = 50;
+	//Hàm khỏi tạo mặc định cho gạch
+	Brick() {
+		_x = 100;
+		_y = 100;
+		_size = 50;
+		_renderer = NULL;
+		_currentRow = 1;
+		_currentFrame = 4;
+	}
+	//Khỏi tạo gạch với đối số là con trỏ renderer
+	Brick(SDL_Renderer*& renderer) {
+		
+		_x = 370;
+		_y = 50;
+		_size =50 ;
+		_renderer = renderer;
+		_currentRow = 1;
+		_currentFrame = 1;
+	}
+	Brick(SDL_Renderer*& renderer,int x,int y) {
+
+		_x = x;
+		_y = y;
+		_size = 50;
 	//	image = NULL;
-		renderer = renderValue;
-		currentRow = 1;
-		currentFrame = 1;
+		this->_renderer = renderer;
+		_currentRow = 1;
+		_currentFrame = 1;
 	}
+	//Lấy ra vị trí x của đối tượng
 	virtual int getX() {
-		return x;
+		return _x;
 	}
+	//Cài đặt vị trí x của đối tượng
 	virtual void setX(int xValue) {
-		x = xValue;
+		_x = xValue;
 	}
+	//Lấy ra vị trí y của đối tượng
 	virtual int getY() {
-		return y;
+		return _y;
 	}
+	//Cài đặt vị trí y của đối tượng
 	virtual void setY(int yValue) {
-		y = yValue;
+		_y = yValue;
 	}
+	//Lấy ra kích thước của gạch
 	virtual float getSize() {
-		return size;
+		return _size;
 	}
+	//Cài đặt size cho gạch
 	virtual void setSize(float sizeValue) {
-		size = sizeValue;
+		_size = sizeValue;
 	}
-	void setImage(string name) {
-	//	image = LoadImage(name, renderer);
-	}
+	//Cài đặt khung ảnh cho gạch
 	virtual void setFrame(int val) {
 
-		currentFrame = val;
+		_currentFrame = val;
 	}
+	//Lấy ra thông tin cụ thể cho khung gạch
 	virtual int getFrame() {
-		return currentFrame;
-	}
-	virtual void update() {
-
-	}
-	
+		return _currentFrame;
+	}	
+	//Vẽ gạch lên màn hình game
 	virtual void draw() {
-		//DrawInRenderer(renderer, image, x, y, size, size);
-		TextureManager::GetInstance()->drawFrame("Brick", float(x), float(y), size, size, 1, currentFrame, renderer);
+		TextureManager::GetInstance()->drawFrame("Brick", float(_x), float(_y), _size, _size, 1, _currentFrame, _renderer);
 	}
+	//Hàm hủy cho đối tượng gạch
 	virtual ~Brick() {
-		//SDL_DestroyRenderer(renderer);
+		//Error
+		//SDL_DestroyRenderer(_renderer);
 
 	}
 

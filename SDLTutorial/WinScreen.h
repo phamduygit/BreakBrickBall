@@ -1,20 +1,26 @@
-#pragma once
+﻿#pragma once
 #include "GameOver.h"
 #include "Player.h"
-#include <memory>
-#define  pt shared_ptr
-#define mk make_shared
-class WinScreen:public GameOver
+class WinScreen :public GameOver
 {
 private:
+	//Chứa hình ảnh các nút 
+	//Nút  next
 	SDL_Texture* nextButton;
+	//Nút chơi lại
 	SDL_Texture* retryButton;
+	//hình ảnh số sao người chơi đặt được 
 	SDL_Texture* imageOfStar;
 
 
 public:
-	WinScreen():GameOver(){}
-	WinScreen(SDL_Renderer* &renderer):GameOver(renderer){}
+	//Hàm khởi tạo không đối số
+	WinScreen() :GameOver() {}
+	//Hàm khởi tạo có đối số 
+	WinScreen(SDL_Renderer*& renderer) :GameOver(renderer) {}
+	//Vẽ màn hình lên màn hình game
+	//nhận vào tọa độ chuột kiểm soát thao tác người chơi chọn sau khi chiến
+	//thắng một vongf
 	void draw(int xMouse, int yMouse, bool& mouseActionClicked) {
 		auto tempImage = image;
 		auto tempNextButton = nextButton;
@@ -51,6 +57,8 @@ public:
 		SDL_DestroyTexture(tempRetryButton);
 		SDL_DestroyTexture(tempNextButton);
 	}
+	//Vẽ star
+
 	void drawStar(int life) {
 		auto imageTemp = imageOfStar;
 		SDL_Rect dest;
@@ -77,11 +85,15 @@ public:
 		SDL_RenderCopy(renderer, imageOfStar, NULL, &dest);
 		SDL_DestroyTexture(imageOfStar);
 		SDL_DestroyTexture(imageTemp);
-		
 
-		
+
+
 	}
-	~WinScreen(){}
+	//Hàm hủy đối tượng
+
+	~WinScreen() {
+
+	}
 
 };
 

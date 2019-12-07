@@ -1,12 +1,9 @@
-#pragma once
+﻿#pragma once
 #include <iostream>
 #include <string>
 #include <SDL.h>
 #include <cmath>
 #include "Functions.h"
-#include <memory>
-#define  pt shared_ptr
-#define mk make_shared
 //#include"Game.h"
 struct Point2D {
 	float x;
@@ -37,7 +34,7 @@ private:
 		x = 250;
 		y = 700;
 		radius = 15;
-		speed = 4;
+		speed =6;
 		image = NULL;
 		degree = 60;
 		renderer = rendererValue;
@@ -117,19 +114,24 @@ public:
 		float deltaY = y2 - y1;
 		return deltaX * deltaX + deltaY * deltaY;
 	}
-	//x y cua vien gach
+	//Hàm kiểm soát việc va chạm giữa viên gạch và quả bóng 
+	//_x,_y size là tọa độ và kích thước của viên gạch
+	//
 	bool isCollision(float _x,float _y,float size) {
+		//Vòng tròn a 
 		Cirle a;
-		a.x =this->x;
+		a.x =x;
 		a.y = y;
 		a.r = radius;
+		//Hình chữ nhật b 
+
 		SDL_FRect b;
 		b.x = _x;
 		b.y = _y;
 		b.w = size;
 		b.h = size;
 		float cX, cY;
-		//Find closest x offset
+		//Tìm điểm gần tâm quả bóng nhất
 		if (a.x < b.x)
 		{
 			cX = b.x;
@@ -143,7 +145,7 @@ public:
 			cX = a.x;
 		}
 
-		//Find closest y offset
+		//Tìm y gần tâm quả bóng nhất 
 		if (a.y < b.y)
 		{
 			cY = b.y;
@@ -157,90 +159,86 @@ public:
 			cY = a.y;
 		}
 
-		//If the closest pofloat is inside the circle
+		//Nếu khoảng cách từ điểm gần với tâm vòng tròn đến tâm vòng tròng nhỏ hơn bán kính thì kết luận 
+		//xảy ra va chạm
 		if (distanceSquared(a.x, a.y, cX, cY) < a.r *a.r)
 		{
-			//This box and the circle have collided
+		
 			return true;
 		}
 
-		//If the shapes have not collided
+		//Ngược lại thì kết luận là không xảy ra va chạm
 		return false;
 
 
 
 	}
-	bool isCollision(float _x, float _y, float width,float height) {
-		Cirle a;
-		a.x = this->x;
-		a.y = y;
-		a.r = radius;
-		SDL_FRect b;
-		b.x = _x;
-		b.y = _y;
-		b.w = width;
-		b.h = height;
-		float cX, cY;
+	//bool isCollision(float _x, float _y, float width,float height) {
+	//	Cirle a;
+	//	a.x = this->x;
+	//	a.y = y;
+	//	a.r = radius;
+	//	SDL_FRect b;
+	//	b.x = _x;
+	//	b.y = _y;
+	//	b.w = width;
+	//	b.h = height;
+	//	float cX, cY;
 
-		//Find closest x offset
-		if (a.x < b.x)
-		{
-			cX = b.x;
-		}
-		else if (a.x > b.x + b.w)
-		{
-			cX = b.x + b.w;
-		}
-		else
-		{
-			cX = a.x;
-		}
+	//	//Find closest x offset
+	//	if (a.x < b.x)
+	//	{
+	//		cX = b.x;
+	//	}
+	//	else if (a.x > b.x + b.w)
+	//	{
+	//		cX = b.x + b.w;
+	//	}
+	//	else
+	//	{
+	//		cX = a.x;
+	//	}
 
-		//Find closest y offset
-		if (a.y < b.y)
-		{
-			cY = b.y;
-		}
-		else if (a.y > b.y + b.h)
-		{
-			cY = b.y + b.h;
-		}
-		else
-		{
-			cY = a.y;
-		}
+	//	//Find closest y offset
+	//	if (a.y < b.y)
+	//	{
+	//		cY = b.y;
+	//	}
+	//	else if (a.y > b.y + b.h)
+	//	{
+	//		cY = b.y + b.h;
+	//	}
+	//	else
+	//	{
+	//		cY = a.y;
+	//	}
 
-		//If the closest pofloat is inside the circle
-		if (distanceSquared(a.x, a.y, cX, cY) < a.r * a.r)
-		{
-			//This box and the circle have collided
-			return true;
-		}
+	//	//If the closest pofloat is inside the circle
+	//	if (distanceSquared(a.x, a.y, cX, cY) < a.r * a.r)
+	//	{
+	//		//This box and the circle have collided
+	//		return true;
+	//	}
 
-		//If the shapes have not collided
-		return false;
+	//	//If the shapes have not collided
+	//	return false;
 
 
 
-	}
+	//}
+	//Khởi tạo hình ảnh cho quả bóng
 	void setImage(string name) {
 		image = LoadImage(name, renderer);
 	}
+	//Vẽ quả bóng lên màn hình game
 	void draw() {
 		//DrawInRenderer(renderer, image, x - radius, y - radius, radius * 2, 100);
-		DrawInRendererRotate(renderer, image, x - radius, y - radius, radius * 2, radius*2, radius, 90 - degree);
+		DrawInRendererRotate(renderer, image, x - radius, y - radius, radius * 2, radius * 2, radius, 90 - degree);
 
 	}
-	/*float getDeltaX() {
-		return float(cos(degree * 3.14 / 180) * speed);
-	}
-	float getDeltaY() {
-		return float(sin(degree * 3.14 / 180) * speed);
-	}*/
-
-
-
+	//Hàm di chuyển quả bóng
 	void move() {
+		//Khi nhận tín hiệu được bay thì mới bắt đầu di chuyển
 		if (isLaunch) {
 			x += float(cos(degree * 3.14 / 180) * speed);
 			y -= float(sin(degree * 3.14 / 180) * speed);
