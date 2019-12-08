@@ -198,7 +198,7 @@ public:
 					//ta tiến hành xóa viên gạch ra khỏi danh sách gạch
 					//đồng thời người chơi ghi điểm 
 					//debug
-					if (_list[i].getFrame() == 2) {
+					if (_list[i].getFrame() == 4) {
 						_list.erase(_list.begin() + i);
 						int currentScore = Player::Instance()->getScore();
 						currentScore = currentScore + Player::Instance()->getRateOfScore();
