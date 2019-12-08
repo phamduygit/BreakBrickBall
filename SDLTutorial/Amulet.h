@@ -23,13 +23,13 @@ class Amulet:public Brick
 {
 private:
 	//Thời gian bắt đầu cho hiệu ứng của bùa
-	int startTime;
+	int _startTime;
 	//Loại amulet
-	TypeAmulet typeAmulet;
-	int MAXTIME = 10000;
+	TypeAmulet _typeAmulet;
+	int _MAXTIME = 6000;
 public:
 	//Khỏi tạo thời gian bắt đầu bằng 0
-	Amulet() { startTime = 0; }
+	Amulet() { _startTime = 0; }
 	//Hàm khởi tạo cho amulet nhận các tham số
 	//x, y là vị trí của bùa trên hệ trục tọa độ đề các
 	Amulet(SDL_Renderer* &renderer, int x, int y,TypeAmulet typeAmulet) :Brick(renderer, x, y) {
@@ -39,33 +39,33 @@ public:
 
 		this->_currentFrame = typeAmulet - 1;
 
-		this->typeAmulet = typeAmulet;
+		this->_typeAmulet = typeAmulet;
 		//Sét mốc thời gian lúc đầu bằng 0
-		startTime = 0;
+		_startTime = 0;
 	}
 	//Hàm để xuất dữ liệu dạng string theo cấu trúc x y loại bùa
 	//Trong đó loại bùa được ép về kiểu số nguyên
 	string toString() {
 		stringstream out;
-		out << _x << " " << _y << " " << int(typeAmulet);
+		out << _x << " " << _y << " " << int(_typeAmulet);
 		return out.str();
 	}
 	//Đặt thời gian lớn nhất mà vật phẩm có thể có hiệu ứng
 	void setMaxTime(int value) {
-		MAXTIME = value;
+		_MAXTIME = value;
 	}
 	//Lấy ra thời gian lớn nhất mà hiệu ứng có thể có 
 	//tác dụng đối với các vật phẩm của người chơi
 	int getMaxTime() {
-		return MAXTIME;
+		return _MAXTIME;
 	}
 	//Bấm giờ thời điểm bắt đầu hiệu ứng
 	void setStartTime(int value) {
-		startTime = value;
+		_startTime = value;
 	}
 	//Lấy ra loại bùa
 	TypeAmulet getType() {
-		return typeAmulet;
+		return _typeAmulet;
 	}
 	//Vẽ bùa lên màn hình
 	void draw() {

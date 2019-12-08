@@ -1,2 +1,2 @@
 #include "Game.h"
-Game* Game::instance = NULL;
+Game* Game::_instance = NULL;

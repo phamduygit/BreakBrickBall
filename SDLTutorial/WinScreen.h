@@ -6,11 +6,11 @@ class WinScreen :public GameOver
 private:
 	//Chứa hình ảnh các nút 
 	//Nút  next
-	SDL_Texture* nextButton;
+	SDL_Texture* _nextButton;
 	//Nút chơi lại
-	SDL_Texture* retryButton;
+	SDL_Texture* _retryButton;
 	//hình ảnh số sao người chơi đặt được 
-	SDL_Texture* imageOfStar;
+	SDL_Texture* _imageOfStar;
 
 
 public:
@@ -22,12 +22,12 @@ public:
 	//nhận vào tọa độ chuột kiểm soát thao tác người chơi chọn sau khi chiến
 	//thắng một vongf
 	void draw(int xMouse, int yMouse, bool& mouseActionClicked) {
-		auto tempImage = image;
-		auto tempNextButton = nextButton;
-		auto tempRetryButton = retryButton;
-		nextButton = LoadImage("Next.png", renderer);
-		retryButton = LoadImage("Retry.png", renderer);
-		image = LoadImage("WinScreen.png", renderer);
+		auto tempImage = _image;
+		auto tempNextButton = _nextButton;
+		auto tempRetryButton = _retryButton;
+		_nextButton = LoadImage("Next.png", _renderer);
+		_retryButton = LoadImage("Retry.png", _renderer);
+		_image = LoadImage("WinScreen.png", _renderer);
 		SDL_Rect destinationNext, destinationRetry;
 		destinationRetry.x = 69;
 		destinationRetry.y = 631;
@@ -37,22 +37,22 @@ public:
 		//cout << "Mouse" << mouseActionClicked << endl;
 		if (mouseActionClicked) {
 			if (xMouse >= 69 && xMouse <= 69 + 80 && yMouse >= 631 && yMouse <= 631 + 80) {
-				action = retry;
+				_action = retry;
 			}
 			else if (xMouse >= 354 && xMouse <= 354 + 80 && yMouse >= 631 && yMouse <= 631 + 80) {
-				action = nextMap;
+				_action = nextMap;
 			}
 
 			mouseActionClicked = false;
 		}
 
 
-		SDL_RenderCopy(renderer, image, NULL, NULL);
-		SDL_DestroyTexture(image);
-		SDL_RenderCopy(renderer, nextButton, NULL, &destinationNext);
-		SDL_DestroyTexture(nextButton);
-		SDL_RenderCopy(renderer, retryButton, NULL, &destinationRetry);
-		SDL_DestroyTexture(retryButton);
+		SDL_RenderCopy(_renderer, _image, NULL, NULL);
+		SDL_DestroyTexture(_image);
+		SDL_RenderCopy(_renderer, _nextButton, NULL, &destinationNext);
+		SDL_DestroyTexture(_nextButton);
+		SDL_RenderCopy(_renderer, _retryButton, NULL, &destinationRetry);
+		SDL_DestroyTexture(_retryButton);
 		SDL_DestroyTexture(tempImage);
 		SDL_DestroyTexture(tempRetryButton);
 		SDL_DestroyTexture(tempNextButton);
@@ -60,7 +60,7 @@ public:
 	//Vẽ star
 
 	void drawStar(int life) {
-		auto imageTemp = imageOfStar;
+		auto imageTemp = _imageOfStar;
 		SDL_Rect dest;
 		dest.x = 150;
 		dest.y = 360;
@@ -69,21 +69,21 @@ public:
 		switch (life)
 		{
 		case 1:
-			imageOfStar = LoadImage("1start.png", renderer);
+			_imageOfStar = LoadImage("1start.png", _renderer);
 			break;
 		case 2:
-			imageOfStar = LoadImage("2start.png", renderer);
+			_imageOfStar = LoadImage("2start.png", _renderer);
 			break;
 		case 3:
-			imageOfStar = LoadImage("3start.png", renderer);
+			_imageOfStar = LoadImage("3start.png", _renderer);
 			break;
 		default:
-			imageOfStar = LoadImage("1start.png", renderer);
+			_imageOfStar = LoadImage("1start.png", _renderer);
 			break;
 		}
 
-		SDL_RenderCopy(renderer, imageOfStar, NULL, &dest);
-		SDL_DestroyTexture(imageOfStar);
+		SDL_RenderCopy(_renderer, _imageOfStar, NULL, &dest);
+		SDL_DestroyTexture(_imageOfStar);
 		SDL_DestroyTexture(imageTemp);
 
 

@@ -20,21 +20,21 @@ private:
 	//Tỉ lệ điểm của người chơi
 	int _rateOfScore;
 	//Struct chứa các thông tin sẽ render lên màn hình
-	SDL_Renderer* renderer;
+	SDL_Renderer* _renderer;
 	//Lưu struct chứa thông tin sẽ render lên màn hình 
 	//ở dây lưu thông tin đưa lên màn hình là chuỗi string
-	SDL_Texture* scoreTexture;
+	SDL_Texture* _scoreTexture;
 	//Lưu string render lên màn hình game
-	SDL_Texture* lifeTexture;
+	SDL_Texture* _lifeTexture;
 	//Hàm khởi tạo không đối số của đối tượng
 	Player() {
 		_score = 0;
 		_currentMap = 1;
 		_life = 1;
 		_rateOfScore = 10;
-		renderer = 0;
-		scoreTexture = 0;
-		lifeTexture = 0;
+		_renderer = 0;
+		_scoreTexture = 0;
+		_lifeTexture = 0;
 		_unlockedMap = 1;
 	}
 	//Thê hiện của đối tượng
@@ -51,7 +51,7 @@ public:
 	}
 	//thiết lập renderer cho đối tượng
 	void setRenderer(SDL_Renderer*& renderer) {
-		this->renderer = renderer;
+		this->_renderer = renderer;
 	}
 	//Thiết lập điểm cho người chơi
 	void setScore(int newScore) {
@@ -133,24 +133,24 @@ public:
 	void draw() {
 		SDL_Texture* temp1;
 		SDL_Texture* temp2;
-		temp1 = scoreTexture;
-		temp2 = lifeTexture;
-		scoreTexture = LoadFont("Score: " + to_string(_score), renderer, "MachineGunk-nyqg.ttf");
-		lifeTexture = LoadFont("Life: " + to_string(_life), renderer, "MachineGunk-nyqg.ttf");
+		temp1 = _scoreTexture;
+		temp2 = _lifeTexture;
+		_scoreTexture = LoadFont("Score: " + to_string(_score), _renderer, "MachineGunk-nyqg.ttf");
+		_lifeTexture = LoadFont("Life: " + to_string(_life), _renderer, "MachineGunk-nyqg.ttf");
 		SDL_Rect destOfScore;
 		destOfScore.x = 0;
 		destOfScore.y = 0;
 		destOfScore.w = 150;
 		destOfScore.h = 50;
-		SDL_RenderCopy(renderer, scoreTexture, NULL, &destOfScore);
-		SDL_DestroyTexture(scoreTexture);
+		SDL_RenderCopy(_renderer, _scoreTexture, NULL, &destOfScore);
+		SDL_DestroyTexture(_scoreTexture);
 		SDL_Rect destOfLife;
 		destOfLife.x = 200;
 		destOfLife.y = 0;
 		destOfLife.w = 120;
 		destOfLife.h = 50;
-		SDL_RenderCopy(renderer, lifeTexture, NULL, &destOfLife);
-		SDL_DestroyTexture(lifeTexture);
+		SDL_RenderCopy(_renderer, _lifeTexture, NULL, &destOfLife);
+		SDL_DestroyTexture(_lifeTexture);
 
 		SDL_DestroyTexture(temp1);
 		SDL_DestroyTexture(temp2);

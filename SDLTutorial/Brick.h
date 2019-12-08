@@ -23,6 +23,7 @@ protected:
 	//Trong đó ứng với một khung có width 50 thì ta có một trạng thái của gạch
 	int _currentFrame;
 	int _currentRow;
+	bool _isFinal;
 public:
 	//Xuất ra những thuộc tính cần thiết của gạch để save game
 	virtual string toString() {
@@ -95,8 +96,13 @@ public:
 		return _currentFrame;
 	}	
 	//Vẽ gạch lên màn hình game
-	virtual void draw() {
-		TextureManager::GetInstance()->drawFrame("Brick", float(_x), float(_y), _size, _size, 1, _currentFrame, _renderer);
+	virtual void draw(bool isFinalBrick = false) {
+		if (!isFinalBrick) {
+			TextureManager::GetInstance()->drawFrame("Brick", float(_x), float(_y), _size, _size, 1, _currentFrame, _renderer);
+		}
+		else {
+			TextureManager::GetInstance()->drawFrame("FinalBrick", float(_x), float(_y), _size, _size, 1, _currentFrame, _renderer);
+		}
 	}
 	//Hàm hủy cho đối tượng gạch
 	virtual ~Brick() {

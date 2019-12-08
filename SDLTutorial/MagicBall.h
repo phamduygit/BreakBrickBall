@@ -20,46 +20,46 @@ using namespace std;
 class Ball
 {
 private:
-	float x;
-	float y;
-	float radius;
-	float speed;
-	float degree;
-	float backupSpeed;
-	SDL_Texture* image;
-	SDL_Renderer* renderer;
-	bool isLaunch;
-	float backupDegree;	
+	float _x;
+	float _y;
+	float _radius;
+	float _speed;
+	float _degree;
+	float _backupSpeed;
+	SDL_Texture* _image;
+	SDL_Renderer* _renderer;
+	bool _isLaunch;
+	float _backupDegree;	
 	Ball(SDL_Renderer*& rendererValue) {
-		x = 250;
-		y = 700;
-		radius = 15;
-		speed =6;
-		image = NULL;
-		degree = 60;
-		renderer = rendererValue;
-		isLaunch = false;
+		_x = 250;
+		_y = 700;
+		_radius = 15;
+		_speed =6;
+		_image = NULL;
+		_degree = 60;
+		_renderer = rendererValue;
+		_isLaunch = false;
 	}
 	static Ball* instance;
 public:
 	float getBackupSpeed() {
-		return backupSpeed;
+		return _backupSpeed;
 	}
 	float getBackupDegree() {
-		return backupDegree;
+		return _backupDegree;
 	}
 	void setBackupDegree(float value) {
-		backupDegree = value;
+		_backupDegree = value;
 
 	}
 	void setBackupSpeed(float value) {
-		backupSpeed = value;
+		_backupSpeed = value;
 	}
 	void reset(float x,float y) {
-		this->x = x ;
-		this->y = y;
+		this->_x = x ;
+		this->_y = y;
 	
-		isLaunch = false;
+		_isLaunch = false;
 	}
 	static Ball* Instance(SDL_Renderer*& rendererValue) {
 		if (instance == NULL) {
@@ -71,42 +71,42 @@ public:
 
 	~Ball();
 	bool getIsLaunch() {
-		return isLaunch;
+		return _isLaunch;
 	}
 	void setIsLaunch(bool val) {
-		isLaunch = val;
+		_isLaunch = val;
 
 	}
 	float getX() {
-		return x;
+		return _x;
 	}
 	void setX(float value) {
-		x = value;
+		_x = value;
 	}
 	float getY() {
-		return y;
+		return _y;
 	}
 	void setY(float value) {
-		y = value;
+		_y = value;
 	}
 	void setSpeed(float value) {
-		speed = value;
+		_speed = value;
 		
 	}
 	float getSpeed() {
-		return speed;
+		return _speed;
 	}
 	float getRadius() {
-		return radius;
+		return _radius;
 	}
 	void setRadius(float value) {
-		radius = value;
+		_radius = value;
 	}
 	float getDegree() {
-		return degree;
+		return _degree;
 	}
 	void setDegree(float value) {
-		degree = value;
+		_degree = value;
 	}
 	float distanceSquared(float x1, float y1, float x2, float y2)
 	{
@@ -120,9 +120,9 @@ public:
 	bool isCollision(float _x,float _y,float size) {
 		//Vòng tròn a 
 		Cirle a;
-		a.x =x;
-		a.y = y;
-		a.r = radius;
+		a.x =_x;
+		a.y = _y;
+		a.r = _radius;
 		//Hình chữ nhật b 
 
 		SDL_FRect b;
@@ -228,20 +228,20 @@ public:
 	//}
 	//Khởi tạo hình ảnh cho quả bóng
 	void setImage(string name) {
-		image = LoadImage(name, renderer);
+		_image = LoadImage(name, _renderer);
 	}
 	//Vẽ quả bóng lên màn hình game
 	void draw() {
 		//DrawInRenderer(renderer, image, x - radius, y - radius, radius * 2, 100);
-		DrawInRendererRotate(renderer, image, x - radius, y - radius, radius * 2, radius * 2, radius, 90 - degree);
+		DrawInRendererRotate(_renderer, _image, _x - _radius, _y - _radius, _radius * 2, _radius * 2, _radius, 90 - _degree);
 
 	}
 	//Hàm di chuyển quả bóng
 	void move() {
 		//Khi nhận tín hiệu được bay thì mới bắt đầu di chuyển
-		if (isLaunch) {
-			x += float(cos(degree * 3.14 / 180) * speed);
-			y -= float(sin(degree * 3.14 / 180) * speed);
+		if (_isLaunch) {
+			_x += float(cos(_degree * 3.14 / 180) * _speed);
+			_y -= float(sin(_degree * 3.14 / 180) * _speed);
 		}
 	}
 };

@@ -1,2 +1,2 @@
 #include "Paddle.h"
-Paddle* Paddle::instance = NULL;
+Paddle* Paddle::_instance = NULL;

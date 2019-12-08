@@ -72,6 +72,9 @@
     <ClCompile Include="SettingScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FinalMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Functions.h">
@@ -128,8 +131,19 @@
     <ClInclude Include="SettingScreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FinalMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="PlayerData.txt">
+      <Filter>Header Files</Filter>
+    </Text>
+    <Text Include="MapSavedData.txt">
+      <Filter>Header Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

@@ -126,6 +126,7 @@
     <ClCompile Include="Amulet.cpp" />
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="EndScreen.cpp" />
+    <ClCompile Include="FinalMap.cpp" />
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameOver.cpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="Amulet.h" />
     <ClInclude Include="Brick.h" />
     <ClInclude Include="EndScreen.h" />
+    <ClInclude Include="FinalMap.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameOver.h" />
@@ -165,6 +167,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="MapSavedData.txt" />
+    <Text Include="PlayerData.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

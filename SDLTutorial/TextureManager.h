@@ -9,23 +9,24 @@ using namespace std;
 //và hình ảnh được gắn nhãn 
 class TextureManager {
 private:
-	static TextureManager* instance;
+	static TextureManager* _instance;
 	//Hàm khởi tạo mặc định cho đối tượng
 	TextureManager() {};
 	map<string, SDL_Texture*> textureMap;
 public:
 	//Phương thức lấy ra thể hiện của đối tượng
 	static TextureManager* GetInstance() {
-		if (instance == NULL) {
-			instance = new  TextureManager();
+		if (_instance == NULL) {
+			_instance = new  TextureManager();
 		}
-		return instance;
+		return _instance;
 
 	}
 	//Tải hình ảnh từ file sau đó gắn nhãn cho hình đó 
 	bool load(string fileName, string id, SDL_Renderer* &renderer) {
 		SDL_Surface* tempSurface = IMG_Load(fileName.c_str());
 		if (!tempSurface) {
+			cout << "Error load image" << endl;
 			return false;
 		}
 		SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, tempSurface);
@@ -33,7 +34,6 @@ public:
 		SDL_FreeSurface(tempSurface);
 		if (texture) {
 			textureMap[id] = texture;
-			//SDL_DestroyTexture(texture);
 			return true;
 		}
 		return false;
@@ -52,5 +52,13 @@ public:
 		dest.x = x;
 		dest.y = y;
 		SDL_RenderCopyExF(renderer, textureMap[id], &source, &dest, 0, 0, flip);
+	}
+	//d
+	int count() {
+		int count = 0;
+		for (auto i : textureMap) {
+			count++;
+		}
+		return count;
 	}
 };

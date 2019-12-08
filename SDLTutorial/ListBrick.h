@@ -13,52 +13,54 @@ class ListBrick
 {
 private:
 	//Mạng chứa thông tin của những viên gạch sẽ render lên màn hình chơi game
-	vector<Brick> list;
+	vector<Brick> _list;
 	//Struct renderer của thư viện lưu giữ các thông tin sẽ render lên màn hình chơi game
-	SDL_Renderer* renderer;
+	SDL_Renderer* _renderer;
 	//Trạng thái bật tắt nhạc
-	bool isMusicOn;
+	bool _isMusicOn;
 
 public:
 	//Hàm khởi tạo không đối số của đối tượng
 	ListBrick() {
-		renderer = NULL;
-		isMusicOn = true;
+		_renderer = NULL;
+		_isMusicOn = true;
 	}
 	//Xuất ra dạng chuỗi thông tin của mảng brick khi người chơi thoát sẽ lưu vào file
 	//khi người chơi bật lại game thì có thể chơi lại
 	string toString() {
 		stringstream out;
-		for (auto brick : list) {			
+		for (auto brick : _list) {			
 			out<< brick.toString() << endl;
 		}
 		return out.str();
 
 	}
 	size_t getSize() {
-		return list.size();
+		return _list.size();
 	}
 	//Hàm khởi tạo có đối của của đối tượng nhận vào con trỏ của struct renderer
 	ListBrick(SDL_Renderer* &_renderer) {
-		renderer = _renderer;
-		isMusicOn = true;
+		_renderer = _renderer;
+		_isMusicOn = true;
 	}
 	//Thiết lập renderer cho đối tượng để vẽ lên màn hình chơi game
 	void setRenderer(SDL_Renderer* &renderer) {
-		this->renderer = renderer;
+		this->_renderer = renderer;
 	}
 	//Thiết lập trạng thái của âm thanh game khi trái bóng của người chơi va chạm vào gạch
 	void setIsMusicOn(bool value) {
-		isMusicOn = value;
+		_isMusicOn = value;
 	}
 	//Xóa tất cả các khối gạch trong mảng
 	void clearAllBrick() {
-		list.clear();
+		_list.clear();
 	}
 	//Vẽ mảng gạch lên màn hình chơi game
-	void drawBrickMap() {
-		for (size_t i = 0; i < list.size(); i++) {
-			list[i].draw();
+	void drawBrickMap(bool isFinal = false) {
+		if (_list.size() >= 1) {
+			for (size_t i = 0; i < _list.size(); i++) {
+				_list[i].draw(isFinal);
+			}
 		}
 	}
 	//Đọc từ file thông tin map gạch để load ở lần chơi mới
@@ -79,10 +81,10 @@ public:
 			int i = k % 10;
 			int j = k / 10;
 			if (map[k] == 1) {
-				Brick brick(renderer);
+				Brick brick(_renderer);
 				brick.setX(i * 50);
 				brick.setY((j+1) * 50);
-				list.push_back(brick);			}
+				_list.push_back(brick);			}
 		}
 
 
@@ -90,15 +92,15 @@ public:
 	}
 	//Thêm gạch vào map 
 	void addBrick(const Brick brick) {
-		list.push_back(brick);
+		_list.push_back(brick);
 	}
 	//Kiểm tra sự giao nhau giữa đường thẳng và vòng tròn
 	bool intersectionLineAndCircle(float xS, float yS, float xE, float yE) {
 		//Tọa độ của quả bóng hiện tại
-		float xBall = Ball::Instance(renderer)->getX();
-		float yBall = Ball::Instance(renderer)->getY();
+		float xBall = Ball::Instance(_renderer)->getX();
+		float yBall = Ball::Instance(_renderer)->getY();
 		//Bán kính quả bóng
-		float radius = Ball::Instance(renderer)->getRadius();
+		float radius = Ball::Instance(_renderer)->getRadius();
 		//Delta x giữa điểm bắt đầu và điểm kết thúc của một đoạn thẳng
 		float dx = xE - xS;
 		//Delta y giữa điểm bắt đầu và kết thức của một đoạn thẳng
@@ -120,27 +122,27 @@ public:
 		return false;
 	}
 	//Kiểm soát việc va chạm
-	void handleCollision() {
+	void handleCollision(bool isFinalMap) {
 		//Tạo tạm một đối tượng ball đối tượng này với đối tượng trong game là một
 
-		Ball* ball = Ball::Instance(renderer);
+		Ball* ball = Ball::Instance(_renderer);
 		//Duyệt va lần lượt từ 0 đến hết mảng brick
-		for (size_t i = 0; i < list.size(); i++) {
+		for (size_t i = 0; i < _list.size(); i++) {
 			//Khi phát hiện có va chạm 
-			if (ball->isCollision(float(list[i].getX()), float(list[i].getY()), list[i].getSize())) {
+			if (ball->isCollision(float(_list[i].getX()), float(_list[i].getY()), _list[i].getSize())) {
 				//Kiểm soát việc có cho phép việc xuất ra âm thanh khi va chạm với gạch không
-				if (isMusicOn) {
+				if (_isMusicOn) {
 					Mix_PlayChannel(-1, LoadSound("medium.wav"), 0);
 				}
 				//Khi quả bóng bay từ bên dưới và có xẩy ra va chạm
-				if (ball->getY() - ball->getRadius() < float(list[i].getY()) + list[i].getSize() &&
-					ball->getY() > float(list[i].getY()) + list[i].getSize()
+				if (ball->getY() - ball->getRadius() < float(_list[i].getY()) + _list[i].getSize() &&
+					ball->getY() > float(_list[i].getY()) + _list[i].getSize()
 					&& 
-					intersectionLineAndCircle(float(list[i].getX()),float(list[i].getY())+list[i].getSize(),
-						float(list[i].getX())+list[i].getSize(), float(list[i].getY()) + list[i].getSize())
+					intersectionLineAndCircle(float(_list[i].getX()),float(_list[i].getY())+_list[i].getSize(),
+						float(_list[i].getX())+_list[i].getSize(), float(_list[i].getY()) + _list[i].getSize())
 					) {
 					//Phần bù để làm cho điều kiện va chạm bị sai
-					float offset = abs(ball->getY() - ball->getRadius() - (float(list[i].getY()) + list[i].getSize()));
+					float offset = abs(ball->getY() - ball->getRadius() - (float(_list[i].getY()) + _list[i].getSize()));
 					//Thay đổi góc cho quả bóng 
 					ball->setDegree(-ball->getDegree());
 					//Thay đổi phần bù cho quả bóng
@@ -148,14 +150,14 @@ public:
 					
 				}
 				//Khi quả bóng bay từ trên xuống và va chạm với vật thể
-				else if (ball->getY() + ball->getRadius() > float(list[i].getY()) &&
-					ball->getY() < float(list[i].getY())
+				else if (ball->getY() + ball->getRadius() > float(_list[i].getY()) &&
+					ball->getY() < float(_list[i].getY())
 					&&
-					intersectionLineAndCircle(float(list[i].getX()),float(list[i].getY()),
-						float(list[i].getX())+list[i].getSize(), float(list[i].getY()))
+					intersectionLineAndCircle(float(_list[i].getX()),float(_list[i].getY()),
+						float(_list[i].getX())+_list[i].getSize(), float(_list[i].getY()))
 					) {
 					//Phần bù để thoát khỏi điều kiện va chạm ở lần lặp tiếp theo
-					float offset = abs(ball->getY() + ball->getRadius() - float(list[i].getY()));
+					float offset = abs(ball->getY() + ball->getRadius() - float(_list[i].getY()));
 					//Đảo góc quả bóng
 					ball->setDegree(-ball->getDegree());
 					//Thay đổi lại tọa độ y để cho điều kiện bị sai
@@ -163,13 +165,13 @@ public:
 				}
 				//Khi banh bay từ bên phải sang và va chạm với gạch
 				else if (
-					ball->getX() - ball->getRadius() < float(list[i].getX()) + list[i].getSize() &&
-					ball->getX() > float(list[i].getX())+list[i].getSize()&&
-					intersectionLineAndCircle(float(list[i].getX())+list[i].getSize(),float(list[i].getY()),
-						float(list[i].getX()) + list[i].getSize(), float(list[i].getY())+list[i].getSize())
+					ball->getX() - ball->getRadius() < float(_list[i].getX()) + _list[i].getSize() &&
+					ball->getX() > float(_list[i].getX())+_list[i].getSize()&&
+					intersectionLineAndCircle(float(_list[i].getX())+_list[i].getSize(),float(_list[i].getY()),
+						float(_list[i].getX()) + _list[i].getSize(), float(_list[i].getY())+_list[i].getSize())
 					) {
 					//Phần bù để thoát khỏi điều kiện va chạm
-					float offset = abs(ball->getX() - ball->getRadius() - float(list[i].getX()) - list[i].getSize());
+					float offset = abs(ball->getX() - ball->getRadius() - float(_list[i].getX()) - _list[i].getSize());
 					//Đổi hướng cho trái bóng
 					ball->setDegree(180 - ball->getDegree());
 					//Thay đổi tọa độ X cho quả bóng 
@@ -178,26 +180,30 @@ public:
 
 				}
 				//Khi quả bóng bay từ bên trái sang và gặp viên gạch 
-				else if (ball->getX() + ball->getRadius() > float(list[i].getX()) &&
-					ball->getX() < float(list[i].getX()) &&
-					intersectionLineAndCircle(float(list[i].getX()),float(list[i].getY()), float(list[i].getX()), float(list[i].getY())+list[i].getSize())
+				else if (ball->getX() + ball->getRadius() > float(_list[i].getX()) &&
+					ball->getX() < float(_list[i].getX()) &&
+					intersectionLineAndCircle(float(_list[i].getX()),float(_list[i].getY()), float(_list[i].getX()), float(_list[i].getY())+_list[i].getSize())
 					) { 
 					//Phần bù để thoát khỏi điều kiện va chạm
-					float offset = abs(ball->getX() + ball->getRadius() - float(list[i].getX()));
+					float offset = abs(ball->getX() + ball->getRadius() - float(_list[i].getX()));
 					ball->setDegree(180 - ball->getDegree());
 					ball->setX(ball->getX() - offset * float(1.1));
 				}
 				//Khi xẩy ra việc va chạm ta cập nhật lại khung hình cho brick
-				list[i].setFrame(list[i].getFrame() + 1);
-				//Khi mà khung hình là 4 nghĩa là viên gạch bị biến mất 
-				//Khi đó xem như là đã phá hủy gạch thành công
-				//ta tiến hành xóa viên gạch ra khỏi danh sách gạch
-				//đồng thời người chơi ghi điểm 
-				if (list[i].getFrame() == 4) {
-					list.erase(list.begin() + i);
-					int currentScore = Player::Instance()->getScore();
-					currentScore = currentScore+Player::Instance()->getRateOfScore();
-					Player::Instance()->setScore(currentScore);
+				if (!isFinalMap) {
+					cout << "Coli" << endl;
+					_list[i].setFrame(_list[i].getFrame() + 1);
+					//Khi mà khung hình là 4 nghĩa là viên gạch bị biến mất 
+					//Khi đó xem như là đã phá hủy gạch thành công
+					//ta tiến hành xóa viên gạch ra khỏi danh sách gạch
+					//đồng thời người chơi ghi điểm 
+					//debug
+					if (_list[i].getFrame() == 2) {
+						_list.erase(_list.begin() + i);
+						int currentScore = Player::Instance()->getScore();
+						currentScore = currentScore + Player::Instance()->getRateOfScore();
+						Player::Instance()->setScore(currentScore);
+					}
 				}
 				break;
 			}

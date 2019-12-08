@@ -1,2 +1,2 @@
 #include "TextureManager.h"
-TextureManager* TextureManager::instance = NULL;
+TextureManager* TextureManager::_instance = NULL;
