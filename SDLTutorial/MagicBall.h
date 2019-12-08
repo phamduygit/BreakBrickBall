@@ -30,14 +30,14 @@ private:
 	SDL_Renderer* _renderer;
 	bool _isLaunch;
 	float _backupDegree;	
-	Ball(SDL_Renderer*& rendererValue) {
+	Ball(SDL_Renderer*& value) {
 		_x = 250;
 		_y = 700;
 		_radius = 15;
 		_speed =6;
 		_image = NULL;
 		_degree = 60;
-		_renderer = rendererValue;
+		this->_renderer = value;
 		_isLaunch = false;
 	}
 	static Ball* instance;
@@ -61,9 +61,9 @@ public:
 	
 		_isLaunch = false;
 	}
-	static Ball* Instance(SDL_Renderer*& rendererValue) {
+	static Ball* Instance(SDL_Renderer*& value) {
 		if (instance == NULL) {
-			instance = new Ball(rendererValue);
+			instance = new Ball(value);
 		}
 		return instance;
 	}
@@ -117,7 +117,7 @@ public:
 	//Hàm kiểm soát việc va chạm giữa viên gạch và quả bóng 
 	//_x,_y size là tọa độ và kích thước của viên gạch
 	//
-	bool isCollision(float _x,float _y,float size) {
+	bool isCollision(float x,float y,float size) {
 		//Vòng tròn a 
 		Cirle a;
 		a.x =_x;
@@ -126,8 +126,8 @@ public:
 		//Hình chữ nhật b 
 
 		SDL_FRect b;
-		b.x = _x;
-		b.y = _y;
+		b.x = x;
+		b.y = y;
 		b.w = size;
 		b.h = size;
 		float cX, cY;

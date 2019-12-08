@@ -32,7 +32,7 @@ public:
 	//Hàm khởi tạo không đối số của đối tượng
 	SettingScreen() {}
 	//Hàm khởi tạo có đối số của đối tượng
-	SettingScreen(SDL_Renderer*& renderer) :GameOver(renderer) {
+	SettingScreen(SDL_Renderer*& value) :GameOver(value) {
 		//	settingAction = noneSetting;
 
 	}

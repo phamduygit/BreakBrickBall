@@ -18,7 +18,7 @@ public:
 		auto tempImage = _image;
 		_image = LoadImage("EndScreen.png", _renderer);
 		//Sao chép hình ảnh vào vùng nhớ mà renderer trỏ tới
-		SDL_RenderCopy(_renderer, _image, NULL, NULL);
+		SDL_RenderCopy(this->_renderer, _image, NULL, NULL);
 		//Sau khi xong tiến hành phá hủy các đối tượng
 		SDL_DestroyTexture(_image);
 		SDL_DestroyTexture(tempImage);

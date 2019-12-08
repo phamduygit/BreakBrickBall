@@ -87,11 +87,11 @@ public:
 		_listBrick.setIsMusicOn(true);
 	}
 	//Hàm khởi tạo cho đối tượng có đối số
-	Map(SDL_Renderer* &_renderer,string dataFileName) {
+	Map(SDL_Renderer* &value,string dataFileName) {
 		this->_dataFileName = dataFileName;
-		_listBrick.setRenderer(_renderer);
-		_listAmulet.setRenderer(_renderer);
-		_renderer = _renderer;
+		this->_renderer = value;
+		_listBrick.setRenderer(value);
+		_listAmulet.setRenderer(value);		
 		_listBrick.createListWithMapText(dataFileName);
 		_listAmulet.createListWithMapText(dataFileName);
 	}
@@ -118,7 +118,8 @@ public:
 	}
 	//Cập nhật các trạng thái  các list
 	virtual void update() {
-		_listBrick.handleCollision(false);
+
+		_listBrick.handleCollision();
 		_listAmulet.handleCollision();
 		int limitTime = 6000;
 		//d

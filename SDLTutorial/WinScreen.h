@@ -17,7 +17,7 @@ public:
 	//Hàm khởi tạo không đối số
 	WinScreen() :GameOver() {}
 	//Hàm khởi tạo có đối số 
-	WinScreen(SDL_Renderer*& renderer) :GameOver(renderer) {}
+	WinScreen(SDL_Renderer*& value) :GameOver(value) {}
 	//Vẽ màn hình lên màn hình game
 	//nhận vào tọa độ chuột kiểm soát thao tác người chơi chọn sau khi chiến
 	//thắng một vongf

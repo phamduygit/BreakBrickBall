@@ -16,12 +16,12 @@ public:
 	//Hàm khỏi tạo không đối số của đối tượng
 	MapDiagram() {}
 	//Thiết lập biến con trỏ cho đối tượng
-	void setRenderer(SDL_Renderer*& renderer) {
-		this->_renderer = renderer;
+	void setRenderer(SDL_Renderer*& value) {
+		this->_renderer = value;
 	}
 	//Hàm khởi tạo có đối số của đối tượng
-	MapDiagram(SDL_Renderer* &renderer) {
-		this->_renderer = renderer;
+	MapDiagram(SDL_Renderer* &value) {
+		this->_renderer = value;
 		_selectedMap = 0;
 	}
 	//Reset lại dữ liệu

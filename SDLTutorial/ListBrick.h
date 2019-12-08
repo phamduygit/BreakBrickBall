@@ -39,13 +39,13 @@ public:
 		return _list.size();
 	}
 	//Hàm khởi tạo có đối của của đối tượng nhận vào con trỏ của struct renderer
-	ListBrick(SDL_Renderer* &_renderer) {
-		_renderer = _renderer;
+	ListBrick(SDL_Renderer* &value) {
+		this->_renderer = value;
 		_isMusicOn = true;
 	}
 	//Thiết lập renderer cho đối tượng để vẽ lên màn hình chơi game
-	void setRenderer(SDL_Renderer* &renderer) {
-		this->_renderer = renderer;
+	void setRenderer(SDL_Renderer* &value) {
+		this->_renderer = value;
 	}
 	//Thiết lập trạng thái của âm thanh game khi trái bóng của người chơi va chạm vào gạch
 	void setIsMusicOn(bool value) {
@@ -57,11 +57,10 @@ public:
 	}
 	//Vẽ mảng gạch lên màn hình chơi game
 	void drawBrickMap(bool isFinal = false) {
-		if (_list.size() >= 1) {
+
 			for (size_t i = 0; i < _list.size(); i++) {
 				_list[i].draw(isFinal);
 			}
-		}
 	}
 	//Đọc từ file thông tin map gạch để load ở lần chơi mới
 	void createListWithMapText(string fileName) {
@@ -122,7 +121,7 @@ public:
 		return false;
 	}
 	//Kiểm soát việc va chạm
-	void handleCollision(bool isFinalMap) {
+	void handleCollision(bool isFinalMap = false) {
 		//Tạo tạm một đối tượng ball đối tượng này với đối tượng trong game là một
 
 		Ball* ball = Ball::Instance(_renderer);
@@ -130,10 +129,11 @@ public:
 		for (size_t i = 0; i < _list.size(); i++) {
 			//Khi phát hiện có va chạm 
 			if (ball->isCollision(float(_list[i].getX()), float(_list[i].getY()), _list[i].getSize())) {
+				cout << "co" << endl;
 				//Kiểm soát việc có cho phép việc xuất ra âm thanh khi va chạm với gạch không
-				if (_isMusicOn) {
+				/*if (_isMusicOn) {
 					Mix_PlayChannel(-1, LoadSound("medium.wav"), 0);
-				}
+				}*/
 				//Khi quả bóng bay từ bên dưới và có xẩy ra va chạm
 				if (ball->getY() - ball->getRadius() < float(_list[i].getY()) + _list[i].getSize() &&
 					ball->getY() > float(_list[i].getY()) + _list[i].getSize()
@@ -191,7 +191,6 @@ public:
 				}
 				//Khi xẩy ra việc va chạm ta cập nhật lại khung hình cho brick
 				if (!isFinalMap) {
-					cout << "Coli" << endl;
 					_list[i].setFrame(_list[i].getFrame() + 1);
 					//Khi mà khung hình là 4 nghĩa là viên gạch bị biến mất 
 					//Khi đó xem như là đã phá hủy gạch thành công

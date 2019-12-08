@@ -245,7 +245,7 @@ public:
 			_fileMapName.push_back("map7.txt");
 			_fileMapName.push_back("map8.txt");
 			_fileMapName.push_back("map9.txt");
-			cout<<endl<<TextureManager::GetInstance()->count();
+		//	cout<<endl<<TextureManager::GetInstance()->count();
 
 
 		}
@@ -266,6 +266,7 @@ public:
 			_listScreen[screenName[i]] = false;
 		}
 		_listScreen[nameScreen] = true;
+		cout << nameScreen << endl;
 		nameScreen.clear();
 	}
 
@@ -663,7 +664,6 @@ public:
 				//Kiểm tra khi người chơi chết 
 				if (_player->getLife() == 0) {
 					//Thì ta kích hoạt màn hình kết thúc game
-
 					//d
 					enableScreen("GameOverScreen");
 				}

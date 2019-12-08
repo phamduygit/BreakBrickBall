@@ -36,7 +36,7 @@ protected:
 		_height = 10;
 		_speed = 5;
 		_image = NULL;
-		_renderer = NULL;
+		this->_renderer = NULL;
 		_deltaX = 0;
 		_previousX = 0;
 
@@ -49,7 +49,7 @@ protected:
 		_height = 20;
 		_speed = 5;
 		_image = NULL;
-		_renderer = RenderValue;
+		this->_renderer = RenderValue;
 
 		_deltaX = 0;
 		_previousX = 0;
@@ -57,9 +57,9 @@ protected:
 	}
 public:
 	//Phương thức lấy ra thể hiện của một singleton
-	static Paddle* Instance(SDL_Renderer*& renderer) {
+	static Paddle* Instance(SDL_Renderer*& value) {
 		if (_instance == NULL) {
-			_instance = new  Paddle(renderer);
+			_instance = new  Paddle(value);
 
 		}
 		return _instance;

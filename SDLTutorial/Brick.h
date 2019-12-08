@@ -48,7 +48,7 @@ public:
 		_x = 370;
 		_y = 50;
 		_size =50 ;
-		_renderer = renderer;
+		this->_renderer = renderer;
 		_currentRow = 1;
 		_currentFrame = 1;
 	}

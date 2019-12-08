@@ -32,7 +32,7 @@ private:
 		_currentMap = 1;
 		_life = 1;
 		_rateOfScore = 10;
-		_renderer = 0;
+		this->_renderer = 0;
 		_scoreTexture = 0;
 		_lifeTexture = 0;
 		_unlockedMap = 1;
@@ -50,8 +50,8 @@ public:
 		return instance;
 	}
 	//thiết lập renderer cho đối tượng
-	void setRenderer(SDL_Renderer*& renderer) {
-		this->_renderer = renderer;
+	void setRenderer(SDL_Renderer*& value) {
+		this->_renderer = value;
 	}
 	//Thiết lập điểm cho người chơi
 	void setScore(int newScore) {

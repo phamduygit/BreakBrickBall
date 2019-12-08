@@ -23,13 +23,13 @@ public:
 
 	}
 	//Tải hình ảnh từ file sau đó gắn nhãn cho hình đó 
-	bool load(string fileName, string id, SDL_Renderer* &renderer) {
+	bool load(string fileName, string id, SDL_Renderer* &value) {
 		SDL_Surface* tempSurface = IMG_Load(fileName.c_str());
 		if (!tempSurface) {
 			cout << "Error load image" << endl;
 			return false;
 		}
-		SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, tempSurface);
+		SDL_Texture* texture = SDL_CreateTextureFromSurface(value, tempSurface);
 		//Giai phong tempSurface
 		SDL_FreeSurface(tempSurface);
 		if (texture) {

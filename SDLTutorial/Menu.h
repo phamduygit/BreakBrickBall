@@ -16,7 +16,7 @@ private:
 	//Lưu giữ ảnh nền
 	SDL_Texture* _backGround;
 	//Lưu giữ biến lưu struct chứa các thông tin renderer  lên màn hình
-	SDL_Renderer* renderer;
+	SDL_Renderer* _renderer;
 	//Lưu giữ hình ảnh button new game
 	SDL_Texture* _BT_NewGame;
 	//Lưu giữ hình ảnh button continue
@@ -50,18 +50,18 @@ public:
 	}
 	//Thiết lập hình ảnh cho  menu
 	void setImage(string NameImage) {
-		_backGround = LoadImage(NameImage, renderer);
+		_backGround = LoadImage(NameImage, _renderer);
 	}
 	//Thiết lập font cho menu
 	void setFont(string NameFont) {
-		_BT_NewGame = LoadFont("NEW GAME", renderer, NameFont);
-		BT_Continue = LoadFont("CONTINUE", renderer, NameFont);
-		_BT_Setting = LoadFont("SETTING", renderer, NameFont);
-		_BT_Exit = LoadFont("EXIT", renderer, NameFont);
+		_BT_NewGame = LoadFont("NEW GAME", _renderer, NameFont);
+		BT_Continue = LoadFont("CONTINUE", _renderer, NameFont);
+		_BT_Setting = LoadFont("SETTING", _renderer, NameFont);
+		_BT_Exit = LoadFont("EXIT", _renderer, NameFont);
 	}
 	//Thiết lập biến _renderer cho menu
-	void setRenderer(SDL_Renderer* renderer) {
-		this->renderer = renderer;
+	void setRenderer(SDL_Renderer* value) {
+		this->_renderer = value;
 	}
 	//Khôi phục lại menu như lúc ban đầu 
 	void resetData() {
@@ -70,11 +70,11 @@ public:
 	}
 	//Vẽ menu lên màn hình chơi game
 	void draw(int x, int y, bool &mouseActionClick) {
-		DrawInRenderer(renderer, _backGround);
+		DrawInRenderer(_renderer, _backGround);
 		if (x > _sizeNewGame.x && x < _sizeNewGame.x + _sizeNewGame.w && y > _sizeNewGame.y && y < _sizeNewGame.y + _sizeNewGame.h) {
 			_sizeNewGame.w = 250 * 1.3;
 			_sizeNewGame.h = 50 * 1.3;
-			DrawInRenderer(renderer, _BT_NewGame, 80, 100, 250 * 1.2, 50 * 1.2);
+			DrawInRenderer(_renderer, _BT_NewGame, 80, 100, 250 * 1.2, 50 * 1.2);
 			if (mouseActionClick) {
 				_currentChoose = NewGame;
 				_isChose = true;
@@ -84,10 +84,10 @@ public:
 		else {
 			_sizeNewGame.w = 250;
 			_sizeNewGame.h = 50;
-			DrawInRenderer(renderer, _BT_NewGame, 80, 100, 250 * 1, 50 * 1);
+			DrawInRenderer(_renderer, _BT_NewGame, 80, 100, 250 * 1, 50 * 1);
 		}
 		if (x > 80 && x < 80 + 300 && y > 200 && y < 200 + 50) {
-			DrawInRenderer(renderer, BT_Continue, 80, 200, 300 * 1.2, 50 * 1.2);
+			DrawInRenderer(_renderer, BT_Continue, 80, 200, 300 * 1.2, 50 * 1.2);
 			if (mouseActionClick) {
 				_currentChoose = Continue;
 				_isChose = true;
@@ -95,10 +95,10 @@ public:
 			}
 		}
 		else {
-			DrawInRenderer(renderer, BT_Continue, 80, 200, 300 * 1, 50 * 1);
+			DrawInRenderer(_renderer, BT_Continue, 80, 200, 300 * 1, 50 * 1);
 		}
 		if (x > 80 && x < 80 + 250 && y > 300 && y < 300 + 50) {
-			DrawInRenderer(renderer, _BT_Setting, 80, 300, 250 * 1.2, 50 * 1.2);
+			DrawInRenderer(_renderer, _BT_Setting, 80, 300, 250 * 1.2, 50 * 1.2);
 			if (mouseActionClick) {
 				_currentChoose = Setting;
 				_isChose = true;
@@ -106,10 +106,10 @@ public:
 			}
 		}
 		else {
-			DrawInRenderer(renderer, _BT_Setting, 80, 300, 250 * 1, 50 * 1);
+			DrawInRenderer(_renderer, _BT_Setting, 80, 300, 250 * 1, 50 * 1);
 		}
 		if (x > 80 && x < 80 + 150 && y >400 && y < 400 + 50) {
-			DrawInRenderer(renderer, _BT_Exit, 80, 400, 150 * 1.2, 50 * 1.2);
+			DrawInRenderer(_renderer, _BT_Exit, 80, 400, 150 * 1.2, 50 * 1.2);
 			if (mouseActionClick) {
 				_currentChoose = Exit;
 				_isChose = true;
@@ -118,7 +118,7 @@ public:
 			}
 		}
 		else {
-			DrawInRenderer(renderer, _BT_Exit, 80, 400, 150 * 1, 50 * 1);
+			DrawInRenderer(_renderer, _BT_Exit, 80, 400, 150 * 1, 50 * 1);
 		}	
 	}
 	//Lấy ra loại menu mà người chơi chọn
@@ -127,7 +127,7 @@ public:
 	}
 	//Hàm khỏi tạo không đối số 
 	Menu() {
-		renderer = NULL;
+		_renderer = NULL;
 		_sizeNewGame = { 80, 100, 250, 50 };
 		_sizeContinue = { 80, 100, 300, 50 };
 		_sizeSetting = { 80, 300, 250, 50 };
@@ -142,7 +142,7 @@ public:
 	}
 	//Hàm hủy 
 	~Menu() {
-		delete _backGround,renderer, _BT_NewGame, BT_Continue, _BT_Setting,_BT_Exit;
+		delete _backGround,_renderer, _BT_NewGame, BT_Continue, _BT_Setting,_BT_Exit;
 	}
 };
 

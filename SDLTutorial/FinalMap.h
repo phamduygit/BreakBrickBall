@@ -22,7 +22,7 @@ public:
 	//Hàm khởi tạo có đối số 
 	FinalMap(SDL_Renderer*& renderer) {
 		this->_renderer = renderer;
-		_listBrick.setRenderer(renderer);
+		_listBrick.setRenderer(_renderer);
 		_currentRedHoleFrame = 1;
 	}
 	//Load file FinalMap.txt từ tệp tin
@@ -58,7 +58,7 @@ public:
 
 	//Khi va chạm vào gạch thì viên gạch phản xạ lại 
 	void update() {
-		_listBrick.handleCollision(true);		
+		_listBrick.handleCollision(true);	
 
 	}
 	//Kiểm tra xem quả bóng có ở trong hố đỏ không
@@ -79,7 +79,7 @@ public:
 	}
 	//Hàm vẽ những viên gạch và hố đen lên màn hình chơi game
 	void draw() {
-		_listBrick.drawBrickMap(true);
+		_listBrick.drawBrickMap();
 		TextureManager::GetInstance()->drawFrame("Hole", _xRedHole, _yRedHole, 50, 50, 1, _currentRedHoleFrame, _renderer);
 		_currentRedHoleFrame = (_currentRedHoleFrame + 1) % 500;
 	}

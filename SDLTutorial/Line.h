@@ -40,10 +40,10 @@ public:
 
 	}
 	//Thiết lập renderer cho đối tượng
-	void setRenderer(SDL_Renderer*& renderer) {
+	void setRenderer(SDL_Renderer*& value) {
 		_width = 500;
 		_height = 800;
-		this->_renderer = renderer;
+		this->_renderer = value;
 		_heSoGoc = 0;
 		_mouse = { 0, 0 };
 		_paddle = { 0 , 0 };

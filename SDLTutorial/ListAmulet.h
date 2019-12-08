@@ -41,10 +41,10 @@ public:
 		return out.str();
 	}
 	//Hàm khỏi tạo có đối số
-	ListAmulet(SDL_Renderer*& renderer) {
+	ListAmulet(SDL_Renderer*& value) {
 		_startTime = 0;
 		_endTime = 0;
-		this->_renderer = renderer;
+		this->_renderer = value;
 	}
 	//Lấy ra thông tin các effect đã được kích hoạt hay chưa trong map
 	map<string, bool> getMapEffect() {

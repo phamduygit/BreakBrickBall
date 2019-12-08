@@ -32,7 +32,7 @@ public:
 	Amulet() { _startTime = 0; }
 	//Hàm khởi tạo cho amulet nhận các tham số
 	//x, y là vị trí của bùa trên hệ trục tọa độ đề các
-	Amulet(SDL_Renderer* &renderer, int x, int y,TypeAmulet typeAmulet) :Brick(renderer, x, y) {
+	Amulet(SDL_Renderer* &value, int x, int y,TypeAmulet typeAmulet) :Brick(value, x, y) {
 		//currentFrame là khung hình hiện tại trong file png 
 		// Do trong cấu trúc file gạch kí hiệu là 1
 		// Do đó bùa ta sẽ tính từ 2 đến 7
@@ -68,7 +68,7 @@ public:
 		return _typeAmulet;
 	}
 	//Vẽ bùa lên màn hình
-	void draw() {
+	void draw(bool finalMap = false) {
 		TextureManager::GetInstance()->drawFrame("Amulet", float(_x), float(_y), float(_size), float(_size), 1, _currentFrame, _renderer);
 	}
 };

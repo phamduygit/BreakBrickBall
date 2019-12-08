@@ -22,13 +22,13 @@ public:
 		_action = none;
 	}
 	//Hàm tạo có đối số
-	GameOver(SDL_Renderer*& renderer) {
-		this->_renderer = renderer;
+	GameOver(SDL_Renderer*& value) {
+		this->_renderer = value;
 		_action = none;
 	}
 	//Sét struct renderer cho đối tượng
-	virtual void setRenderer(SDL_Renderer*& renderer) {
-		this->_renderer = renderer;
+	virtual void setRenderer(SDL_Renderer*& value) {
+		this->_renderer = value;
 	}
 	//Lấy ra hành động mà màn hình muốn Class game thực hiện
 	virtual Action getAction() {
