@@ -20,16 +20,27 @@ using namespace std;
 class Ball
 {
 private:
+	//Tọa độ hiện tại của quả bóng
 	float _x;
 	float _y;
+	//Bán kính của quả bóng
 	float _radius;
+	//Tốc độ di chuyển của quả bóng
 	float _speed;
+	//Góc bay quả quả bóng
 	float _degree;
+	//Tốc độ sao lưu lại 
 	float _backupSpeed;
+	//Struct lưu trữ hình ảnh quả bóng
 	SDL_Texture* _image;
+	//Struct chưa thông tin những thứ sẽ render lên màn hình 
 	SDL_Renderer* _renderer;
+	//Trạng thái quả bóng đã bay chưa 
 	bool _isLaunch;
+	//Sao lưu gốc bay quả bóng 
 	float _backupDegree;	
+	//Hàm khởi tạo có đối số 
+	float _backupRadius;
 	Ball(SDL_Renderer*& value) {
 		_x = 250;
 		_y = 700;
@@ -40,8 +51,17 @@ private:
 		this->_renderer = value;
 		_isLaunch = false;
 	}
+	//Thể hiện của đối tượng
 	static Ball* instance;
+
 public:
+
+	void setBackupRadius(float value) {
+		_backupRadius = value;
+	}
+	float getBackupRadius() {
+		return _backupRadius;
+	}
 	float getBackupSpeed() {
 		return _backupSpeed;
 	}

@@ -406,7 +406,7 @@ public:
 		}
 		//Hiện thị màn hình map diagram
 		else if (_listScreen["MapDiagramScreen"]) {
-			_previousScreen = "MapDiagramScreen";
+		
 			//Sét giới hạn những map mà người chơi có thể tích chọn khi người chơi muốn chơi lại
 			//với điều kiện những map mà người chơi được chọn là những map nhỏ hơn hoặc bằng 
 			//map mà người chơi đã unlock 
@@ -442,6 +442,7 @@ public:
 				_mapDiagram.resetData();
 				//Kích hoạt màn hình chơi game sau khi đã load đầy đủ dữ liệu
 				enableScreen("GamePlayScreen");
+				_previousScreen = "MapDiagramScreen";
 			}
 		}
 		//Màn hình cài đặt 

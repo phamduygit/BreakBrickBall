@@ -30,7 +30,7 @@ private:
 	Player() {
 		_score = 0;
 		_currentMap = 1;
-		_life = 1;
+		_life = 3;
 		_rateOfScore = 10;
 		this->_renderer = 0;
 		_scoreTexture = 0;

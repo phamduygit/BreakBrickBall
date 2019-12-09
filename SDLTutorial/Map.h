@@ -43,6 +43,8 @@ public:
 	}
 	//Tải dữ liệu từ dữ liệu ở lần chơi trước 
 	void loadData() {
+		_listAmulet.clearAllAmulet();
+		_listBrick.clearAllBrick();
 		fstream file("MapSavedData.txt", ios::in);
 		if (!file) {
 			cout << "\nFile not found";
