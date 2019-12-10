@@ -365,9 +365,6 @@ public:
 
 	}
 	void update() {
-		//	for (auto i = listScreen.begin(); i != listScreen.end(); i++) {
-		//		cout << i->first << ":" << i->second << endl;
-		//	}
 			//Kiểm tra nêu chưa chơi nhạc thì ta tiến hành load nhạc
 		if (Mix_PlayingMusic() == 0)
 		{
@@ -436,12 +433,12 @@ public:
 					//nghĩa là người chơi muốn chơi lại ở vòng chơi trước khi thoát 
 					//ta tiến hành load dữ liệu đã lưu từ file
 
-					if (_currentMap == _player->getCurrentMap()) {
+					if (_currentMap == _player->getCurrentMap()&&_player->getLife()>0) {
 
 						_map.loadData();
 					}
 					else { //Ngược lại là người chơi muốn chơi lại những vòng khác
-
+						_player->setLife(3);
 						_map.loadData(_fileMapName[_mapDiagram.getSelectedMap()]);
 
 					}
