@@ -69,6 +69,9 @@ public:
 		while (!file.eof()) {
 			string data;
 			getline(file, data);
+			if (data == "") {
+				break;
+			}
 			stringstream dat(data);
 			string temp;
 			while (getline(dat, temp, ' ')) {
@@ -83,7 +86,8 @@ public:
 				Brick brick(_renderer);
 				brick.setX(i * 50);
 				brick.setY((j+1) * 50);
-				_list.push_back(brick);			}
+				_list.push_back(brick);			
+			}
 		}
 
 
@@ -129,7 +133,7 @@ public:
 		for (size_t i = 0; i < _list.size(); i++) {
 			//Khi phát hiện có va chạm 
 			if (ball->isCollision(float(_list[i].getX()), float(_list[i].getY()), _list[i].getSize())) {
-				cout << "co" << endl;
+				//cout << "co" << endl;
 				//Kiểm soát việc có cho phép việc xuất ra âm thanh khi va chạm với gạch không
 				/*if (_isMusicOn) {
 					Mix_PlayChannel(-1, LoadSound("medium.wav"), 0);

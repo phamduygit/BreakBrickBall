@@ -2,9 +2,7 @@
 #include "ListBrick.h"
 #include "ListAmulet.h"
 #include <fstream>
-#include <memory>
-#define  pt shared_ptr
-#define mk make_shared
+#include "ComputerPaddle.h"
 
 
 class Map
@@ -12,6 +10,8 @@ class Map
 private:
 	//Đối tượng chứa danh sách bùa 
 	ListAmulet _listAmulet;
+	//Đối tượng vật cản trong game
+	ComputerPaddle _computerPaddle;
 protected:
 	//Đối tượng chứa danh sách những viên gạch
 	ListBrick _listBrick;	
@@ -32,19 +32,25 @@ public:
 	//Lưu dữ liệu cho game khi người chơi thoát khỏi game
 	void saveData() {
 		fstream file("MapSavedData.txt",ios::out);
-		file << _listBrick.toString()<<endl << _listAmulet.toString();
-		file.close();
-		
+		file << _listBrick.toString() << endl << _listAmulet.toString() << endl << _computerPaddle.toString();
+		file.close();		
 	}
 	//Xóa tất cả các item xuất hiên trên màn hình
 	void clearMap() {
+		//clear
+		_computerPaddle.disable();
 		_listAmulet.clearAllAmulet();
 		_listBrick.clearAllBrick();
 	}
 	//Tải dữ liệu từ dữ liệu ở lần chơi trước 
 	void loadData() {
+		//Xóa tất cả các bùa trong map
 		_listAmulet.clearAllAmulet();
+		//Xóa tất cả các gạch có trong map
 		_listBrick.clearAllBrick();
+		//clear
+		_computerPaddle.disable();
+		_computerPaddle.setRenderer(_renderer);
 		fstream file("MapSavedData.txt", ios::in);
 		if (!file) {
 			cout << "\nFile not found";
@@ -61,13 +67,13 @@ public:
 			while (getline(source, buffer, ' ')) {
 				token.push_back(buffer);
 			}
-			Brick *brick = new Brick(_renderer, stoi(token[0]), stoi(token[1]));
-			brick->setFrame(stoi(token[2]));
-			_listBrick.addBrick(*brick);
-			delete brick;
+			Brick brick(_renderer, stoi(token[0]), stoi(token[1]));
+			brick.setFrame(stoi(token[2]));
+			_listBrick.addBrick(brick);
 			token.clear();
 
 		}
+		//Load dữ liệu từ file cho list gạch
 		while (!file.eof()) {
 			getline(file, buffer);
 			if (buffer == "") {
@@ -77,11 +83,33 @@ public:
 			while (getline(source, buffer, ' ') ){
 				token.push_back(buffer);
 			}
-			Amulet* amulet = new Amulet(_renderer, stoi(token[0]), stoi(token[1]), TypeAmulet(stoi(token[2])));
-			_listAmulet.addAmulet(*amulet);
-			delete amulet;
+			Amulet amulet(_renderer, stoi(token[0]), stoi(token[1]), TypeAmulet(stoi(token[2])));
+			_listAmulet.addAmulet(amulet);
 			token.clear();
 		}
+		//Load dữ liệu từ file MapSavedData.txt
+		while (!file.eof()) {
+			getline(file, buffer);
+			if (buffer == "") {
+				break;
+			}
+			stringstream source(buffer);
+			vector<string> token;
+			string dat;
+			while (getline(source, dat, ' ')) {
+				token.push_back(dat);
+			}			
+			_computerPaddle.setX(stoi(token[0]));
+			_computerPaddle.setY(stoi(token[1]));
+			_computerPaddle.setSpeed(stoi(token[2]));
+			if (token[3] == "1") {
+				_computerPaddle.enable();
+			}
+			else if (token[3] == "0"){
+				_computerPaddle.disable();
+			}
+		}
+		file.close();
 
 	}
 	//Bật nhạc khi bóng chạm vào gạch
@@ -94,6 +122,7 @@ public:
 		this->_renderer = value;
 		_listBrick.setRenderer(value);
 		_listAmulet.setRenderer(value);		
+		_computerPaddle.setRenderer(_renderer);
 		_listBrick.createListWithMapText(dataFileName);
 		_listAmulet.createListWithMapText(dataFileName);
 	}
@@ -101,9 +130,11 @@ public:
 	virtual void loadData(string fileName) {
 		_listBrick.clearAllBrick();
 		_listAmulet.clearAllAmulet();
+		_computerPaddle.disable();
 		_listBrick.setRenderer(_renderer);
 		_listBrick.createListWithMapText(fileName);
 		_listAmulet.createListWithMapText(fileName);
+		_computerPaddle.load(fileName);
 
 	}
 	//Kiểm tra xem map còn gạch không
@@ -117,12 +148,15 @@ public:
 	void draw() {
 		_listBrick.drawBrickMap();
 		_listAmulet.drawListAmulet();
+		_computerPaddle.draw();
 	}
 	//Cập nhật các trạng thái  các list
 	virtual void update() {
 
 		_listBrick.handleCollision();
 		_listAmulet.handleCollision();
+		_computerPaddle.move();
+		_computerPaddle.handleCollision();
 		int limitTime = 6000;
 		//d
 		//cout << listAmulet.getTime()<<endl;

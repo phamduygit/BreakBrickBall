@@ -80,7 +80,7 @@ public:
 	//Hàm vẽ những viên gạch và hố đen lên màn hình chơi game
 	void draw() {
 		_listBrick.drawBrickMap();
-		TextureManager::GetInstance()->drawFrame("Hole", _xRedHole, _yRedHole, 50, 50, 1, _currentRedHoleFrame, _renderer);
+		TextureManager::GetInstance()->drawFrame("RedHole", _xRedHole, _yRedHole, 50, 50, 1, _currentRedHoleFrame, _renderer);
 		_currentRedHoleFrame = (_currentRedHoleFrame + 1) % 500;
 	}
 

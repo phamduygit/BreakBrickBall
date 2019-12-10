@@ -44,12 +44,13 @@ private:
 	Ball(SDL_Renderer*& value) {
 		_x = 250;
 		_y = 700;
-		_radius = 15;
+		_radius = 20;
 		_speed =6;
 		_image = NULL;
 		_degree = 60;
 		this->_renderer = value;
 		_isLaunch = false;
+		_backupRadius = 20;
 	}
 	//Thể hiện của đối tượng
 	static Ball* instance;
@@ -193,59 +194,59 @@ public:
 
 
 	}
-	//bool isCollision(float _x, float _y, float width,float height) {
-	//	Cirle a;
-	//	a.x = this->x;
-	//	a.y = y;
-	//	a.r = radius;
-	//	SDL_FRect b;
-	//	b.x = _x;
-	//	b.y = _y;
-	//	b.w = width;
-	//	b.h = height;
-	//	float cX, cY;
+	bool isCollision(float x, float y, float width,float height) {
+		Cirle a;
+		a.x = this->_x;
+		a.y = _y;
+		a.r = _radius;
+		SDL_FRect b;
+		b.x = x;
+		b.y = y;
+		b.w = width;
+		b.h = height;
+		float cX, cY;
 
-	//	//Find closest x offset
-	//	if (a.x < b.x)
-	//	{
-	//		cX = b.x;
-	//	}
-	//	else if (a.x > b.x + b.w)
-	//	{
-	//		cX = b.x + b.w;
-	//	}
-	//	else
-	//	{
-	//		cX = a.x;
-	//	}
+		//Find closest x offset
+		if (a.x < b.x)
+		{
+			cX = b.x;
+		}
+		else if (a.x > b.x + b.w)
+		{
+			cX = b.x + b.w;
+		}
+		else
+		{
+			cX = a.x;
+		}
 
-	//	//Find closest y offset
-	//	if (a.y < b.y)
-	//	{
-	//		cY = b.y;
-	//	}
-	//	else if (a.y > b.y + b.h)
-	//	{
-	//		cY = b.y + b.h;
-	//	}
-	//	else
-	//	{
-	//		cY = a.y;
-	//	}
+		//Find closest y offset
+		if (a.y < b.y)
+		{
+			cY = b.y;
+		}
+		else if (a.y > b.y + b.h)
+		{
+			cY = b.y + b.h;
+		}
+		else
+		{
+			cY = a.y;
+		}
 
-	//	//If the closest pofloat is inside the circle
-	//	if (distanceSquared(a.x, a.y, cX, cY) < a.r * a.r)
-	//	{
-	//		//This box and the circle have collided
-	//		return true;
-	//	}
+		//If the closest pofloat is inside the circle
+		if (distanceSquared(a.x, a.y, cX, cY) < a.r * a.r)
+		{
+			//This box and the circle have collided
+			return true;
+		}
 
-	//	//If the shapes have not collided
-	//	return false;
+		//If the shapes have not collided
+		return false;
 
 
 
-	//}
+	}
 	//Khởi tạo hình ảnh cho quả bóng
 	void setImage(string name) {
 		_image = LoadImage(name, _renderer);

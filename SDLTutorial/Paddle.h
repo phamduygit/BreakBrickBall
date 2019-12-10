@@ -57,7 +57,7 @@ protected:
 	}
 public:
 	//Phương thức lấy ra thể hiện của một singleton
-	static Paddle* Instance(SDL_Renderer*& value) {
+	 static Paddle* Instance(SDL_Renderer*& value) {
 		if (_instance == NULL) {
 			_instance = new  Paddle(value);
 

@@ -15,7 +15,10 @@ enum TypeAmulet {
 	//Giảm tốc độ bóng
 	DecreaseSpeedBall =7,
 	//Tăng mạng
-	IncreaseLife = 8
+	IncreaseLife = 8,
+	BlackHole = 10,
+	RedHole = 11
+
 
 };
 

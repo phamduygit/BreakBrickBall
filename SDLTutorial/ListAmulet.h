@@ -95,6 +95,31 @@ public:
 				_list.push_back(amulet);
 			}
 		}
+		/*vector<int> map;
+		fstream file(fileName, ios::in);
+		while (!file.eof()) {
+			
+			string data;
+			getline(file, data);
+			if (data == "") {
+				break;
+			}
+			stringstream dat(data);
+			string temp;
+			while (getline(dat, temp, ' ')) {
+				map.push_back(stoi(temp));
+			}
+
+		}
+		for (int k = 0; k < int(map.size()); k++) {
+			int i = k % 10;
+			int j = k / 10;
+			if (map[k] == 1) {
+				Amulet amulet(_renderer, i * 50,(j + 1) * 50,TypeAmulet(map[k]));
+				
+				_list.push_back(amulet);
+			}
+		}*/
 	}
 	//Thêm bùa vào trong list bùa
 	void addAmulet(const Amulet amulet) {

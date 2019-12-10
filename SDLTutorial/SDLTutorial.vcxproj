@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClCompile Include="Amulet.cpp" />
     <ClCompile Include="Brick.cpp" />
+    <ClCompile Include="ComputerPaddle.cpp" />
     <ClCompile Include="EndScreen.cpp" />
     <ClCompile Include="FinalMap.cpp" />
     <ClCompile Include="Functions.cpp" />
@@ -147,6 +148,7 @@
   <ItemGroup>
     <ClInclude Include="Amulet.h" />
     <ClInclude Include="Brick.h" />
+    <ClInclude Include="ComputerPaddle.h" />
     <ClInclude Include="EndScreen.h" />
     <ClInclude Include="FinalMap.h" />
     <ClInclude Include="Functions.h" />
