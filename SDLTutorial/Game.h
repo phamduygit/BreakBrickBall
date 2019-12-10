@@ -706,12 +706,13 @@ public:
 			if (_ball->getIsLaunch()) {
 				//Kiểm soát xem quả bóng va chạm vào biên trên
 				if (_ball->getY() - _ball->getRadius() < 0) {
+					float offset = abs(_ball->getY() - _ball->getRadius());
 					_ball->setDegree(-_ball->getDegree());
+					_ball->setY(_ball->getY() + offset *float( 1.1));
 
 				}
 				//Kiểm soát quả bóng khi quả bóng va chạm biên dưới
 				if (_ball->getY() + _ball->getRadius() > 800) {
-
 					_ball->reset(_paddle->getX() + _paddle->getWidth() / 2, _paddle->getY());
 
 					_player->setLife(_player->getLife() - 1);
@@ -719,7 +720,14 @@ public:
 
 				}
 				//Kiểm soát quả bóng khi quả bóng va chạm biên trái và biên phải 
-				if (_ball->getX() - _ball->getRadius() < 0 || _ball->getX() + _ball->getRadius() > 500) {
+				if (_ball->getX() - _ball->getRadius() < 0 ) {
+					float offset = abs(_ball->getX() - _ball->getRadius());
+					_ball->setX(_ball->getX() + float(1.1) * offset);
+					_ball->setDegree(180 - _ball->getDegree());
+				}
+				else if (_ball->getX() + _ball->getRadius() > 500) {
+					float offset = abs(_ball->getX() + _ball->getRadius() - 500);
+					_ball->setX(_ball->getX() - float(1.1) * offset);
 					_ball->setDegree(180 - _ball->getDegree());
 				}
 			}
@@ -753,7 +761,7 @@ public:
 				}
 				//Kiểm soát speed của trái banh ở mức tối đa 
 				//speed <11
-				if (_ball->getSpeed() <= 10) {
+				if (_ball->getSpeed() <= 8.5) {
 
 					_ball->setSpeed(_ball->getSpeed() * (float)1.1);
 

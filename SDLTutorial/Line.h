@@ -50,10 +50,10 @@ public:
 		_paddleSize = 120;
 	}
 	//Sét thống tin cho paddle gồm vị trí và kích thước
-	void setPaddle(float x, float y, float _paddleSize) {
+	void setPaddle(float x, float y, float paddleSize) {
 		_paddle.x = x;
 		_paddle.y = y;
-		_paddleSize = _paddleSize;
+		_paddleSize = paddleSize;
 	}
 	//Set tọa độ con trỏ chuột
 	void setMouse(int x, int y) {

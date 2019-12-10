@@ -105,7 +105,7 @@ public:
 	void  handleCollision() {
 		//Khi xẩy ra hiệu ứng của bùa nam châm thì sét vị trí của banh luôn nằm 
 		//ở chính giữa của paddle
-		if (this->getTime() < 6000 && _mapAmuletEffect["Magnet"]) {
+		if (this->getTime() < 6000 && _mapAmuletEffect["Magnet"]&&Ball::Instance(_renderer)->getIsLaunch()) {
 			Ball* ball = Ball::Instance(_renderer);
 			Paddle* paddle = Paddle::Instance(_renderer);
 			ball->setX(paddle->getX() + paddle->getWidth() / 2);
@@ -137,7 +137,9 @@ public:
 					Ball::Instance(_renderer)->setX(Paddle::Instance(_renderer)->getX() + Paddle::Instance(_renderer)->getWidth() / 2);
 					Ball::Instance(_renderer)->setY(Paddle::Instance(_renderer)->getY()+10);
 					//Khi đó quả bóng sẽ không di chuyển
+					//FIX
 					Ball::Instance(_renderer)->setSpeed(0);
+					//Ball::Instance(_renderer)->setIsLaunch(false);
 
 
 				}
@@ -195,6 +197,8 @@ public:
 	}
 	//Sét lại góc bay và tốc độ trái bóng sau khi hết thời gian bùa có hiệu ứng
 	void resetMagnet() {
+		//d
+		//Ball::Instance(_renderer)->setIsLaunch(true);
 		Ball::Instance(_renderer)->setDegree(120);
 		Ball::Instance(_renderer)->setSpeed(Ball::Instance(_renderer)->getBackupSpeed());
 		_mapAmuletEffect["Magnet"] = false;
