@@ -88,7 +88,7 @@ public:
 		
 		file.close();
 		for (int k = 0; k < int(map.size()); k++) {
-			if (map[k] != 0 && map[k] != 1) {
+			if (map[k] != 0 && map[k] != 1&&map[k]!=9) {
 				int i = k % 10;
 				int j = k / 10;
 				Amulet amulet(_renderer, i * 50, (j + 1) * 50, TypeAmulet(map[k]));
@@ -212,8 +212,22 @@ public:
 					life++;
 					Player::Instance()->setLife(life);
 				}
-				//Sau khi trái banh va chạm vào bùa thì bùa biến mất 
-				_list.erase(_list.begin() + i);
+				else if (BlackHole == _list[i].getType()) {
+					Amulet whiteHole;
+
+					for (auto amulet : _list) {
+						if (amulet.getType() == WhiteHole) {
+							whiteHole = amulet;
+							break;
+						}
+					}
+					Ball::Instance(_renderer)->setX(whiteHole.getX() + whiteHole.getSize() / 2);
+					Ball::Instance(_renderer)->setY(whiteHole.getY() + whiteHole.getSize() / 2);
+				}
+				//Sau khi trái banh va chạm vào bùa thì bùa biến mất
+				if (_list[i].getType() != BlackHole && _list[i].getType() != WhiteHole) {
+					_list.erase(_list.begin() + i);
+				}
 				break;
 
 			}

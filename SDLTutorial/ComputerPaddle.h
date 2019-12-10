@@ -218,7 +218,7 @@ public:
 			disable();
 		}
 	}
-	//Chuyển đổi dư liệu thành dạng chuỗi để lưu trữ trạng thái sau khi thoát game
+	//Chuyển đổi dữ liệu thành dạng chuỗi để lưu trữ trạng thái sau khi thoát game
 	string toString() {
 		stringstream out;
 		out << _x << " " << int(_y) << " " << int(_speed)<< " "<<isEnable;

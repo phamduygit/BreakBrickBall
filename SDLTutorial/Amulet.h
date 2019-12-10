@@ -16,8 +16,13 @@ enum TypeAmulet {
 	DecreaseSpeedBall =7,
 	//Tăng mạng
 	IncreaseLife = 8,
+	//9 là vật cản
+	//Hố đén 
+	//Khi quả bóng người chơi lọt vào hố đen thì 
+	//sẽ bay ra ở hố trắng
 	BlackHole = 10,
-	RedHole = 11
+	//Hố trắng là nơi mà trái banh sẽ bay ra 
+	WhiteHole = 11
 
 
 };
@@ -38,9 +43,16 @@ public:
 	Amulet(SDL_Renderer* &value, int x, int y,TypeAmulet typeAmulet) :Brick(value, x, y) {
 		//currentFrame là khung hình hiện tại trong file png 
 		// Do trong cấu trúc file gạch kí hiệu là 1
-		// Do đó bùa ta sẽ tính từ 2 đến 7
-
-		this->_currentFrame = typeAmulet - 1;
+		// Do đó bùa ta sẽ tính từ 2 đến 8
+		// 9 là vật cản
+		//10 là hố đen
+		//11 là hố trắng
+		if (_typeAmulet != BlackHole && _typeAmulet != WhiteHole) {
+			this->_currentFrame = typeAmulet - 1;
+		}
+		else {
+			this->_currentFrame = 1;
+		}	
 
 		this->_typeAmulet = typeAmulet;
 		//Sét mốc thời gian lúc đầu bằng 0
@@ -72,7 +84,27 @@ public:
 	}
 	//Vẽ bùa lên màn hình
 	void draw(bool finalMap = false) {
-		TextureManager::GetInstance()->drawFrame("Amulet", float(_x), float(_y), float(_size), float(_size), 1, _currentFrame, _renderer);
+		//Nếu bùa không phải là hố đen và hố trắng thì vẽ theo khung trên sprite sheet
+		if (_typeAmulet != BlackHole && _typeAmulet != WhiteHole) {
+			TextureManager::GetInstance()->drawFrame("Amulet", float(_x), float(_y), float(_size), float(_size), 1, _currentFrame, _renderer);
+		}
+		//ngược lại nếu bùa là hố đen thì vẽ theo khung hình riêng tính từ 1 đến 120 
+		else if (_typeAmulet == BlackHole) {
+			TextureManager::GetInstance()->drawFrame("BlackHole", float(_x), float(_y), float(_size), float(_size), 1, _currentFrame, _renderer);
+			_currentFrame = (_currentFrame + 1) % 121;
+			if (_currentFrame == 0) {
+				_currentFrame = 1;
+			}
+		}
+		//nếu là hố trắng thì vẽ tương tự hố đen khung hình chạy từ 1 đến 120
+		else if (_typeAmulet == WhiteHole) {
+			TextureManager::GetInstance()->drawFrame("WhiteHole", float(_x), float(_y), float(_size), float(_size), 1, _currentFrame, _renderer);
+			_currentFrame = (_currentFrame + 1) % 121;
+			if (_currentFrame == 0) {
+				_currentFrame = 1;
+			}
+
+		}
 	}
 };
 

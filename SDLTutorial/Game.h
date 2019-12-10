@@ -223,6 +223,9 @@ public:
 			TextureManager::GetInstance()->load("FinalBrick.png", "FinalBrick", _renderer);
 			TextureManager::GetInstance()->load("amulet.png", "Amulet", _renderer);
 			TextureManager::GetInstance()->load("ComputerPaddle.png", "ComputerPaddle", _renderer);
+			TextureManager::GetInstance()->load("BlackHole.png", "BlackHole", _renderer);
+			TextureManager::GetInstance()->load("WhiteHole.png", "WhiteHole", _renderer);
+			TextureManager::GetInstance()->load("RedHole.png", "RedHole", _renderer);
 			//Load hình ảnh cho background
 			//d
 
@@ -237,8 +240,8 @@ public:
 			_paddle = Paddle::Instance(_renderer);
 			//Cài đặt hình ảnh cho paddle
 			_paddle->setImage("Paddle.png");
-		//	_computerPaddle = ComputerPaddle(_renderer, 200, 600, 188, 20);
-			TextureManager::GetInstance()->load("RedHole.png", "RedHole", _renderer);
+
+			
 			//Thêm và tên các file text chứa thông tin map vào vector
 			_fileMapName.push_back("");
 			_fileMapName.push_back("map1.txt");
@@ -299,7 +302,7 @@ public:
 
 			DrawInRenderer(_renderer, _background);
 			//Vẽ banh lên màn hình game
-			_ball->draw();
+			
 			//Vẽ map gồm gạch và bùa lên màn hình chơi
 			if (_listScreen["FinalMapScreen"]) {
 				_finalMap.draw();
@@ -307,6 +310,7 @@ public:
 			else {
 				_map.draw();
 			}
+			_ball->draw();
 			//Sét màu cho đường thẳng nhắm tới mục tiêu
 			SDL_SetRenderDrawColor(_renderer, 255, 255, 255, NULL);
 			if (!_ball->getIsLaunch()) {

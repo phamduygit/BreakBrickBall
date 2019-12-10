@@ -4,7 +4,7 @@
 #include <SDL.h>
 #include <cmath>
 #include "Functions.h"
-//#include"Game.h"
+//#include"quả bóng.h"
 struct Point2D {
 	float x;
 	float y;
@@ -56,60 +56,74 @@ private:
 	static Ball* instance;
 
 public:
-
+	//Thiết bán kính đã được sao lưu từ trước
 	void setBackupRadius(float value) {
 		_backupRadius = value;
 	}
+	//Lấy ra bán kính đã sao lưu
 	float getBackupRadius() {
 		return _backupRadius;
 	}
+	//Lấy ra tốc độ đã sao lưu từ trước
 	float getBackupSpeed() {
 		return _backupSpeed;
 	}
+	//Lấy ra gốc bay đã sao lưu từ trước 
 	float getBackupDegree() {
 		return _backupDegree;
 	}
+	//Thiết lập gốc bay sao lưu lại
 	void setBackupDegree(float value) {
 		_backupDegree = value;
 
 	}
+	//Thiết lập tốc độ sao lưu lại
 	void setBackupSpeed(float value) {
 		_backupSpeed = value;
 	}
+	//Khôi phục lại trạng thái cho trái bóng
 	void reset(float x,float y) {
 		this->_x = x ;
-		this->_y = y;
-	
+		this->_y = y;	
 		_isLaunch = false;
 	}
+	//Phương thức lấy thể hiện của singleton
 	static Ball* Instance(SDL_Renderer*& value) {
 		if (instance == NULL) {
 			instance = new Ball(value);
 		}
 		return instance;
 	}
+	//Hàm khởi tạo không đối số
 	Ball();
-
+	//Hàm khởi tạo có đối số
 	~Ball();
+	//Lấy ra thông tin trái bóng đã bay chưa 
 	bool getIsLaunch() {
 		return _isLaunch;
 	}
+	//Thiết lập trạng thái trái bóng đã bay hay chưa
 	void setIsLaunch(bool val) {
 		_isLaunch = val;
 
 	}
+	//Lấy ra tọa độ x cho quả bóng
 	float getX() {
 		return _x;
 	}
+	//Thiết lập tọa độ X cho quả bóng
 	void setX(float value) {
 		_x = value;
 	}
+	//Lấy ra tọa độ y cho quả bóng
 	float getY() {
 		return _y;
 	}
+	//Thiết lập tọa độ y cho quả bóng
 	void setY(float value) {
 		_y = value;
 	}
+	//Thiết lập tốc độ cho quả bóng
 	void setSpeed(float value) {
 		_speed = value;
 		
@@ -251,7 +265,7 @@ public:
 	void setImage(string name) {
 		_image = LoadImage(name, _renderer);
 	}
-	//Vẽ quả bóng lên màn hình game
+	//Vẽ quả bóng lên màn hình quả bóng
 	void draw() {
 		//DrawInRenderer(renderer, image, x - radius, y - radius, radius * 2, 100);
 		DrawInRendererRotate(_renderer, _image, _x - _radius, _y - _radius, _radius * 2, _radius * 2, _radius, 90 - _degree);
