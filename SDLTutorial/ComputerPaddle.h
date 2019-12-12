@@ -15,7 +15,7 @@ private:
 	//Kích thước của đối tượng
 	float _width;
 	float _height;
-	//Tốc độ của paddle khi người chơi chơi bằng bàn phím
+	//Tốc độ của paddle
 	int _speed;
 	//Biến lưu giữ các thông số sẽ render lên màn hình game
 	SDL_Renderer* _renderer;

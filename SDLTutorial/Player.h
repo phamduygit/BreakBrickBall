@@ -68,13 +68,18 @@ public:
 	void setCurrentMapScore(int value) {
 		currentMapScore = value;
 	}
+	//Thiết lập điểm tổng
+	void setTotalScore(int value) {
+		_totalScore = value;
+	}
 	//Tăng điểm map chơi hiện tại
+	//Đồng thời tăng tổng điểm 
 	void increaseScore() {
 		currentMapScore += _rateOfScore;
 		_totalScore += _rateOfScore;
 	}
-	//Reset lai diem nguoi choi choi o vong hien tai về 0
-	//Reset lai diem khi nguoi choi choi lai tu dau
+	//Reset lai diem vòng hiện tại của người chơi về 0
+	//Reset lại điểm vòng hiện tại cho người chơi chơi lại từ đầu 
 	void reupdateTotalScore(int currentMap) {
 		int result = 0;
 		for (int i = 1; i < currentMap; i++) {
@@ -83,7 +88,7 @@ public:
 		_totalScore = result;
 		currentMapScore = 0;
 	}
-	//Cập nhật lại map điểm 
+	//Cập nhật lại map điểm từng vòng của người chơi
 	void updateScoreToRoundScore(int currentMap) {
 		roundScore[currentMap] = currentMapScore;
 	}
@@ -91,13 +96,13 @@ public:
 	void resetMapScoreForPlayAgain() {
 		currentMapScore = 0;
 	}
+	//Sét lại điểm vòng hiện tại vào map điểm từng vòng của người chơi
+	//đồng thời reset lại điểm mỗi vòng của người chơi
 	void resetMapScoreForNextMap(int currentMap) {
 		roundScore[currentMap] = currentMapScore;
 		currentMapScore = 0;
 	}
 	
-	// Thiết lập điểm map trước cho người chơi khi người chơi qua map
-
 	//Lấy ra điểm ở vòng chơi hiện tại của người chơi
 	int getCurrentMapScore() {
 		return currentMapScore;
@@ -275,18 +280,18 @@ public:
 		SDL_DestroyTexture(temp1);
 		SDL_DestroyTexture(temp2);
 	}
-	void drawCurrentResult() {
+	void drawCurrentResult(float verticalHeight = 0) {
 		string key = "v" + to_string(_currentMap);
 		auto vongTT = LoadFont("Round: " + to_string(_currentMap), _renderer, "zorque.ttf");
 		auto diemHienTai = LoadFont("Your current map score: " + to_string(currentMapScore), _renderer, "zorque.ttf");
 		auto tongDiem = LoadFont("Your total score: " + to_string(_totalScore), _renderer, "zorque.ttf");
-		auto diemCaoHienTai = LoadFont("High score:  " + to_string(highScore[key]), _renderer, "zorque.ttf");
-		auto tongDiemCaoNhat = LoadFont("High score: " + to_string(highScore["HighScore"]), _renderer, "zorque.ttf");
-		DrawInRenderer(_renderer, vongTT, 75, 290, 12 * (("Round: " + to_string(_currentMap)).length()), 40);
-		DrawInRenderer(_renderer, diemHienTai, 75, 290 + 45, 12 * ("Your current map score: " + to_string(currentMapScore)).length(), 40);
-		DrawInRenderer(_renderer, diemCaoHienTai, 75, 290 + 90, 12 * ("High score: " + to_string(highScore[key])).length(), 40);
-		DrawInRenderer(_renderer, tongDiem,75, 290 + 90 + 45, 12 * ("Your total score: " + to_string(_totalScore)).length(), 40);
-		DrawInRenderer(_renderer, tongDiemCaoNhat, 75, 290 + 90 + 90, 12 * ("High score: " + to_string(highScore["HighScore"])).length(), 40);
+		auto diemCaoHienTai = LoadFont("Old high score:  " + to_string(highScore[key]), _renderer, "zorque.ttf");
+		auto tongDiemCaoNhat = LoadFont("Old high score: " + to_string(highScore["HighScore"]), _renderer, "zorque.ttf");
+		DrawInRenderer(_renderer, vongTT, 75, 290+verticalHeight, 12 * (("Round: " + to_string(_currentMap)).length()), 40);
+		DrawInRenderer(_renderer, diemHienTai, 75, 290 + 45+verticalHeight, 12 * ("Your current map score: " + to_string(currentMapScore)).length(), 40);
+		DrawInRenderer(_renderer, diemCaoHienTai, 75, 290 + 90+verticalHeight, 12 * ("Old high score: " + to_string(highScore[key])).length(), 40);
+		DrawInRenderer(_renderer, tongDiem,75, 290 + 90 + 45+verticalHeight, 12 * ("Your total score: " + to_string(_totalScore)).length(), 40);
+		DrawInRenderer(_renderer, tongDiemCaoNhat, 75, 290 + 90 + 90+verticalHeight, 12 * ("Old high score: " + to_string(highScore["HighScore"])).length(), 40);
 
 
 		/*DrawInRenderer(_renderer, vongTT2, 80 + 100 + 10, 290, 20 * to_string(_currentMap).length(), 40);

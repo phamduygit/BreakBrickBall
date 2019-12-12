@@ -183,7 +183,7 @@ public:
 					_mapAmuletEffect["IncreaseSizeBall"] = true;
 					//Bắt đầu bắm thời gian tại lúc chạm vào bùa 
 					_startTime = clock();
-					Ball::Instance(_renderer)->setBackupRadius(Ball::Instance(_renderer)->getRadius());
+					//Ball::Instance(_renderer)->setBackupRadius(Ball::Instance(_renderer)->getRadius());
 					Ball::Instance(_renderer)->setRadius(Ball::Instance(_renderer)->getRadius() * float(2));
 
 				}

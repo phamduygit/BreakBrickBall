@@ -78,7 +78,7 @@ public:
 			_imageOfStar = LoadImage("3start.png", _renderer);
 			break;
 		default:
-			_imageOfStar = LoadImage("1start.png", _renderer);
+			_imageOfStar = LoadImage("3start.png", _renderer);
 			break;
 		}
 

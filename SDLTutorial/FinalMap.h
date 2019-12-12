@@ -81,7 +81,7 @@ public:
 	void draw() {
 		_listBrick.drawBrickMap();
 		TextureManager::GetInstance()->drawFrame("RedHole", _xRedHole, _yRedHole, 50, 50, 1, _currentRedHoleFrame, _renderer);
-		_currentRedHoleFrame = (_currentRedHoleFrame + 1) % 500;
+		_currentRedHoleFrame = (_currentRedHoleFrame + 1) % 200;
 	}
 
 };

@@ -104,15 +104,7 @@ private:
 	SettingAction _gameMode;
 	//Map cuối cùng
 	FinalMap _finalMap;
-	//d
-	//ComputerPaddle _computerPaddle;
-	/*
-	-["MenuScreen"]
-	-["MapDiagramScreen"]
-	-["SettingScreen"]
-	-["GameOverScreen"]
-	-["GamePlayScreen"]
-	*/
+	
 	//Đối tượng player lưu các thông tin của người chơi
 	//cũng như đối tượng paddle và đối tượng ball ở đây ta thiết kế ở dạng
 	//singleton vì trong game ta chỉ có một người chơi duy nhất
@@ -126,15 +118,12 @@ private:
 		_running = false;
 		_background = NULL;
 		//Ban đầu ta cho trạng thái có nhạc là true nghĩa là trong game có nhạc
-		//d
 		_isMusicOn = false;
 		_currentMap = 1;
 		_previousScreen = "";
 		//Ban đầu khi vào game thì ta hiện thị màn hình Menu đầu tiên
 		
 		_listScreen["MenuScreen"] = true;
-		//d
-		// _listScreen["WinScreen"] = true;
 		//Thiết lập tương đối tọa độ cho chuột
 		_xMouse = 0;
 		_yMouse = 0;
@@ -230,12 +219,11 @@ public:
 			TextureManager::GetInstance()->load("WhiteHole.png", "WhiteHole", _renderer);
 			TextureManager::GetInstance()->load("RedHole.png", "RedHole", _renderer);
 			//Load hình ảnh cho background
-			//d
 
 			_background = LoadImage("GrassBackground.png", _renderer);
 			_ball->setImage("Ball.png");
 			_map = Map(_renderer, "map2.txt");
-			//_map.setRenderer(_renderer);
+
 			//Cài đặt font cho màn hình menu game
 			_menuScreen.setFont("MachineGunk-nyqg.ttf");
 			//Cài đặt background cho game
@@ -256,10 +244,6 @@ public:
 			_fileMapName.push_back("map7.txt");
 			_fileMapName.push_back("map8.txt");
 			_fileMapName.push_back("map9.txt");
-			//cout << _fileMapName.size() << endl;
-			//	cout<<endl<<TextureManager::GetInstance()->count();
-
-
 		}
 	}
 	//Kích hoạt một màn hình nào đó 
@@ -278,8 +262,6 @@ public:
 			_listScreen[screenName[i]] = false;
 		}
 		_listScreen[nameScreen] = true;
-		cout << nameScreen << endl;
-		nameScreen.clear();
 	}
 
 	void render() {
@@ -325,8 +307,6 @@ public:
 			//Thông tin gồm điểm 
 			//Số mạng hiện tại mà người chơi có
 			_player->draw();
-			//_computerPaddle.draw();
-		//	_computerPaddle.move();
 		}
 		//Hiển thị màn hình khi người chơi bị thua game
 		else if (_listScreen["GameOverScreen"]) {
@@ -334,20 +314,18 @@ public:
 			//khi người chơi bị hêt mạng
 			//nhận vào cử chỉ chuột để kiểm soát xem người chơi có muốn chơi lại không hay là chọn cài đặt
 			//hay là người chơi muốn trở lại màn hình chọn map chơi
-			//cout << "Caled";
 			_gameOver.draw(_xMouse, _yMouse, _mouseActionClicked);
 		}
 		//Hiển thị màn hình chơi khi người chơi thắng một màn
 		else if (_listScreen["WinScreen"]) {
-
 			winScreen.draw(_xMouse, _yMouse, _mouseActionClicked);
-			//Set up animation
 			winScreen.drawStar(_player->getLife());
 			_player->drawCurrentResult();
 		}
 		//Hiển thị màn hình kết thúc game khi người chơi qua hết tất cả các map của game
 		else if (_listScreen["EndScreen"]) {
 			_endScreen.draw();
+			_player->drawCurrentResult(-60);
 		}
 
 		//Hiện thị những thông tin copy vào renderer lên màn hình chính
@@ -401,15 +379,14 @@ public:
 				//Sau đó kích hoạt màn hình map diagram
 
 				else if (_menuScreen.getCurrentChoose() == Continue) {
-					//Load du lieu bao gom những thông tin co ban 
-					//File highscore
+					//Load dữ liệu bao gồm các thông tin cơ bản
+					//Gồm file PlayerData.txt, HighScore.txt
 				
 					_player->loadDataFromFile();
-					//d
-					//Kiểm tra xem người chơi còn bao nhiêu mạng
 					_currentMap = _player->getCurrentMap();
 					_mapDiagram.resetData();
 					enableScreen("MapDiagramScreen");
+					_previousScreen = "MenuScreen";
 				}
 
 				//Kích hoạt màn hình cài đặt
@@ -454,10 +431,10 @@ public:
 					}
 					else { //Ngược lại là người chơi muốn chơi lại những vòng khác
 						_player->setLife(3);
-						//d
+						//Update lại điểm điểm ở vòng chơi nào đó mà người chơi muốn chơi lại
+						//sau đó khôi phục lại điểm để cho người chơi chơi lại
 						_player->reupdateTotalScore(_currentMap);
-						_player->resetMapScoreForPlayAgain();
-						//reset score theo vong
+						_player->resetMapScoreForPlayAgain();					
 
 						_map.loadData(_fileMapName[_mapDiagram.getSelectedMap()]);
 
@@ -473,8 +450,7 @@ public:
 
 				}
 				
-				//Đã thêm
-				//d
+				//Cập nhật máp mà người chơi đã chọn
 				_player->setCurrentMap(_currentMap % _fileMapName.size());
 				//Reset lại acction để những vòng lặp sau có thể vào đúng điều kiện
 				_mapDiagram.resetData();
@@ -588,7 +564,7 @@ public:
 					_previousScreen = "GameOverScreen";
 					//Khi choi lại sét lại mạng cho người chơi là 3 mạng
 					_player->setLife(3);
-					//d
+				
 					//reset lại điểm của người chơi
 					_player->reupdateTotalScore(_currentMap);
 					_player->resetMapScoreForPlayAgain();
@@ -605,8 +581,7 @@ public:
 					//Khi choi lại sét lại mạng cho người chơi là 3 mạng
 					_player->setLife(3);
 					//reset lại điểm của người chơi
-					//d
-					//score 9
+					//khi đó điểm vòng hiện tại sẽ bằng 0
 					_player->resetMapScoreForPlayAgain();
 					//Thiết lặp lại vị trí của quả bóng
 					_ball->reset(_paddle->getX() + 0.5 * _paddle->getWidth() / 2, _paddle->getY());
@@ -619,9 +594,7 @@ public:
 				//Kích hoạt màn hình map diagram
 				enableScreen("MapDiagramScreen");
 				_previousScreen = "GameOverScreen";
-				//d
-				//_player->resetScoreForPlayAgain();
-				//_player->setScore(0);
+		
 				//reset lại thuộc tính của map diagram
 				_mapDiagram.setSelectedMap(0);
 				_gameOver.setAction(none);
@@ -644,9 +617,6 @@ public:
 			//Người chơi chọn nút chơi lại
 			if (winScreen.getAction() == retry) {
 				//Hoàn thành khi người chơi chiến thắng đồng thời muốn chơi lại
-
-
-
 				enableScreen("GamePlayScreen");
 				_player->setLife(3);
 				_player->setRateOfScore(10);
@@ -668,14 +638,9 @@ public:
 				_player->setCurrentMap(_currentMap + 1);
 				_player->updateHighScore(_currentMap);
 				_player->setUnlockedMap(_currentMap + 1);
-				//d
-				//chuan bi 
-				//->updateScoreToRoundScore(_currentMap);
+				//Cập nhật điểm vòng hiện tại vào map score theo từng vòng của người chơi 
+				//đông thời reset lại biến currentMapScore về 0
 				_player->resetMapScoreForNextMap(_currentMap);
-				//_player->updateScoreToRoundScore(_currentMap);
-				//_player->reupdateTotalScore(_currentMap);
-				//_player->resetMapScoreForNextMap(_currentMap);
-				//reset lại mạng cho người chơi
 				_player->setLife(3);
 				//Reset lại tỉ lệ điểm cho người chơi
 				_player->setRateOfScore(10);
@@ -712,6 +677,8 @@ public:
 			if (_listScreen["FinalMapScreen"]) {
 				if (_finalMap.isBallInRedHole()) {
 					enableScreen("EndScreen");
+					_player->setCurrentMapScore(200);
+					_player->setTotalScore(_player->getTotalScore() + 200);
 				}
 				_finalMap.update();
 				if (_player->getLife() == 0) {
@@ -728,7 +695,6 @@ public:
 				//Kiểm tra khi người chơi chết 
 				if (_player->getLife() == 0) {
 					//Thì ta kích hoạt màn hình kết thúc game
-					//d
 					enableScreen("GameOverScreen");
 				}
 
