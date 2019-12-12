@@ -187,7 +187,7 @@ public:
 					Ball::Instance(_renderer)->setRadius(Ball::Instance(_renderer)->getRadius() * float(2));
 
 				}
-				//Nếu gặp phải loại bùa giảm nửa phần trăm số điểm 
+				//Nếu gặp phải loại bùa giảm 50 phần trăm số điểm 
 				else if (HalveScore == _list[i].getType()) {
 					//Cập nhật lại biến tín hiệu
 					_mapAmuletEffect["HalveScore"] = true;
@@ -212,7 +212,7 @@ public:
 					life++;
 					Player::Instance()->setLife(life);
 				}
-				else if (BlackHole == _list[i].getType()) {
+				else if (BlackHole == _list[i].getType()&&_list[i].getFrame()>=1&& _list[i].getFrame() <=120) {
 					Amulet whiteHole;
 
 					for (auto amulet : _list) {

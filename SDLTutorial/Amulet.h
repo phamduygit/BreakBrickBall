@@ -91,7 +91,7 @@ public:
 		//ngược lại nếu bùa là hố đen thì vẽ theo khung hình riêng tính từ 1 đến 120 
 		else if (_typeAmulet == BlackHole) {
 			TextureManager::GetInstance()->drawFrame("BlackHole", float(_x), float(_y), float(_size), float(_size), 1, _currentFrame, _renderer);
-			_currentFrame = (_currentFrame + 1) % 121;
+			_currentFrame = (_currentFrame + 1) % 180;
 			if (_currentFrame == 0) {
 				_currentFrame = 1;
 			}
@@ -99,7 +99,7 @@ public:
 		//nếu là hố trắng thì vẽ tương tự hố đen khung hình chạy từ 1 đến 120
 		else if (_typeAmulet == WhiteHole) {
 			TextureManager::GetInstance()->drawFrame("WhiteHole", float(_x), float(_y), float(_size), float(_size), 1, _currentFrame, _renderer);
-			_currentFrame = (_currentFrame + 1) % 121;
+			_currentFrame = (_currentFrame + 1) % 180;
 			if (_currentFrame == 0) {
 				_currentFrame = 1;
 			}

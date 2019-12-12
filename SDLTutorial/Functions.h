@@ -9,7 +9,7 @@ using namespace std;
 //Tải hình ảnh từng file
 SDL_Texture* LoadImage(string nameImage, SDL_Renderer*Renderer);
 //Tải font chữ từ file .ttf
-SDL_Texture* LoadFont(string filePath, SDL_Renderer* Renderer, string Font);
+SDL_Texture* LoadFont(string text, SDL_Renderer* Renderer, string Font);
 //Tải file âm thanh từ file
 Mix_Chunk* LoadSound(string filePath);
 //Tải file âm thanh từ file

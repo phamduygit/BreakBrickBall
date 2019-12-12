@@ -151,5 +151,8 @@
     <Text Include="MapSavedData.txt">
       <Filter>Header Files</Filter>
     </Text>
+    <Text Include="HighScore.txt">
+      <Filter>Header Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

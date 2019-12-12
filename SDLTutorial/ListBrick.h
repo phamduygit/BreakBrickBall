@@ -203,9 +203,7 @@ public:
 					//debug
 					if (_list[i].getFrame() == 4) {
 						_list.erase(_list.begin() + i);
-						int currentScore = Player::Instance()->getScore();
-						currentScore = currentScore + Player::Instance()->getRateOfScore();
-						Player::Instance()->setScore(currentScore);
+						Player::Instance()->increaseScore();
 					}
 				}
 				break;

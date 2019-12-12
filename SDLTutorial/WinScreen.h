@@ -62,10 +62,10 @@ public:
 	void drawStar(int life) {
 		auto imageTemp = _imageOfStar;
 		SDL_Rect dest;
-		dest.x = 150;
-		dest.y = 360;
+		dest.x = 250-210/2;
+		dest.y = 172;
 		dest.w = 210;
-		dest.h = 100;
+		dest.h = 90;
 		switch (life)
 		{
 		case 1:
