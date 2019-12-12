@@ -4,9 +4,10 @@
 #include "Functions.h"
 #include <string>
 #include "SettingScreen.h"
+#include "ScrollBar.h"
 using namespace std;
 //Đối tượng paddle
-class Paddle
+class Paddle:public ScrollBar
 {
 protected:
 	//Tọa độ của đối tượng
@@ -15,8 +16,6 @@ protected:
 	//Kích thước của đối tượng
 	float _width;
 	float _height;
-	//Tốc độ của paddle khi người chơi chơi bằng bàn phím
-	float _speed;
 	//Độ dịch chuyển theo phương ox
 	//Nếu khoảng thời gian tương đối ngắn thì có thể xem đó là vận tốc paddle
 	float _deltaX;
@@ -29,12 +28,12 @@ protected:
 	//Thể hiện của paddle
 	static Paddle* _instance;
 	//Hàm khởi tạo không đối số
-	Paddle() {
+	Paddle():ScrollBar() {
 		_x = 150;
 		_y = 700;
 		_width = 80;
 		_height = 10;
-		_speed = 5;
+		//_speed = 5;
 		_image = NULL;
 		this->_renderer = NULL;
 		_deltaX = 0;
@@ -42,12 +41,12 @@ protected:
 
 	}
 	//Hàm khởi tạo có đối số
-	Paddle(SDL_Renderer*& RenderValue) {
+	Paddle(SDL_Renderer*& RenderValue):ScrollBar() {
 		_x = 150;
 		_y = 750;
 		_width = 150;
 		_height = 20;
-		_speed = 5;
+		//_speed = 5;
 		_image = NULL;
 		this->_renderer = RenderValue;
 
@@ -94,15 +93,15 @@ public:
 	}
 	//Thiết lập speed cho đối tượng
 	virtual void setSpeed(float value) {
-		_speed = value;
+		vx = value;
 	}
 	//Lấy ra speed của đối tượng
 	float getSpeed() {
-		return _speed;
+		return vx;
 	}
 	//Cài đặt hình ảnh cho đối tượng
 	void setImage(string name) {
-		_image = LoadImage(name, _renderer);
+		_image = loadImage(name, _renderer);
 	}
 	//Vẽ đối tượng lên mặt phẳng chơi game
 	void draw() {
@@ -140,13 +139,13 @@ public:
 		else if (setting == playWithKeyboard) {
 			if (moveLR[0]) {
 				if (_x > 0) {
-					_x -= _speed;
+					_x -= vx;
 				}
 			}
 
 			if (moveLR[1]) {
 				if (_x + _width < 500) {
-					_x += _speed;
+					_x += vx;
 				}
 			}
 

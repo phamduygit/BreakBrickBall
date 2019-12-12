@@ -59,14 +59,14 @@ public:
 		//sau đó giải phóng vùng nhớ
 		auto temp = _image;
 		//Load hình ảnh cho biến image
-		_image = LoadImage("SettingScreen.png", _renderer);
+		_image = loadImage("Image/SettingScreen.png", _renderer);
 		//Copy thông tin vào renderer
 		SDL_RenderCopy(_renderer, _image, NULL, NULL);
 		//Nếu chuột rê vào vùng 
 		//thì các vùng tương ứng sẽ phóng to lên
 
 		if (xMouse >= 67 && xMouse <= 67 + 76 && yMouse >= 81 && yMouse <= 81 + 76) {
-			SDL_Texture* speakerOn = LoadImage("SpeakerOn.png", _renderer);
+			SDL_Texture* speakerOn = loadImage("Image/SpeakerOn.png", _renderer);
 			//Phóng to
 			DrawInRenderer(_renderer, speakerOn, 57, 71, 120, 120);
 			if (mouseActionClicked) {
@@ -78,7 +78,7 @@ public:
 		}
 		else if (xMouse >= 204 && xMouse <= 204 + 76 && yMouse >= 81 && yMouse <= 81 + 76) {
 			//Phóng to hình ảnh
-			SDL_Texture* speakerOff = LoadImage("SpeakerOff.png", _renderer);
+			SDL_Texture* speakerOff = loadImage("Image/SpeakerOff.png", _renderer);
 			DrawInRenderer(_renderer, speakerOff, 194, 71, 120, 120);
 			if (mouseActionClicked) {
 				_settingAction = turnOffSpeaker;
@@ -89,7 +89,7 @@ public:
 		}
 		else if (xMouse >= 367 && xMouse <= 367 + 76 && yMouse >= 81 && yMouse <= 81 + 76) {
 			//Phóng to hình ảnh
-			SDL_Texture* play = LoadImage("Play.png", _renderer);
+			SDL_Texture* play = loadImage("Image/Play.png", _renderer);
 			DrawInRenderer(_renderer,play, 357, 71, 120, 120);
 			if (mouseActionClicked) {
 				_settingAction = loadMapDiagramScreen;
@@ -99,7 +99,7 @@ public:
 
 		}
 		else if (xMouse >= 67 && xMouse <= 67 + 76 && yMouse >= 218 && yMouse <= 218 + 76) {
-			SDL_Texture* back = LoadImage("Back.png", _renderer);
+			SDL_Texture* back = loadImage("Image/Back.png", _renderer);
 			//Phóng to hình ảnh
 			DrawInRenderer(_renderer, back, 57, 208, 120, 120);
 			if (mouseActionClicked) {
@@ -109,14 +109,14 @@ public:
 			SDL_DestroyTexture(back);
 		}
 		else if (xMouse >= 204 && xMouse <= 204 + 76 && yMouse >= 218 && yMouse <= 218 + 76) {
-			SDL_Texture* googleImage = LoadImage("Google.png", _renderer);
+			SDL_Texture* googleImage = loadImage("Image/Google.png", _renderer);
 			//Phóng to hình ảnh
 			DrawInRenderer(_renderer, googleImage, 197, 208, 120, 120);
 			//Giải phóng vùng nhớ
 			SDL_DestroyTexture(googleImage);
 		}
 		else if (xMouse >= 367 && xMouse <= 367 + 76 && yMouse >= 218 && yMouse <= 218 + 76) {
-			SDL_Texture* facebookImage = LoadImage("Facebook.png", _renderer);
+			SDL_Texture* facebookImage = loadImage("Image/Facebook.png", _renderer);
 			//phóng to hình ảnh 
 			DrawInRenderer(_renderer, facebookImage, 357, 208, 120, 120);
 			//Giải phóng vùng nhớ
@@ -125,7 +125,7 @@ public:
 		}
 		else if (xMouse >= 67 && xMouse <= 145 && yMouse >= 350 && yMouse <= 430) {
 			//Phóng to hình ảnh 
-			SDL_Texture* playWithMouseTT = LoadImage("PlayWithMouse.png", _renderer);
+			SDL_Texture* playWithMouseTT = loadImage("Image/PlayWithMouse.png", _renderer);
 			DrawInRenderer(_renderer, playWithMouseTT, 57, 340, 120, 120);
 			//Giải phóng vùng nhớ
 			SDL_DestroyTexture(playWithMouseTT);
@@ -135,7 +135,7 @@ public:
 			
 		}
 		else if (xMouse >= 208 && xMouse <= 383 && yMouse >= 350 && yMouse <= 430) {
-			SDL_Texture* autoPlayTT = LoadImage("AutoPlay.png", _renderer);
+			SDL_Texture* autoPlayTT = loadImage("Image/AutoPlay.png", _renderer);
 			//Phóng to hình ảnh 
 			DrawInRenderer(_renderer, autoPlayTT, 198, 340, 120, 120);
 			if (mouseActionClicked) {
@@ -145,7 +145,7 @@ public:
 			SDL_DestroyTexture(autoPlayTT);
 		}
 		else if (xMouse >= 365 && xMouse <= 447 && yMouse >= 347 && yMouse <= 430) {
-			SDL_Texture* playWithKeyboardTT = LoadImage("PlayWithKeyboard.png", _renderer);
+			SDL_Texture* playWithKeyboardTT = loadImage("Image/PlayWithKeyboard.png", _renderer);
 			//Phóng to hình ảnh
 
 			DrawInRenderer(_renderer, playWithKeyboardTT, 355, 340, 120, 120);

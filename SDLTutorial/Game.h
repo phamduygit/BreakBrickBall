@@ -45,7 +45,7 @@ private:
 	//Đối tượng quả bóng là một con trỏ được thiết kế ở dạng singleton
 	//do trong game ta chỉ tạo một quả bóng duy nhất nên thiết kế dạng singleton để dễ quản lí dữ liệu
 
-	Ball* _ball;
+	MagicBall* _ball;
 	//Đối tượng map chứ thông tin map game đang chơi gồm những thứ như là 
 	//danh sách các viên gạch, danh sách bùa và vị trí của chúng
 
@@ -104,7 +104,7 @@ private:
 	SettingAction _gameMode;
 	//Map cuối cùng
 	FinalMap _finalMap;
-	
+
 	//Đối tượng player lưu các thông tin của người chơi
 	//cũng như đối tượng paddle và đối tượng ball ở đây ta thiết kế ở dạng
 	//singleton vì trong game ta chỉ có một người chơi duy nhất
@@ -122,7 +122,7 @@ private:
 		_currentMap = 1;
 		_previousScreen = "";
 		//Ban đầu khi vào game thì ta hiện thị màn hình Menu đầu tiên
-		
+
 		_listScreen["MenuScreen"] = true;
 		//Thiết lập tương đối tọa độ cho chuột
 		_xMouse = 0;
@@ -208,31 +208,32 @@ public:
 			_player->setRenderer(_renderer);
 			_endScreen.setRenderer(_renderer);
 			_settingScreen.setRenderer(_renderer);
-			_ball = Ball::Instance(_renderer);
+			_ball = MagicBall::Instance(_renderer);
 			_line.setRenderer(_renderer);
 			//Load ảnh và gắn id cho những bức ảnh cho singleton TextureManager
-			TextureManager::GetInstance()->load("Brick.png", "Brick", _renderer);
-			TextureManager::GetInstance()->load("FinalBrick.png", "FinalBrick", _renderer);
-			TextureManager::GetInstance()->load("amulet.png", "Amulet", _renderer);
-			TextureManager::GetInstance()->load("ComputerPaddle.png", "ComputerPaddle", _renderer);
-			TextureManager::GetInstance()->load("BlackHole.png", "BlackHole", _renderer);
-			TextureManager::GetInstance()->load("WhiteHole.png", "WhiteHole", _renderer);
-			TextureManager::GetInstance()->load("RedHole.png", "RedHole", _renderer);
+			TextureManager::GetInstance()->load("Image/Brick.png", "Brick", _renderer);
+			TextureManager::GetInstance()->load("Image/FinalBrick.png", "FinalBrick", _renderer);
+			TextureManager::GetInstance()->load("Image/amulet.png", "Amulet", _renderer);
+			TextureManager::GetInstance()->load("Image/ComputerPaddle.png", "ComputerPaddle", _renderer);
+			TextureManager::GetInstance()->load("Image/BlackHole.png", "BlackHole", _renderer);
+			TextureManager::GetInstance()->load("Image/WhiteHole.png", "WhiteHole", _renderer);
+			TextureManager::GetInstance()->load("Image/RedHole.png", "RedHole", _renderer);
+			TextureManager::GetInstance()->load("Image/Explosion.png", "Explosion", _renderer);
 			//Load hình ảnh cho background
 
-			_background = LoadImage("GrassBackground.png", _renderer);
-			_ball->setImage("Ball.png");
+			_background = loadImage("Image/GrassBackground.png", _renderer);
+			_ball->setImage("Image/Ball.png");
 			_map = Map(_renderer, "map2.txt");
 
 			//Cài đặt font cho màn hình menu game
 			_menuScreen.setFont("MachineGunk-nyqg.ttf");
 			//Cài đặt background cho game
-			_menuScreen.setImage("GrassBackground.png");
+			_menuScreen.setImage("Image/GrassBackground.png");
 			_paddle = Paddle::Instance(_renderer);
 			//Cài đặt hình ảnh cho paddle
-			_paddle->setImage("Paddle.png");
+			_paddle->setImage("Image/Paddle.png");
 
-			
+
 			//Thêm và tên các file text chứa thông tin map vào vector
 			_fileMapName.push_back("");
 			_fileMapName.push_back("map1.txt");
@@ -287,7 +288,7 @@ public:
 
 			DrawInRenderer(_renderer, _background);
 			//Vẽ banh lên màn hình game
-			
+
 			//Vẽ map gồm gạch và bùa lên màn hình chơi
 			if (_listScreen["FinalMapScreen"]) {
 				_finalMap.draw();
@@ -347,7 +348,7 @@ public:
 
 	}
 	void update() {
-			//Kiểm tra nêu chưa chơi nhạc thì ta tiến hành load nhạc
+		//Kiểm tra nêu chưa chơi nhạc thì ta tiến hành load nhạc
 		if (Mix_PlayingMusic() == 0)
 		{
 
@@ -381,7 +382,7 @@ public:
 				else if (_menuScreen.getCurrentChoose() == Continue) {
 					//Load dữ liệu bao gồm các thông tin cơ bản
 					//Gồm file PlayerData.txt, HighScore.txt
-				
+
 					_player->loadDataFromFile();
 					_currentMap = _player->getCurrentMap();
 					_mapDiagram.resetData();
@@ -418,14 +419,14 @@ public:
 			//Khi nhận tín hiệu là người chơi đã tích chọn một map
 			if (_mapDiagram.getSelectedMap() != 0) {
 				//Nếu mà người chơi chọn chơi tiếp tục
-				if (_menuScreen.getCurrentChoose() == Continue||_previousScreen == "GameOverScreen") {
+				if (_menuScreen.getCurrentChoose() == Continue || _previousScreen == "GameOverScreen") {
 					//Khi đó ta cặp nhật lại biến mapCurrent bằng map mà người chơi chọn 
 					_currentMap = _mapDiagram.getSelectedMap();
 					//Khi mà máp người chơi chọn trùng với map mà người chơi đã chơi ở lần chơi trước 
 					//nghĩa là người chơi muốn chơi lại ở vòng chơi trước khi thoát 
 					//ta tiến hành load dữ liệu đã lưu từ file
 
-					if (_currentMap == _player->getCurrentMap()&&_player->getLife()>0) {
+					if (_currentMap == _player->getCurrentMap() && _player->getLife() > 0) {
 
 						_map.loadData();
 					}
@@ -434,12 +435,12 @@ public:
 						//Update lại điểm điểm ở vòng chơi nào đó mà người chơi muốn chơi lại
 						//sau đó khôi phục lại điểm để cho người chơi chơi lại
 						_player->reupdateTotalScore(_currentMap);
-						_player->resetMapScoreForPlayAgain();					
+						_player->resetMapScoreForPlayAgain();
 
 						_map.loadData(_fileMapName[_mapDiagram.getSelectedMap()]);
 
 					}
-					
+
 				}
 				//Ngược lại người chơi chọn 1 nghĩa là người chơi muốn chơi mới luôn
 				//do đó ta load map 1 
@@ -449,13 +450,13 @@ public:
 					//reset all
 
 				}
-				
+
 				//Cập nhật máp mà người chơi đã chọn
 				_player->setCurrentMap(_currentMap % _fileMapName.size());
 				//Reset lại acction để những vòng lặp sau có thể vào đúng điều kiện
 				_mapDiagram.resetData();
 				//Kích hoạt màn hình chơi game sau khi đã load đầy đủ dữ liệu
-				enableScreen("GamePlayScreen");				
+				enableScreen("GamePlayScreen");
 				_previousScreen = "MapDiagramScreen";
 
 			}
@@ -521,8 +522,8 @@ public:
 					_menuScreen.resetData();
 				}
 				else {
-					
-					enableScreen(_previousScreen); 
+
+					enableScreen(_previousScreen);
 					_previousScreen = "SettingScreen";
 					//listScreen[previousScreen] = true;
 					//listScreen["SettingScreen"] = false;
@@ -557,14 +558,14 @@ public:
 			_ball->setSpeed(4);
 			//Khi người chơi chọn chơi lại
 			if (_gameOver.getAction() == retry) {
-				if (_previousScreen == "GamePlayScreen"||_previousScreen == "SettingScreen") {
+				if (_previousScreen == "GamePlayScreen" || _previousScreen == "SettingScreen") {
 					_currentMap = _player->getCurrentMap();
 					_map.loadData(_fileMapName[_currentMap % (_fileMapName.size())]);
 					enableScreen("GamePlayScreen");
 					_previousScreen = "GameOverScreen";
 					//Khi choi lại sét lại mạng cho người chơi là 3 mạng
 					_player->setLife(3);
-				
+
 					//reset lại điểm của người chơi
 					_player->reupdateTotalScore(_currentMap);
 					_player->resetMapScoreForPlayAgain();
@@ -575,7 +576,7 @@ public:
 					_isResetState = true;
 					_gameOver.setAction(none);
 				}
-				else if (_previousScreen == "FinalMapScreen"||_previousScreen == "SettingScreen") {
+				else if (_previousScreen == "FinalMapScreen" || _previousScreen == "SettingScreen") {
 					enableScreen("FinalMapScreen");
 					_previousScreen = "GameOverScreen";
 					//Khi choi lại sét lại mạng cho người chơi là 3 mạng
@@ -594,7 +595,7 @@ public:
 				//Kích hoạt màn hình map diagram
 				enableScreen("MapDiagramScreen");
 				_previousScreen = "GameOverScreen";
-		
+
 				//reset lại thuộc tính của map diagram
 				_mapDiagram.setSelectedMap(0);
 				_gameOver.setAction(none);
@@ -682,6 +683,7 @@ public:
 				}
 				_finalMap.update();
 				if (_player->getLife() == 0) {
+
 					enableScreen("GameOverScreen");
 				}
 			}
@@ -695,6 +697,7 @@ public:
 				//Kiểm tra khi người chơi chết 
 				if (_player->getLife() == 0) {
 					//Thì ta kích hoạt màn hình kết thúc game
+
 					enableScreen("GameOverScreen");
 				}
 
@@ -732,7 +735,7 @@ public:
 				}
 			}
 			//Khi quả bóng đã bay lên
-			if (_ball->getIsLaunch()) {
+			if (_ball->getIsLaunch() && !_ball->getIsExplode()) {
 				//Kiểm soát xem quả bóng va chạm vào biên trên
 				if (_ball->getY() - _ball->getRadius() < 0) {
 					float offset = abs(_ball->getY() - _ball->getRadius());
@@ -741,11 +744,13 @@ public:
 
 				}
 				//Kiểm soát quả bóng khi quả bóng va chạm biên dưới
+				//d
 				if (_ball->getY() + _ball->getRadius() > 800) {
-					_ball->reset(_paddle->getX() + _paddle->getWidth() / 2, _paddle->getY());
-
+					_ball->explode();
 					_player->setLife(_player->getLife() - 1);
 					_isResetState = true;
+					_ball->reset(_paddle->getX() + _paddle->getWidth() / 2, _paddle->getY());
+
 
 				}
 				//Kiểm soát quả bóng khi quả bóng va chạm biên trái và biên phải 

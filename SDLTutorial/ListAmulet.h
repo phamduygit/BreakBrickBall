@@ -130,14 +130,14 @@ public:
 	void  handleCollision() {
 		//Khi xẩy ra hiệu ứng của bùa nam châm thì sét vị trí của banh luôn nằm 
 		//ở chính giữa của paddle
-		if (this->getTime() < 6000 && _mapAmuletEffect["Magnet"]&&Ball::Instance(_renderer)->getIsLaunch()) {
-			Ball* ball = Ball::Instance(_renderer);
+		if (this->getTime() < 6000 && _mapAmuletEffect["Magnet"]&&MagicBall::Instance(_renderer)->getIsLaunch()) {
+			MagicBall* ball = MagicBall::Instance(_renderer);
 			Paddle* paddle = Paddle::Instance(_renderer);
 			ball->setX(paddle->getX() + paddle->getWidth() / 2);
 		}
 		for (size_t i = 0; i < _list.size(); i++) {
 			//Nếu có va chạm
-			if (Ball::Instance(_renderer)->isCollision(float(_list[i].getX()), float(_list[i].getY()), _list[i].getSize())) {
+			if (MagicBall::Instance(_renderer)->isCollision(float(_list[i].getX()), float(_list[i].getY()), _list[i].getSize())) {
 				//Nếu loại bùa là bùa tăng điểm gấp đôi
 				if (_list[i].getType() == Double) {
 					//Cập nhật lại biến tín hiệu là đã kích hoạt hiệu ứng
@@ -156,14 +156,14 @@ public:
 					//Bấm thời gian kể từ khi xẩy ra hiệu ứng
 					_startTime = clock();
 					//Lưu giữ lại tốc độ khi xẩy ra hiệu ứng 
-					Ball::Instance(_renderer)->setBackupSpeed(Ball::Instance(_renderer)->getSpeed());
+					MagicBall::Instance(_renderer)->setBackupSpeed(MagicBall::Instance(_renderer)->getSpeed());
 					//Cập nhật lại vị trí quả bóng 
 
-					Ball::Instance(_renderer)->setX(Paddle::Instance(_renderer)->getX() + Paddle::Instance(_renderer)->getWidth() / 2);
-					Ball::Instance(_renderer)->setY(Paddle::Instance(_renderer)->getY()+10);
+					MagicBall::Instance(_renderer)->setX(Paddle::Instance(_renderer)->getX() + Paddle::Instance(_renderer)->getWidth() / 2);
+					MagicBall::Instance(_renderer)->setY(Paddle::Instance(_renderer)->getY()+10);
 					//Khi đó quả bóng sẽ không di chuyển
 					//FIX
-					Ball::Instance(_renderer)->setSpeed(0);
+					MagicBall::Instance(_renderer)->setSpeed(0);
 					//Ball::Instance(_renderer)->setIsLaunch(false);
 
 
@@ -184,7 +184,7 @@ public:
 					//Bắt đầu bắm thời gian tại lúc chạm vào bùa 
 					_startTime = clock();
 					//Ball::Instance(_renderer)->setBackupRadius(Ball::Instance(_renderer)->getRadius());
-					Ball::Instance(_renderer)->setRadius(Ball::Instance(_renderer)->getRadius() * float(2));
+					MagicBall::Instance(_renderer)->setRadius(MagicBall::Instance(_renderer)->getRadius() * float(2));
 
 				}
 				//Nếu gặp phải loại bùa giảm 50 phần trăm số điểm 
@@ -203,7 +203,7 @@ public:
 					_mapAmuletEffect["SlowSpeed"] = true;
 					//Bắt đầu bấm giờ 
 					_startTime = clock();
-					Ball::Instance(_renderer)->setSpeed(Ball::Instance(_renderer)->getSpeed() * float(0.6));
+					MagicBall::Instance(_renderer)->setSpeed(MagicBall::Instance(_renderer)->getSpeed() * float(0.6));
 					
 				}
 				//Nếu gặp bùa tăng mạng
@@ -221,8 +221,8 @@ public:
 							break;
 						}
 					}
-					Ball::Instance(_renderer)->setX(whiteHole.getX() + whiteHole.getSize() / 2);
-					Ball::Instance(_renderer)->setY(whiteHole.getY() + whiteHole.getSize() / 2);
+					MagicBall::Instance(_renderer)->setX(whiteHole.getX() + whiteHole.getSize() / 2);
+					MagicBall::Instance(_renderer)->setY(whiteHole.getY() + whiteHole.getSize() / 2);
 				}
 				//Sau khi trái banh va chạm vào bùa thì bùa biến mất
 				if (_list[i].getType() != BlackHole && _list[i].getType() != WhiteHole) {
@@ -238,13 +238,13 @@ public:
 	void resetMagnet() {
 		//d
 		//Ball::Instance(_renderer)->setIsLaunch(true);
-		Ball::Instance(_renderer)->setDegree(120);
-		Ball::Instance(_renderer)->setSpeed(Ball::Instance(_renderer)->getBackupSpeed());
+		MagicBall::Instance(_renderer)->setDegree(120);
+		MagicBall::Instance(_renderer)->setSpeed(MagicBall::Instance(_renderer)->getBackupSpeed());
 		_mapAmuletEffect["Magnet"] = false;
 	}
 	//Trả lại kích thước cho trái banh sau khi hết thời gian
 	void resetSizeBall() {
-		Ball* ball = Ball::Instance(_renderer);
+		MagicBall* ball = MagicBall::Instance(_renderer);
 		ball->setRadius(ball->getBackupRadius());
 		_mapAmuletEffect["IncreaseSizeBall"] = false;
 
@@ -259,7 +259,7 @@ public:
 	}
 	//Trả lại vận tốc trước đó cho quả bóng sau khi hết thời gian xẩy ra hiệu ứng
 	void resetSpeed() {
-		Ball* ball = Ball::Instance(_renderer);		
+		MagicBall* ball = MagicBall::Instance(_renderer);		
 		ball->setSpeed(ball->getSpeed()/float(0.6));
 		_mapAmuletEffect["SlowSpeed"] = false;
 	}

@@ -4,12 +4,9 @@
 #include <SDL.h>
 #include <cmath>
 #include "Functions.h"
-//#include"quả bóng.h"
-struct Point2D {
-	float x;
-	float y;
+#include "Ball.h"
+#include "TextureManager.h"
 
-};
 struct Cirle {
 	float x;
 	float y;
@@ -17,7 +14,7 @@ struct Cirle {
 };
 
 using namespace std;
-class Ball
+class MagicBall:public Ball
 {
 private:
 	//Tọa độ hiện tại của quả bóng
@@ -28,7 +25,7 @@ private:
 	//Tốc độ di chuyển của quả bóng
 	float _speed;
 	//Góc bay quả quả bóng
-	float _degree;
+	float trigonometric_angle;
 	//Tốc độ sao lưu lại 
 	float _backupSpeed;
 	//Struct lưu trữ hình ảnh quả bóng
@@ -41,19 +38,23 @@ private:
 	float _backupDegree;	
 	//Hàm khởi tạo có đối số 
 	float _backupRadius;
-	Ball(SDL_Renderer*& value) {
+	int explodeFrame;
+	bool isExplode;
+	MagicBall(SDL_Renderer*& value):Ball() {
 		_x = 250;
 		_y = 700;
 		_radius = 20;
 		_speed =6;
 		_image = NULL;
-		_degree = 60;
+		trigonometric_angle = 60;
 		this->_renderer = value;
 		_isLaunch = false;
 		_backupRadius = 20;
+		explodeFrame = 1;
+		isExplode = false;
 	}
 	//Thể hiện của đối tượng
-	static Ball* instance;
+	static MagicBall* instance;
 
 public:
 	//Thiết bán kính đã được sao lưu từ trước
@@ -88,16 +89,16 @@ public:
 		_isLaunch = false;
 	}
 	//Phương thức lấy thể hiện của singleton
-	static Ball* Instance(SDL_Renderer*& value) {
+	static MagicBall* Instance(SDL_Renderer*& value) {
 		if (instance == NULL) {
-			instance = new Ball(value);
+			instance = new MagicBall(value);
 		}
 		return instance;
 	}
 	//Hàm khởi tạo không đối số
-	Ball();
+	MagicBall();
 	//Hàm khởi tạo có đối số
-	~Ball();
+	~MagicBall();
 	//Lấy ra thông tin trái bóng đã bay chưa 
 	bool getIsLaunch() {
 		return _isLaunch;
@@ -138,10 +139,10 @@ public:
 		_radius = value;
 	}
 	float getDegree() {
-		return _degree;
+		return trigonometric_angle;
 	}
 	void setDegree(float value) {
-		_degree = value;
+		trigonometric_angle = value;
 	}
 	float distanceSquared(float x1, float y1, float x2, float y2)
 	{
@@ -261,22 +262,44 @@ public:
 
 
 	}
+	void explode() {
+		isExplode = true;
+	}
+	void restoreFromExplosion() {
+		isExplode = false;
+	}
 	//Khởi tạo hình ảnh cho quả bóng
 	void setImage(string name) {
-		_image = LoadImage(name, _renderer);
+		_image = loadImage(name, _renderer);
+	}
+	bool getIsExplode() {
+		return isExplode;
 	}
 	//Vẽ quả bóng lên màn hình quả bóng
 	void draw() {
-		//DrawInRenderer(renderer, image, x - radius, y - radius, radius * 2, 100);
-		DrawInRendererRotate(_renderer, _image, _x - _radius, _y - _radius, _radius * 2, _radius * 2, _radius, 90 - _degree);
-
+		if (!isExplode) {
+			//DrawInRenderer(renderer, image, x - radius, y - radius, radius * 2, 100);
+			DrawInRendererRotate(_renderer, _image, _x - _radius, _y - _radius, _radius * 2, _radius * 2, _radius, 90 - trigonometric_angle);
+			
+		}
+		else {
+			//SDL_Texture* _explodeImage = loadImage("Explosion.png",_renderer);
+			TextureManager::GetInstance()->drawFrame("Explosion", _x -50, _y - 50,100, 100,1, explodeFrame, _renderer);
+			explodeFrame++;
+			SDL_Delay(50);
+			cout << "called";
+			if (explodeFrame == 6) {
+				explodeFrame = 1;
+				isExplode = false;
+			}
+		}
 	}
 	//Hàm di chuyển quả bóng
 	void move() {
 		//Khi nhận tín hiệu được bay thì mới bắt đầu di chuyển
 		if (_isLaunch) {
-			_x += float(cos(_degree * 3.14 / 180) * _speed);
-			_y -= float(sin(_degree * 3.14 / 180) * _speed);
+			_x += float(cos(trigonometric_angle * 3.14 / 180) * _speed);
+			_y -= float(sin(trigonometric_angle * 3.14 / 180) * _speed);
 		}
 	}
 };

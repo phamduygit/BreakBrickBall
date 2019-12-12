@@ -68,10 +68,10 @@ public:
 	//sử dụng trong sử lí va chạm
 	bool intersectionLineAndCircle(float xS, float yS, float xE, float yE) {
 		//Tọa độ của quả bóng hiện tại
-		float xBall = Ball::Instance(_renderer)->getX();
-		float yBall = Ball::Instance(_renderer)->getY();
+		float xBall = MagicBall::Instance(_renderer)->getX();
+		float yBall = MagicBall::Instance(_renderer)->getY();
 		//Bán kính quả bóng
-		float radius = Ball::Instance(_renderer)->getRadius();
+		float radius = MagicBall::Instance(_renderer)->getRadius();
 		//Delta x giữa điểm bắt đầu và điểm kết thúc của một đoạn thẳng
 		float dx = xE - xS;
 		//Delta y giữa điểm bắt đầu và kết thức của một đoạn thẳng
@@ -99,7 +99,7 @@ public:
 	//xử lí va chạm
 	void handleCollision() {
 		if (isEnable) {
-			Ball* ball = Ball::Instance(_renderer);
+			MagicBall* ball = MagicBall::Instance(_renderer);
 			//Kiểm tra khi bóng bay từ bên trái sang và có va chạm
 			if (_currentFrame == 1 && ball->isCollision(_x, _y, _width, _height) && _currentFrame >= 1 && _currentFrame <= 100) {
 				if (ball->getX() + ball->getRadius() > _x&&

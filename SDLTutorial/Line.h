@@ -93,7 +93,7 @@ public:
 				A.y = _paddle.y;
 				B.x = 0;
 				B.y = hsTuDo;
-				SDL_RenderDrawLineF(_renderer, A.x + _paddleSize / 2, A.y - Ball::Instance(_renderer)->getRadius(), B.x, B.y);
+				SDL_RenderDrawLineF(_renderer, A.x + _paddleSize / 2, A.y - MagicBall::Instance(_renderer)->getRadius(), B.x, B.y);
 				//Vẽ tia đối xứng
 
 				hsGoc = -hsGoc;
@@ -110,7 +110,7 @@ public:
 				A.y = _paddle.y;
 				B.x = _width;
 				B.y = hsGoc * B.x + hsTuDo;
-				SDL_RenderDrawLineF(_renderer, A.x + _paddleSize / 2, A.y - Ball::Instance(_renderer)->getRadius(), B.x, B.y);
+				SDL_RenderDrawLineF(_renderer, A.x + _paddleSize / 2, A.y - MagicBall::Instance(_renderer)->getRadius(), B.x, B.y);
 				hsGoc = -hsGoc;
 				hsTuDo = B.y - B.x * hsGoc;
 				A.y = 0;
@@ -124,7 +124,7 @@ public:
 				A.y = _paddle.y;
 				B.x = -hsTuDo / hsGoc;
 				B.y = 0;
-				SDL_RenderDrawLineF(_renderer, A.x + _paddleSize / 2, A.y - Ball::Instance(_renderer)->getRadius(), B.x, B.y);
+				SDL_RenderDrawLineF(_renderer, A.x + _paddleSize / 2, A.y - MagicBall::Instance(_renderer)->getRadius(), B.x, B.y);
 				//Vẽ tia đối xứng
 				hsGoc = -hsGoc;
 				hsTuDo = B.y - hsGoc * B.x;
@@ -138,7 +138,7 @@ public:
 				A.y = _paddle.y;
 				B.x = -hsTuDo / hsGoc;
 				B.y = 0;
-				SDL_RenderDrawLineF(_renderer, A.x + _paddleSize / 2, A.y - Ball::Instance(_renderer)->getRadius(), B.x, B.y);
+				SDL_RenderDrawLineF(_renderer, A.x + _paddleSize / 2, A.y - MagicBall::Instance(_renderer)->getRadius(), B.x, B.y);
 				hsGoc = -hsGoc;
 				hsTuDo = B.y - hsGoc * B.x;
 				A.x = _width;

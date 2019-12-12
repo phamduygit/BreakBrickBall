@@ -16,7 +16,7 @@ public:
 		//Khởi tạo một biến tạm để lưu lại con trỏ image cũ tránh bị rò rĩ bộ nhớ
 
 		auto tempImage = _image;
-		_image = LoadImage("EndScreen.png", _renderer);
+		_image = loadImage("Image/EndScreen.png", _renderer);
 		//Sao chép hình ảnh vào vùng nhớ mà renderer trỏ tới
 		SDL_RenderCopy(this->_renderer, _image, NULL, NULL);
 		//Sau khi xong tiến hành phá hủy các đối tượng

@@ -78,6 +78,21 @@
     <ClCompile Include="ComputerPaddle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="function.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ball.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Point2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScrollBar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Functions.h">
@@ -138,6 +153,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ComputerPaddle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="function.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ball.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Point2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScrollBar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

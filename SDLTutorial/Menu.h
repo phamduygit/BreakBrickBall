@@ -50,7 +50,7 @@ public:
 	}
 	//Thiết lập hình ảnh cho  menu
 	void setImage(string NameImage) {
-		_backGround = LoadImage(NameImage, _renderer);
+		_backGround = loadImage(NameImage, _renderer);
 	}
 	//Thiết lập font cho menu
 	void setFont(string NameFont) {

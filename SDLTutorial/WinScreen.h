@@ -25,9 +25,9 @@ public:
 		auto tempImage = _image;
 		auto tempNextButton = _nextButton;
 		auto tempRetryButton = _retryButton;
-		_nextButton = LoadImage("Next.png", _renderer);
-		_retryButton = LoadImage("Retry.png", _renderer);
-		_image = LoadImage("WinScreen.png", _renderer);
+		_nextButton = loadImage("Image/Next.png", _renderer);
+		_retryButton = loadImage("Image/Retry.png", _renderer);
+		_image = loadImage("Image/WinScreen.png", _renderer);
 		SDL_Rect destinationNext, destinationRetry;
 		destinationRetry.x = 69;
 		destinationRetry.y = 631;
@@ -69,16 +69,16 @@ public:
 		switch (life)
 		{
 		case 1:
-			_imageOfStar = LoadImage("1start.png", _renderer);
+			_imageOfStar = loadImage("Image/1start.png", _renderer);
 			break;
 		case 2:
-			_imageOfStar = LoadImage("2start.png", _renderer);
+			_imageOfStar = loadImage("Image/2start.png", _renderer);
 			break;
 		case 3:
-			_imageOfStar = LoadImage("3start.png", _renderer);
+			_imageOfStar = loadImage("Image/3start.png", _renderer);
 			break;
 		default:
-			_imageOfStar = LoadImage("3start.png", _renderer);
+			_imageOfStar = loadImage("Image/3start.png", _renderer);
 			break;
 		}
 

@@ -1,6 +1,6 @@
 #include "MagicBall.h"
-Ball* Ball::instance = NULL;
-Ball::Ball() {
+MagicBall* MagicBall::instance = NULL;
+MagicBall::MagicBall() {
 	_x = 0;
 	_y = 0;
 	_radius = 0;
@@ -9,6 +9,6 @@ Ball::Ball() {
 	_renderer = NULL;
 }
 
-Ball::~Ball() {
+MagicBall::~MagicBall() {
 	SDL_DestroyTexture(_image);
 }

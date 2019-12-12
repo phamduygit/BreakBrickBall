@@ -52,12 +52,12 @@ public:
 	void draw(int xMouse, int yMouse, bool& mouseActionClicked) {
 		//Chứa texture trước đó lưu lại để giải phóng hạn chế tình trạng memory leaks
 		auto temp = _mapDiagramImage;
-		_mapDiagramImage = LoadImage("MapDiagram.png", _renderer);
+		_mapDiagramImage = loadImage("Image/MapDiagram.png", _renderer);
 		SDL_RenderCopy(_renderer, _mapDiagramImage, NULL, NULL);
 		//Nếu con trỏ di chuyển qua nút số 1 
 		//thì ta phóng to nút số 1 khi mà click thì ta set biến selectedMap
 		if (isInRectangle(xMouse, yMouse, 322, 535, (340 - 322), (575 - 535) * 1)) {
-			SDL_Texture* Image1 = LoadImage("Image/1.png", _renderer);
+			SDL_Texture* Image1 = loadImage("Image/1.png", _renderer);
 			if (_unlockedMap >= 1) {
 				DrawInRenderer(_renderer, Image1, 322 - 10, 535 - 10, (340 - 322) * 1.6, (575 - 535) * 1.6);
 				if (mouseActionClicked) {
@@ -69,7 +69,7 @@ public:
 		//Nếu con trỏ chuột di chuyển qua số 2 
 		//thì ta phóng to nút số 1 khi mà click thì ta set biến selectedMap
 		else if (isInRectangle(xMouse, yMouse, 242, 564, (272 - 242) * 1, (615 - 564) * 1)) {
-			SDL_Texture* Image2 = LoadImage("Image/2.png", _renderer);
+			SDL_Texture* Image2 = loadImage("Image/2.png", _renderer);
 			if (_unlockedMap >= 2) {
 				DrawInRenderer(_renderer, Image2, 242 - 10, 564 - 10, (272 - 242) * 1.6, (615 - 564) * 1.6);
 				if (mouseActionClicked) {
@@ -81,7 +81,7 @@ public:
 		//Nếu con trỏ chuột di chuyển qua số 3
 		//thì ta phóng to nút số 1 khi mà click thì ta set biến selectedMap
 		else if (isInRectangle(xMouse, yMouse, 153, 535, (182 - 153) * 1, (583 - 535) * 1)) {
-			SDL_Texture* Image3 = LoadImage("Image/3.png", _renderer);
+			SDL_Texture* Image3 = loadImage("Image/3.png", _renderer);
 			if (_unlockedMap >= 3) {
 				DrawInRenderer(_renderer, Image3, 153 - 10, 535 - 10, (182 - 153) * 1.6, (583 - 535) * 1.6);
 				if (mouseActionClicked) {
@@ -93,7 +93,7 @@ public:
 		//Nếu con trỏ chuột di chuyển qua số 4
 		//thì ta phóng to nút số 1 khi mà click thì ta set biến selectedMap
 		else if (isInRectangle(xMouse, yMouse, 85, 453, (130 - 85) * 1, (510 - 453) * 1)) {
-			SDL_Texture* Image4 = LoadImage("Image/4.png", _renderer);
+			SDL_Texture* Image4 = loadImage("Image/4.png", _renderer);
 			if (_unlockedMap >= 4) {
 				DrawInRenderer(_renderer, Image4, 85 - 10, 453 - 10, (130 - 85) * 1.6, (510 - 453) * 1.6);
 				if (mouseActionClicked) {
@@ -105,7 +105,7 @@ public:
 		//Nếu con trỏ chuột di chuyển qua số 5 
 		//thì ta phóng to nút số 1 khi mà click thì ta set biến selectedMap
 		else if (isInRectangle(xMouse, yMouse, 87, 332, (129 - 87) * 1, (386 - 332) * 1)) {
-			SDL_Texture* Image5 = LoadImage("Image/5.png", _renderer);
+			SDL_Texture* Image5 = loadImage("Image/5.png", _renderer);
 			if (_unlockedMap >= 5) {
 				DrawInRenderer(_renderer, Image5, 87 - 10, 332 - 10, (129 - 87) * 1.6, (386 - 332) * 1.6);
 				if (mouseActionClicked) {
@@ -117,7 +117,7 @@ public:
 		//Nếu con trỏ chuột di chuyển qua số 6
 		//thì ta phóng to nút số 1 khi mà click thì ta set biến selectedMap
 		else if (isInRectangle(xMouse, yMouse, 87, 215, (125 - 87) * 1, (266 - 215) * 1)) {
-			SDL_Texture* Image6 = LoadImage("Image/6.png", _renderer);
+			SDL_Texture* Image6 = loadImage("Image/6.png", _renderer);
 			if(_unlockedMap>=6){
 				DrawInRenderer(_renderer, Image6, 87 - 10, 215 - 10, (125 - 87) * 1.6, (266 - 215) * 1.6);
 				if (mouseActionClicked) {
@@ -130,7 +130,7 @@ public:
 		//Nếu con trỏ chuột di chuyển qua số 7
 		//thì ta phóng to nút số 1 khi mà click thì ta set biến selectedMap
 		else if (isInRectangle(xMouse, yMouse, 364, 212, (414 - 364) * 1, (281 - 212) * 1)) {
-			SDL_Texture* Image7 = LoadImage("Image/7.png", _renderer);
+			SDL_Texture* Image7 = loadImage("Image/7.png", _renderer);
 			if (_unlockedMap >= 7) {
 				DrawInRenderer(_renderer, Image7, 364 - 10, 212 - 10, (414 - 364) * 1.6, (281 - 212) * 1.6);
 				if (mouseActionClicked) {
@@ -142,7 +142,7 @@ public:
 		//Nếu con trỏ chuột di chuyển qua số 8
 		//thì ta phóng to nút số 1 khi mà click thì ta set biến selectedMap
 		else if (isInRectangle(xMouse, yMouse, 364, 334, (409 - 364) * 1, (385 - 334) * 1)) {
-			SDL_Texture* Image8 = LoadImage("Image/8.png", _renderer);
+			SDL_Texture* Image8 = loadImage("Image/8.png", _renderer);
 			if (_unlockedMap >= 8) {
 				DrawInRenderer(_renderer, Image8, 364 - 10, 334 - 10, (409 - 364) * 1.6, (385 - 334) * 1.6);
 				if (mouseActionClicked ) {
@@ -154,7 +154,7 @@ public:
 		//Nếu con trỏ chuột di chuyển qua số 9
 		//thì ta phóng to nút số 1 khi mà click thì ta set biến selectedMap
 		else if (isInRectangle(xMouse, yMouse, 366, 453, (405 - 366) * 1, (506 - 453) * 1)) {
-			SDL_Texture* Image9 = LoadImage("Image/9.png", _renderer);
+			SDL_Texture* Image9 = loadImage("Image/9.png", _renderer);
 			if ( _unlockedMap >= 9) {
 				DrawInRenderer(_renderer, Image9, 366 - 10, 453 - 10, (405 - 366) * 1.6, (506 - 453) * 1.6);
 				if (mouseActionClicked && _unlockedMap >= 9) {

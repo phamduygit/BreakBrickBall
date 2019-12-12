@@ -44,7 +44,7 @@ public:
 	// hành động click chuột
 	virtual void draw(int xMouse,int yMouse,bool &mouseActionClicked) {
 		auto temp = _image;
-		_image = LoadImage("GameOver.png", _renderer); 
+		_image = loadImage("Image/GameOver.png", _renderer); 
 		if (mouseActionClicked) {
 			//Vùng button retry
 			if (xMouse >= 210 && xMouse <= 210 + 80 && yMouse >= 390 && yMouse <= 390 + 80) {

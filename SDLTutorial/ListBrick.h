@@ -100,10 +100,10 @@ public:
 	//Kiểm tra sự giao nhau giữa đường thẳng và vòng tròn
 	bool intersectionLineAndCircle(float xS, float yS, float xE, float yE) {
 		//Tọa độ của quả bóng hiện tại
-		float xBall = Ball::Instance(_renderer)->getX();
-		float yBall = Ball::Instance(_renderer)->getY();
+		float xBall = MagicBall::Instance(_renderer)->getX();
+		float yBall = MagicBall::Instance(_renderer)->getY();
 		//Bán kính quả bóng
-		float radius = Ball::Instance(_renderer)->getRadius();
+		float radius = MagicBall::Instance(_renderer)->getRadius();
 		//Delta x giữa điểm bắt đầu và điểm kết thúc của một đoạn thẳng
 		float dx = xE - xS;
 		//Delta y giữa điểm bắt đầu và kết thức của một đoạn thẳng
@@ -128,16 +128,16 @@ public:
 	void handleCollision(bool isFinalMap = false) {
 		//Tạo tạm một đối tượng ball đối tượng này với đối tượng trong game là một
 
-		Ball* ball = Ball::Instance(_renderer);
+		MagicBall* ball = MagicBall::Instance(_renderer);
 		//Duyệt va lần lượt từ 0 đến hết mảng brick
 		for (size_t i = 0; i < _list.size(); i++) {
 			//Khi phát hiện có va chạm 
 			if (ball->isCollision(float(_list[i].getX()), float(_list[i].getY()), _list[i].getSize())) {
 				//cout << "co" << endl;
 				//Kiểm soát việc có cho phép việc xuất ra âm thanh khi va chạm với gạch không
-				/*if (_isMusicOn) {
+				if (_isMusicOn) {
 					Mix_PlayChannel(-1, LoadSound("medium.wav"), 0);
-				}*/
+				}
 				//Khi quả bóng bay từ bên dưới và có xẩy ra va chạm
 				if (ball->getY() - ball->getRadius() < float(_list[i].getY()) + _list[i].getSize() &&
 					ball->getY() > float(_list[i].getY()) + _list[i].getSize()

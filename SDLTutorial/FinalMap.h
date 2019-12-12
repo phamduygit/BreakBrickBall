@@ -63,7 +63,7 @@ public:
 	}
 	//Kiểm tra xem quả bóng có ở trong hố đỏ không
 	bool isBallInRedHole() {
-		Ball* ball = Ball::Instance(_renderer);
+		MagicBall* ball = MagicBall::Instance(_renderer);
 		float xBall = ball->getX();
 		float yBall = ball->getY();
 		if (xBall >= _xRedHole &&
