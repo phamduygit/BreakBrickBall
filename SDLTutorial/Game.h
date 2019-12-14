@@ -118,7 +118,7 @@ private:
 		_running = false;
 		_background = NULL;
 		//Ban đầu ta cho trạng thái có nhạc là true nghĩa là trong game có nhạc
-		_isMusicOn = false;
+		_isMusicOn = true;
 		_currentMap = 1;
 		_previousScreen = "";
 		//Ban đầu khi vào game thì ta hiện thị màn hình Menu đầu tiên
@@ -876,9 +876,8 @@ public:
 		else if (Events.type == SDL_MOUSEMOTION || Events.type == SDL_MOUSEBUTTONUP || Events.type == SDL_MOUSEBUTTONDOWN) {
 			//Lấy ra tính hiệu chuột mà đưa vào hai thuộc tính xMouse và yMouse
 			SDL_GetMouseState(&_xMouse, &_yMouse);
-			//d
-			//cout << "X:" << _xMouse << endl;
-			//cout << "Y:" << _yMouse << endl;
+		
+
 			switch (Events.type)
 			{
 				//Kiểm soát xem người chơi có nhấn chuột xuống không
@@ -892,9 +891,19 @@ public:
 			case SDL_MOUSEBUTTONUP:
 				_mouseActionClicked = false;
 				break;
+
 			default:
 				break;
 			}
+			if ((size_t)Events.button.button == 3) {
+				SDL_SetWindowGrab(_window, SDL_FALSE);
+
+			}
+			else if ((size_t)Events.button.button == 1) {
+				SDL_SetWindowGrab(_window, SDL_TRUE);
+
+			}
+			
 		}
 	}
 	//Trả về trạng thái hoạt động của game

@@ -23,6 +23,7 @@
     <ProjectGuid>{850C8705-4C2D-4993-910F-36FA7EDD25E2}</ProjectGuid>
     <RootNamespace>SDLTutorial</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>18120331_18120345</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
