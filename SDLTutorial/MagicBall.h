@@ -136,7 +136,9 @@ public:
 		return _radius;
 	}
 	void setRadius(float value) {
-		_radius = value;
+		if(value>=20)
+			_radius = value;
+
 	}
 	float getDegree() {
 		return trigonometric_angle;
@@ -286,8 +288,8 @@ public:
 			//SDL_Texture* _explodeImage = loadImage("Explosion.png",_renderer);
 			TextureManager::GetInstance()->drawFrame("Explosion", _x -50, _y - 50,100, 100,1, explodeFrame, _renderer);
 			explodeFrame++;
-			SDL_Delay(50);
-			cout << "called";
+			SDL_Delay(100);
+			//cout << "called";
 			if (explodeFrame == 6) {
 				explodeFrame = 1;
 				isExplode = false;

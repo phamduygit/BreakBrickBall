@@ -23,7 +23,6 @@
 #include "SettingScreen.h"
 #include "FinalMap.h"
 #include "ComputerPaddle.h"
-
 #define PI 3.141592
 using namespace std;
 class Game
@@ -224,7 +223,7 @@ public:
 			_background = loadImage("Image/GrassBackground.png", _renderer);
 			_ball->setImage("Image/Ball.png");
 			_map = Map(_renderer, "map2.txt");
-
+			//_map.setRenderer(_renderer);
 			//Cài đặt font cho màn hình menu game
 			_menuScreen.setFont("MachineGunk-nyqg.ttf");
 			//Cài đặt background cho game
@@ -245,6 +244,14 @@ public:
 			_fileMapName.push_back("map7.txt");
 			_fileMapName.push_back("map8.txt");
 			_fileMapName.push_back("map9.txt");
+			
+			SDL_WarpMouseInWindow(_window, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED);
+			
+			SDL_SetWindowGrab(_window, SDL_TRUE);
+			
+			//SDL_ShowCursor(1);
+		
+
 		}
 	}
 	//Kích hoạt một màn hình nào đó 
@@ -254,7 +261,6 @@ public:
 		for (auto screen : _listScreen) {
 			if (screen.first != nameScreen)
 			{
-				//cout << screen.first << endl;
 				screenName.push_back(screen.first);
 			}
 
@@ -266,7 +272,7 @@ public:
 	}
 
 	void render() {
-
+		
 		//Xóa thông tin lưu trên renderer ở vòng lặp trước
 		SDL_RenderClear(_renderer);
 		//Hiển thị màn hình menu game
@@ -277,6 +283,7 @@ public:
 		//Hiển thị màn hình chọn map
 		else if (_listScreen["MapDiagramScreen"]) {
 			_mapDiagram.draw(_xMouse, _yMouse, _mouseActionClicked);
+
 		}
 		//Hiển thị màn hình cài đặt
 		else if (_listScreen["SettingScreen"]) {
@@ -328,7 +335,7 @@ public:
 			_endScreen.draw();
 			_player->drawCurrentResult(-60);
 		}
-
+		
 		//Hiện thị những thông tin copy vào renderer lên màn hình chính
 		SDL_RenderPresent(_renderer);
 	}
@@ -347,6 +354,8 @@ public:
 
 
 	}
+
+
 	void update() {
 		//Kiểm tra nêu chưa chơi nhạc thì ta tiến hành load nhạc
 		if (Mix_PlayingMusic() == 0)
@@ -419,7 +428,7 @@ public:
 			//Khi nhận tín hiệu là người chơi đã tích chọn một map
 			if (_mapDiagram.getSelectedMap() != 0) {
 				//Nếu mà người chơi chọn chơi tiếp tục
-				if (_menuScreen.getCurrentChoose() == Continue || _previousScreen == "GameOverScreen") {
+				if (_menuScreen.getCurrentChoose() == Continue || _previousScreen == "GameOverScreen" || _previousScreen == "SettingScreen") {
 					//Khi đó ta cặp nhật lại biến mapCurrent bằng map mà người chơi chọn 
 					_currentMap = _mapDiagram.getSelectedMap();
 					//Khi mà máp người chơi chọn trùng với map mà người chơi đã chơi ở lần chơi trước 
@@ -457,6 +466,7 @@ public:
 				_mapDiagram.resetData();
 				//Kích hoạt màn hình chơi game sau khi đã load đầy đủ dữ liệu
 				enableScreen("GamePlayScreen");
+				_mouseActionClicked = false;
 				_previousScreen = "MapDiagramScreen";
 
 			}
@@ -510,6 +520,8 @@ public:
 				//Ta cũng reset lại thuộc tính của setting để những lần sau dùng không bị nhảy
 				//thẳng vào if khi chưa chọn
 				_settingScreen.setSettingAction(noneSetting);
+				_previousScreen = "SettingScreen";
+
 
 			}
 			//Khi người dùng chọn trở về 
@@ -517,8 +529,6 @@ public:
 				if (_previousScreen == "MenuScreen") {
 					enableScreen("MenuScreen");
 					_previousScreen = "SettingScreen";
-					//listScreen["MenuScreen"] = true;
-					//listScreen["SettingScreen"] = false;
 					_menuScreen.resetData();
 				}
 				else {
@@ -562,6 +572,7 @@ public:
 					_currentMap = _player->getCurrentMap();
 					_map.loadData(_fileMapName[_currentMap % (_fileMapName.size())]);
 					enableScreen("GamePlayScreen");
+					_mouseActionClicked = false;
 					_previousScreen = "GameOverScreen";
 					//Khi choi lại sét lại mạng cho người chơi là 3 mạng
 					_player->setLife(3);
@@ -619,6 +630,7 @@ public:
 			if (winScreen.getAction() == retry) {
 				//Hoàn thành khi người chơi chiến thắng đồng thời muốn chơi lại
 				enableScreen("GamePlayScreen");
+				_mouseActionClicked = false;
 				_player->setLife(3);
 				_player->setRateOfScore(10);
 				//_player->updateScoreToRoundScore(_cur);
@@ -636,6 +648,7 @@ public:
 
 			else if (winScreen.getAction() == nextMap) {
 				enableScreen("GamePlayScreen");
+				_mouseActionClicked = false;
 				_player->setCurrentMap(_currentMap + 1);
 				_player->updateHighScore(_currentMap);
 				_player->setUnlockedMap(_currentMap + 1);
@@ -711,6 +724,7 @@ public:
 			//Khi click chuột và banh chưa bay 
 			if (_mouseActionClicked == true && !_ball->getIsLaunch()) {
 				//Sét trạng thái cho trái banh bay lên
+				
 				_ball->setIsLaunch(true);
 				//Tính toán góc bay lên của quả bóng dựa vào hệ số góc
 				float degree = atan(_line.getHeSoGoc()) * 180 / float(PI);
@@ -811,6 +825,9 @@ public:
 	}
 
 	void handleEvents() {
+
+
+
 		SDL_Event Events;
 		SDL_PollEvent(&Events);
 		if (Events.type == SDL_QUIT)
@@ -836,6 +853,12 @@ public:
 			case SDLK_d:
 				_MoveLR[1] = true;
 				break;
+			case SDLK_ESCAPE:
+				_player->writeDataToFile();
+				if (_player->getLife() != 0) {
+					_map.saveData();
+				}
+				_running = false;
 			}
 		}
 		else if (Events.type == SDL_KEYUP)
@@ -858,21 +881,23 @@ public:
 		else if (Events.type == SDL_MOUSEMOTION || Events.type == SDL_MOUSEBUTTONUP || Events.type == SDL_MOUSEBUTTONDOWN) {
 			//Lấy ra tính hiệu chuột mà đưa vào hai thuộc tính xMouse và yMouse
 			SDL_GetMouseState(&_xMouse, &_yMouse);
-			//d
-			//cout << "X:" << _xMouse << endl;
-			//cout << "Y:" << _yMouse << endl;
 			switch (Events.type)
 			{
 				//Kiểm soát xem người chơi có nhấn chuột xuống không
 				//Nếu nhấn thì ta cặp nhât mouseActionClicked là true
 				//người chơi không nhấn chuột thì biến đó có giá trị là false
 			case SDL_MOUSEBUTTONDOWN:
+			
 				_mouseActionClicked = true;
+				SDL_WaitEvent(&Events);
+		
 				break;
 			case SDL_MOUSEBUTTONUP:
 				_mouseActionClicked = false;
+
 				break;
 			default:
+
 				break;
 			}
 		}

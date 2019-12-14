@@ -18,7 +18,7 @@ private:
 	vector <Amulet> _list;
 	//Struct renderer lưu giữ các thông tin sẽ vẽ lên màn hình
 	SDL_Renderer* _renderer;
-	//Vector chúa các bùa vẫn còn trong thời gian có hiệu ứng;
+	//Vector chứa các bùa vẫn còn trong thời gian có hiệu ứng;
 	queue<Amulet> waitForEndTimeAmulet;
 	//tín hiệu khi va chạm vào bùa magnet
 	bool isTouchedMagnet = false;
@@ -115,21 +115,7 @@ public:
 	// với các bùa
 	void  handleCollision() {
 		//Khi xẩy ra hiệu ứng của bùa nam châm thì sét vị trí của banh luôn nằm 
-		//ở chính giữa của paddle
-		if (isTouchedMagnet) {
-			MagicBall* ball = MagicBall::Instance(_renderer);
-			ball->setX(Paddle::Instance(_renderer)->getX() + Paddle::Instance(_renderer)->getWidth() / 2);
-		}
-		if (!waitForEndTimeAmulet.empty()) {
-			if (waitForEndTimeAmulet.front().getTime() >= waitForEndTimeAmulet.front().getMaxTime()) {
-				waitForEndTimeAmulet.front().reset();
-				if (waitForEndTimeAmulet.front().getType() == Magnet) {
-					isTouchedMagnet = false;
-				}
-				waitForEndTimeAmulet.pop();
-			}
-		}
-		
+		//ở chính giữa của paddle		
 		for (size_t i = 0; i < _list.size(); i++) {
 			//Nếu có va chạm
 			if (MagicBall::Instance(_renderer)->isCollision(float(_list[i].getX()), float(_list[i].getY()), _list[i].getSize())) {
@@ -208,6 +194,29 @@ public:
 
 			}
 		}
+		//Kiểm tra xem bóng ăn được bùa magnet chưa
+		//nếu có thì thực hiện đoạn lệnh bên trong
+		//set vị trí bóng về trung tâm paddle
+		if (isTouchedMagnet) {
+			MagicBall* ball = MagicBall::Instance(_renderer);
+			ball->setX(Paddle::Instance(_renderer)->getX() + Paddle::Instance(_renderer)->getWidth() / 2);
+			ball->setY(Paddle::Instance(_renderer)->getY() - ball->getRadius());
+		}
+		//Khi hàng đợi queue chưa trống 
+		//nghĩa là vẫn còn bùa còn thời gian hoạt động 
+		//ta kiểm tra xem thời gian chạy của bùa xem đã quá thời gian cực trị chưa 
+		//nếu rồi thì ta xóa bùa 
+		//nếu là bùa magnet thì ta cho trạng thái chạm và magnet là false
+		if (!waitForEndTimeAmulet.empty()) {
+			if (waitForEndTimeAmulet.front().getTime() >= waitForEndTimeAmulet.front().getMaxTime()) {
+				waitForEndTimeAmulet.front().reset();
+				if (waitForEndTimeAmulet.front().getType() == Magnet) {
+					isTouchedMagnet = false;
+				}
+				waitForEndTimeAmulet.pop();
+			}
+		}
+
 	
 	}
 	

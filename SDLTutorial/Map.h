@@ -25,6 +25,9 @@ public:
 	Map(){
 		_renderer = NULL;
 	}
+	void setRenderer(SDL_Renderer*& value) {
+		_renderer = value;
+	}
 	//hàn động tắt nhạc
 	virtual void turnOffMusic() {
 		_listBrick.setIsMusicOn(false);
@@ -131,6 +134,8 @@ public:
 		_listBrick.clearAllBrick();
 		_listAmulet.clearAllAmulet();
 		_computerPaddle.disable();
+		_listBrick.setRenderer(_renderer);
+		_listAmulet.setRenderer(_renderer);
 		_listBrick.setRenderer(_renderer);
 		_listBrick.createListWithMapText(fileName);
 		_listAmulet.createListWithMapText(fileName);

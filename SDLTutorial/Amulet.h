@@ -21,7 +21,7 @@ enum TypeAmulet {
 	//Tăng mạng
 	IncreaseLife = 8,
 	//9 là vật cản
-	//Hố đén 
+	//Hố đen 
 	//Khi quả bóng người chơi lọt vào hố đen thì 
 	//sẽ bay ra ở hố trắng
 	BlackHole = 10,
@@ -60,6 +60,10 @@ public:
 		this->_typeAmulet = typeAmulet;
 		//Sét mốc thời gian lúc đầu bằng 0
 		_startTime = 0;
+		//
+		if (_typeAmulet == Double) {
+			this->setMaxTime(10000);
+		}
 		
 	}
 	//Hàm để xuất dữ liệu dạng string theo cấu trúc x y loại bùa
