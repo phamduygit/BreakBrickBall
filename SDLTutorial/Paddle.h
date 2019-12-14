@@ -5,6 +5,7 @@
 #include <string>
 #include "SettingScreen.h"
 #include "ScrollBar.h"
+#include "MagicBall.h"
 using namespace std;
 //Đối tượng paddle
 class Paddle:public ScrollBar
@@ -159,6 +160,32 @@ public:
 	//Khôi phục lại deltaX
 	void resetDeltaX() {
 		_deltaX = 0;
+	}
+	bool intersectionLineAndCircle(float xS, float yS, float xE, float yE) {
+		//Tọa độ của quả bóng hiện tại
+		float xBall = MagicBall::Instance(_renderer)->getX();
+		float yBall = MagicBall::Instance(_renderer)->getY();
+		//Bán kính quả bóng
+		float radius = MagicBall::Instance(_renderer)->getRadius();
+		//Delta x giữa điểm bắt đầu và điểm kết thúc của một đoạn thẳng
+		float dx = xE - xS;
+		//Delta y giữa điểm bắt đầu và kết thức của một đoạn thẳng
+		float dy = yE - yS;
+		// Thay vào công thức tính khoảng cách giữa đoạn thẳng và một điểm ta có 
+		//ta được phương trình a*x^2+b*x+c <=r^2
+		float a = dx * dx + dy * dy;
+		float b = 2 * (xS * dx - xBall * dx + yS * dy - yBall * dy);
+		float c = xS * xS + xBall * xBall + yS * yS + yBall * yBall - 2 *
+			(xS * xBall + yS * yBall) - radius * radius;
+		float delta = b * b - 4 * a * c;
+		if (delta >= 0) {
+			float x1 = (-b + sqrt(delta)) / (2 * a);
+			float x2 = (-b - sqrt(delta)) / (2 * a);
+			if ((x1 >= 0 && x1 <= 1) || (x2 >= 0 && x2 <= 1)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 };

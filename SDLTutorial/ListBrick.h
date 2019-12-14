@@ -139,9 +139,9 @@ public:
 					Mix_PlayChannel(-1, LoadSound("medium.wav"), 0);
 				}
 				//Khi quả bóng bay từ bên dưới và có xẩy ra va chạm
-				if (ball->getY() - ball->getRadius() < float(_list[i].getY()) + _list[i].getSize() &&
-					ball->getY() > float(_list[i].getY()) + _list[i].getSize()
-					&& 
+				if (
+					//ball->getY() - ball->getRadius() < float(_list[i].getY()) + _list[i].getSize() &&
+					//ball->getY() > float(_list[i].getY()) + _list[i].getSize()	&& 
 					intersectionLineAndCircle(float(_list[i].getX()),float(_list[i].getY())+_list[i].getSize(),
 						float(_list[i].getX())+_list[i].getSize(), float(_list[i].getY()) + _list[i].getSize())
 					) {
@@ -154,9 +154,9 @@ public:
 					
 				}
 				//Khi quả bóng bay từ trên xuống và va chạm với vật thể
-				else if (ball->getY() + ball->getRadius() > float(_list[i].getY()) &&
-					ball->getY() < float(_list[i].getY())
-					&&
+				else if (
+					//ball->getY() + ball->getRadius() > float(_list[i].getY()) &&
+					//ball->getY() < float(_list[i].getY())	&&
 					intersectionLineAndCircle(float(_list[i].getX()),float(_list[i].getY()),
 						float(_list[i].getX())+_list[i].getSize(), float(_list[i].getY()))
 					) {
@@ -169,8 +169,8 @@ public:
 				}
 				//Khi banh bay từ bên phải sang và va chạm với gạch
 				else if (
-					ball->getX() - ball->getRadius() < float(_list[i].getX()) + _list[i].getSize() &&
-					ball->getX() > float(_list[i].getX())+_list[i].getSize()&&
+					//ball->getX() - ball->getRadius() < float(_list[i].getX()) + _list[i].getSize() &&
+					//ball->getX() > float(_list[i].getX())+_list[i].getSize()&&
 					intersectionLineAndCircle(float(_list[i].getX())+_list[i].getSize(),float(_list[i].getY()),
 						float(_list[i].getX()) + _list[i].getSize(), float(_list[i].getY())+_list[i].getSize())
 					) {
@@ -184,8 +184,9 @@ public:
 
 				}
 				//Khi quả bóng bay từ bên trái sang và gặp viên gạch 
-				else if (ball->getX() + ball->getRadius() > float(_list[i].getX()) &&
-					ball->getX() < float(_list[i].getX()) &&
+				else if (
+					//ball->getX() + ball->getRadius() > float(_list[i].getX()) &&
+					//ball->getX() < float(_list[i].getX()) &&
 					intersectionLineAndCircle(float(_list[i].getX()),float(_list[i].getY()), float(_list[i].getX()), float(_list[i].getY())+_list[i].getSize())
 					) { 
 					//Phần bù để thoát khỏi điều kiện va chạm

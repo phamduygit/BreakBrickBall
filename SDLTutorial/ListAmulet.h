@@ -8,6 +8,7 @@
 #include <sstream>
 #include <string>
 #include <map>
+#include <queue>
 using namespace std;
 
 class ListAmulet
@@ -17,17 +18,13 @@ private:
 	vector <Amulet> _list;
 	//Struct renderer lưu giữ các thông tin sẽ vẽ lên màn hình
 	SDL_Renderer* _renderer;
-	//Thời gian bắt đầu bấm giờ
-	int _startTime;
-	//Thơi gian kết thúc bấm giờ
-	int _endTime;
-	//Một map các hiệu ứng của bùa
-	map <string, bool> _mapAmuletEffect;
+	//Vector chứa các bùa vẫn còn trong thời gian có hiệu ứng;
+	queue<Amulet> _waitForEndTimeAmulet;
+	//tín hiệu khi va chạm vào bùa magnet
+	bool _isTouchedMagnet = false;
 public:
 	//Hàm khỏi tạo không đối số của mảng bùa
 	ListAmulet() {
-		_startTime = 0;
-		_endTime = 0;
 		this->_renderer = NULL;
 	}
 	//Hàm xuất mảng các bùa về dạng string có thể lưu thông 
@@ -42,13 +39,8 @@ public:
 	}
 	//Hàm khỏi tạo có đối số
 	ListAmulet(SDL_Renderer*& value) {
-		_startTime = 0;
-		_endTime = 0;
+		
 		this->_renderer = value;
-	}
-	//Lấy ra thông tin các effect đã được kích hoạt hay chưa trong map
-	map<string, bool> getMapEffect() {
-		return _mapAmuletEffect;
 	}
 	//Cài đặt renderer cho đối tượng
 	void setRenderer(SDL_Renderer* &renderer) {
@@ -57,18 +49,12 @@ public:
 	//Xóa tất cả các bùa có trong mảng bùa
 	void clearAllAmulet() {
 		_list.clear();
-
 	}
 	//Vẽ danh sách bùa lên màn hình
 	void drawListAmulet() {
 		for(size_t i = 0; i < _list.size(); i++) {
 			_list[i].draw();
 		}
-	}
-	//Lấy ra khoảng thời gian mà bùa có tác dụng kể từ thời điểm có hiệu ứng
-	int getTime() {
-		_endTime = clock();
-		return _endTime - _startTime;
 	}
 	//Tạo ra map game bằng file map text
 	void createListWithMapText(string fileName) {
@@ -129,21 +115,14 @@ public:
 	// với các bùa
 	void  handleCollision() {
 		//Khi xẩy ra hiệu ứng của bùa nam châm thì sét vị trí của banh luôn nằm 
-		//ở chính giữa của paddle
-		if (this->getTime() < 6000 && _mapAmuletEffect["Magnet"]&&MagicBall::Instance(_renderer)->getIsLaunch()) {
-			MagicBall* ball = MagicBall::Instance(_renderer);
-			Paddle* paddle = Paddle::Instance(_renderer);
-			ball->setX(paddle->getX() + paddle->getWidth() / 2);
-		}
+		//ở chính giữa của paddle		
 		for (size_t i = 0; i < _list.size(); i++) {
 			//Nếu có va chạm
 			if (MagicBall::Instance(_renderer)->isCollision(float(_list[i].getX()), float(_list[i].getY()), _list[i].getSize())) {
 				//Nếu loại bùa là bùa tăng điểm gấp đôi
+				//d
+				_list[i].activeAmulet();
 				if (_list[i].getType() == Double) {
-					//Cập nhật lại biến tín hiệu là đã kích hoạt hiệu ứng
-					_mapAmuletEffect["Double"] = true;
-					//Bấm thời gian tại thời điểm xẩy ra hiệu ứng
-					_startTime = clock();
 					//Gấp đôi tỉ lệ điểm khi người chơi ăn một viên gạch
 					int rateOfScore = Player::Instance()->getRateOfScore();
 					rateOfScore *= 2;
@@ -151,58 +130,38 @@ public:
 				}
 				//Nếu loại bùa đó là nam châm
 				else if (_list[i].getType() == Magnet) {
-					//Cập nhật lại biến tín hiệu 
-					_mapAmuletEffect["Magnet"] = true;
-					//Bấm thời gian kể từ khi xẩy ra hiệu ứng
-					_startTime = clock();
+					_isTouchedMagnet = true;					
 					//Lưu giữ lại tốc độ khi xẩy ra hiệu ứng 
+					MagicBall::Instance(_renderer)->explode();
 					MagicBall::Instance(_renderer)->setBackupSpeed(MagicBall::Instance(_renderer)->getSpeed());
 					//Cập nhật lại vị trí quả bóng 
-
 					MagicBall::Instance(_renderer)->setX(Paddle::Instance(_renderer)->getX() + Paddle::Instance(_renderer)->getWidth() / 2);
 					MagicBall::Instance(_renderer)->setY(Paddle::Instance(_renderer)->getY()+10);
 					//Khi đó quả bóng sẽ không di chuyển
 					//FIX
 					MagicBall::Instance(_renderer)->setSpeed(0);
-					//Ball::Instance(_renderer)->setIsLaunch(false);
+
 
 
 				}
 				//Nếu gặp loại bùa tăng kích thước paddle
 				else if (_list[i].getType() == IncreasePaddle) {
-					//Cập nhật lại biến tín hiệu
-					_mapAmuletEffect["IncreasePaddle"] = true;
-					//Bắt đầu bấm giờ tại thời điểm có hiệu ứng
-					_startTime = clock();
 					Paddle::Instance(_renderer)->setWidth(Paddle::Instance(_renderer)->getWidth() * float(1.5));
 
 				}
 				//Nếu gặp tín hiệu tăng kích thước trái bóng
 				else if (_list[i].getType() == IncreaseSizeBall) {
-					//Cập nhật lại biến tín hiệu
-					_mapAmuletEffect["IncreaseSizeBall"] = true;
-					//Bắt đầu bắm thời gian tại lúc chạm vào bùa 
-					_startTime = clock();
-					//Ball::Instance(_renderer)->setBackupRadius(Ball::Instance(_renderer)->getRadius());
 					MagicBall::Instance(_renderer)->setRadius(MagicBall::Instance(_renderer)->getRadius() * float(2));
 
 				}
 				//Nếu gặp phải loại bùa giảm 50 phần trăm số điểm 
 				else if (HalveScore == _list[i].getType()) {
-					//Cập nhật lại biến tín hiệu
-					_mapAmuletEffect["HalveScore"] = true;
-					//Bắt đầu bắm giờ tại thời điểm có hiệu ứng 
-					_startTime = clock();
 					int rateOfScore = Player::Instance()->getRateOfScore();
 					rateOfScore /= 2;
 					Player::Instance()->setRateOfScore(rateOfScore);
 
 				}
 				else if (DecreaseSpeedBall == _list[i].getType()) {
-					//Cập nhật lại biến tín hiệu
-					_mapAmuletEffect["SlowSpeed"] = true;
-					//Bắt đầu bấm giờ 
-					_startTime = clock();
 					MagicBall::Instance(_renderer)->setSpeed(MagicBall::Instance(_renderer)->getSpeed() * float(0.6));
 					
 				}
@@ -226,55 +185,40 @@ public:
 				}
 				//Sau khi trái banh va chạm vào bùa thì bùa biến mất
 				if (_list[i].getType() != BlackHole && _list[i].getType() != WhiteHole) {
-					_list.erase(_list.begin() + i);
+					if (_list[i].getType() != IncreaseLife) {
+						_waitForEndTimeAmulet.push(_list[i]);
+					}
+					_list.erase(_list.begin() + i);		
 				}
 				break;
 
 			}
 		}
+		//Kiểm tra xem bóng ăn được bùa magnet chưa
+		//nếu có thì thực hiện đoạn lệnh bên trong
+		//set vị trí bóng về trung tâm paddle
+		if (_isTouchedMagnet) {
+			MagicBall* ball = MagicBall::Instance(_renderer);
+			ball->setX(Paddle::Instance(_renderer)->getX() + Paddle::Instance(_renderer)->getWidth() / 2);
+			ball->setY(Paddle::Instance(_renderer)->getY() - ball->getRadius());
+		}
+		//Khi hàng đợi queue chưa trống 
+		//nghĩa là vẫn còn bùa còn thời gian hoạt động 
+		//ta kiểm tra xem thời gian chạy của bùa xem đã quá thời gian cực trị chưa 
+		//nếu rồi thì ta xóa bùa 
+		//nếu là bùa magnet thì ta cho trạng thái chạm và magnet là false
+		if (!_waitForEndTimeAmulet.empty()) {
+			if (_waitForEndTimeAmulet.front().getTime() >= _waitForEndTimeAmulet.front().getMaxTime()) {
+				_waitForEndTimeAmulet.front().reset();
+				if (_waitForEndTimeAmulet.front().getType() == Magnet) {
+					_isTouchedMagnet = false;
+				}
+				_waitForEndTimeAmulet.pop();
+			}
+		}
+
 	
 	}
-	//Sét lại góc bay và tốc độ trái bóng sau khi hết thời gian bùa có hiệu ứng
-	void resetMagnet() {
-		//d
-		//Ball::Instance(_renderer)->setIsLaunch(true);
-		MagicBall::Instance(_renderer)->setDegree(120);
-		MagicBall::Instance(_renderer)->setSpeed(MagicBall::Instance(_renderer)->getBackupSpeed());
-		_mapAmuletEffect["Magnet"] = false;
-	}
-	//Trả lại kích thước cho trái banh sau khi hết thời gian
-	void resetSizeBall() {
-		MagicBall* ball = MagicBall::Instance(_renderer);
-		ball->setRadius(ball->getBackupRadius());
-		_mapAmuletEffect["IncreaseSizeBall"] = false;
-
-
-	}
-	//Trả lại kích thước của paddle sau khi hết thời gian xảy ra hiệu ứng
-	void resetWidthPaddle() {
-		Paddle* paddle = Paddle::Instance(_renderer);
-		paddle->setWidth(paddle->getWidth() / float(1.5));
-		_mapAmuletEffect["IncreasePaddle"] = false;
-
-	}
-	//Trả lại vận tốc trước đó cho quả bóng sau khi hết thời gian xẩy ra hiệu ứng
-	void resetSpeed() {
-		MagicBall* ball = MagicBall::Instance(_renderer);		
-		ball->setSpeed(ball->getSpeed()/float(0.6));
-		_mapAmuletEffect["SlowSpeed"] = false;
-	}
-	//Trả lại tỉ lệ điểm lúc trước sau khi bùa hết hiệu lực
-	void resetDoubleScore() {
-		_mapAmuletEffect["Double"] = false;
-		Player::Instance()->setRateOfScore(Player::Instance()->getRateOfScore() / 2);
-
-	}
-	//Trả lại tỉ lệ điểm như lúc trước sau khi bùa hết hiệu lực
-	void resetHalveScore() {
-		_mapAmuletEffect["HalveScore"] = false;
-		Player::Instance()->setRateOfScore(Player::Instance()->getRateOfScore() * 2);
-
-	}
-
+	
 };
 

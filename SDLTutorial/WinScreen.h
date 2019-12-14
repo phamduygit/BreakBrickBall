@@ -34,7 +34,7 @@ public:
 		destinationNext.x = 354;
 		destinationNext.y = 631;
 		destinationNext.w = destinationNext.h = destinationRetry.h = destinationRetry.w = 80;
-		//cout << "Mouse" << mouseActionClicked << endl;
+		//cout << "Mouse:" << mouseActionClicked << endl;
 		if (mouseActionClicked) {
 			if (xMouse >= 69 && xMouse <= 69 + 80 && yMouse >= 631 && yMouse <= 631 + 80) {
 				_action = retry;
@@ -43,9 +43,10 @@ public:
 				_action = nextMap;
 			}
 
-			mouseActionClicked = false;
+			
+			
 		}
-
+		mouseActionClicked = false;
 
 		SDL_RenderCopy(_renderer, _image, NULL, NULL);
 		SDL_DestroyTexture(_image);

@@ -25,6 +25,9 @@ public:
 	Map(){
 		_renderer = NULL;
 	}
+	void setRenderer(SDL_Renderer*& value) {
+		_renderer = value;
+	}
 	//hàn động tắt nhạc
 	virtual void turnOffMusic() {
 		_listBrick.setIsMusicOn(false);
@@ -132,6 +135,8 @@ public:
 		_listAmulet.clearAllAmulet();
 		_computerPaddle.disable();
 		_listBrick.setRenderer(_renderer);
+		_listAmulet.setRenderer(_renderer);
+		_listBrick.setRenderer(_renderer);
 		_listBrick.createListWithMapText(fileName);
 		_listAmulet.createListWithMapText(fileName);
 		_computerPaddle.load(fileName);
@@ -156,38 +161,7 @@ public:
 		_listBrick.handleCollision();
 		_listAmulet.handleCollision();
 		_computerPaddle.move();
-		_computerPaddle.handleCollision();
-		int limitTime = 6000;
-		//d
-		//cout << listAmulet.getTime()<<endl;
-		map<string, bool> mapEffect = _listAmulet.getMapEffect();
-		//Thời gian giơi hạn là 6s sau khi hết thời gian giới hạn thì ta 
-		//reset các biến chứa thuộc tính đồng thời trả lại trạng thái trước đó cho người chơi
-		if (_listAmulet.getTime() >= limitTime) {
-		
-			if (mapEffect["Magnet"]) {
-				_listAmulet.resetMagnet();
-			}
-			if (mapEffect["IncreasePaddle"]) {
-				_listAmulet.resetWidthPaddle();
-
-			}
-			if (mapEffect["IncreaseSizeBall"]) {
-				_listAmulet.resetSizeBall();
-			}
-			if (mapEffect["SlowSpeed"]) {
-				_listAmulet.resetSpeed();
-			}
-			if (mapEffect["Double"]) {
-				_listAmulet.resetDoubleScore();
-			}
-			if (mapEffect["HalveScore"]) {
-				_listAmulet.resetHalveScore();
-			}
-		}
-		//Do biên mapEffect dùng để chứa dữ liệu lấy từ hàm nên sau khi dùng ta giải 
-		//phóng để tránh rò rĩ bộ nhớ 
-		mapEffect.clear();
+		_computerPaddle.handleCollision();		
 	}
 	//lấy ra số lương gạch hiện có 
 	int getNumberOfBrick() {

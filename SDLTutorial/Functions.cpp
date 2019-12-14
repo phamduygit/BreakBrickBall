@@ -3,8 +3,7 @@
 
 SDL_Texture* loadImage(string NameImage, SDL_Renderer*Renderer) {
 	SDL_Texture* newTexture = NULL;
-	SDL_Surface* loadSurface = LoadImage(NameImage);
-		//IMG_Load(NameImage.c_str());
+	SDL_Surface* loadSurface = IMG_Load(NameImage.c_str());
 	if (loadSurface == NULL) {
 		cout << "Unable to load image " << NameImage << "! SDL_image error: " << IMG_GetError() << endl;
 	}

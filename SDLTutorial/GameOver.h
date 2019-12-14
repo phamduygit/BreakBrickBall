@@ -59,7 +59,9 @@ public:
 			else if ((xMouse >= 210 && xMouse <= 210 + 80 && yMouse >= 685 && yMouse <= 685 + 80)) {
 				_action = setting;
 			}
-			mouseActionClicked = false;
+
+			
+			
 		}
 		//Copy tất cả hình ảnh vào renderer		
 		SDL_RenderCopy(_renderer, _image, NULL, NULL);
@@ -67,6 +69,9 @@ public:
 		//Memory leaks
 		SDL_DestroyTexture(_image);
 		SDL_DestroyTexture(temp);
+		
+
+		mouseActionClicked = false;
 	}
 	virtual ~GameOver(){}
 };

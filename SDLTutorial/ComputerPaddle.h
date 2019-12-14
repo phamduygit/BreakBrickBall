@@ -101,9 +101,10 @@ public:
 		if (isEnable) {
 			MagicBall* ball = MagicBall::Instance(_renderer);
 			//Kiểm tra khi bóng bay từ bên trái sang và có va chạm
-			if (_currentFrame == 1 && ball->isCollision(_x, _y, _width, _height) && _currentFrame >= 1 && _currentFrame <= 100) {
-				if (ball->getX() + ball->getRadius() > _x&&
-					ball->getX() < _x&&
+			if ( _currentFrame == 1 && ball->isCollision(_x, _y, _width, _height)) {
+				if (
+					//ball->getX() + ball->getRadius() > _x&&
+					//ball->getX() < _x&&
 					intersectionLineAndCircle(_x, _y, _x, _y + _height)
 					) { 
 					float offset = abs(ball->getX() + ball->getRadius() - _x);
@@ -113,8 +114,10 @@ public:
 
 				}
 				//Kiểm tra bóng bay từ bên trên xuống và có va chạm
-				else if (ball->getY() + ball->getRadius() > _y&&
-					ball->getY() < _y&& intersectionLineAndCircle(_x, _y, _x + _width, _y)
+				else if (
+					//ball->getY() + ball->getRadius() > _y&&
+					//ball->getY() < _y&& 
+					intersectionLineAndCircle(_x, _y, _x + _width, _y)
 
 					) {
 					float offset = abs(ball->getY() + ball->getRadius() - _y);
@@ -123,8 +126,9 @@ public:
 
 				}
 				//Kiểm tra bóng bay từ bên phải sang và có va chạm
-				else if (ball->getX() - ball->getRadius() < _x + _width &&
-					ball->getX() > _x + _width &&
+				else if (
+					//ball->getX() - ball->getRadius() < _x + _width &&
+					//ball->getX() > _x + _width &&
 					intersectionLineAndCircle(_x + _width, _y, _x + _width, _y + _height)) {//Bong ben  phai
 					float offset = abs(ball->getX() - ball->getRadius() - _x - _width);
 					ball->setX(ball->getX() + float(1.1) * offset);
@@ -132,8 +136,9 @@ public:
 
 				}
 				//Kiểm tra bóng bay từ bên dưới và có sự va chạm với paddle
-				else if (ball->getY() - ball->getRadius() <= _y + _height &&
-					ball->getY() > _y + _height &&
+				else if (
+					//ball->getY() - ball->getRadius() <= _y + _height &&
+				//	ball->getY() > _y + _height &&
 					intersectionLineAndCircle(_x, _y + _height, _x + _width, _y + _height)) {
 					float offset = abs(ball->getY() - ball->getRadius() - _y);
 					ball->setY(ball->getY() + float(1.1) * offset);

@@ -1,6 +1,10 @@
 ﻿#pragma once
 #include "Brick.h"
 #include "MagicBall.h"
+#include "Player.h"
+#include "MagicBall.h"
+#include "Paddle.h"
+#include <time.h>
 enum TypeAmulet {
 	//Nhân hai điểm 
 	Double = 2,
@@ -17,7 +21,7 @@ enum TypeAmulet {
 	//Tăng mạng
 	IncreaseLife = 8,
 	//9 là vật cản
-	//Hố đén 
+	//Hố đen 
 	//Khi quả bóng người chơi lọt vào hố đen thì 
 	//sẽ bay ra ở hố trắng
 	BlackHole = 10,
@@ -53,10 +57,14 @@ public:
 		else {
 			this->_currentFrame = 1;
 		}	
-
 		this->_typeAmulet = typeAmulet;
 		//Sét mốc thời gian lúc đầu bằng 0
 		_startTime = 0;
+		//
+		if (_typeAmulet == Double) {
+			this->setMaxTime(10000);
+		}
+		
 	}
 	//Hàm để xuất dữ liệu dạng string theo cấu trúc x y loại bùa
 	//Trong đó loại bùa được ép về kiểu số nguyên
@@ -77,6 +85,13 @@ public:
 	//Bấm giờ thời điểm bắt đầu hiệu ứng
 	void setStartTime(int value) {
 		_startTime = value;
+	}
+	//Kích hoạt hiệu ứng của bùa
+	void activeAmulet() {
+		_startTime = clock();
+	}
+	int getTime() {
+		return clock() - _startTime;
 	}
 	//Lấy ra loại bùa
 	TypeAmulet getType() {
@@ -106,5 +121,38 @@ public:
 
 		}
 	}
+	void reset() {
+		if (_typeAmulet == Magnet) {
+			MagicBall::Instance(_renderer)->setDegree(120);
+			MagicBall::Instance(_renderer)->setSpeed(MagicBall::Instance(_renderer)->getBackupSpeed());
+		}
+		else if (_typeAmulet == IncreaseSizeBall) {
+			MagicBall* ball = MagicBall::Instance(_renderer);
+			ball->setRadius(ball->getRadius() / 2);
+		}
+		else if (_typeAmulet == IncreasePaddle) {
+			Paddle* paddle = Paddle::Instance(_renderer);
+			paddle->setWidth(paddle->getWidth() / float(1.5));
+
+		}
+		else if (_typeAmulet == DecreaseSpeedBall) {
+			MagicBall* ball = MagicBall::Instance(_renderer);
+			ball->setSpeed(ball->getSpeed() / float(0.6));
+		}
+		else if (_typeAmulet == Double) {
+			Player::Instance()->setRateOfScore(Player::Instance()->getRateOfScore() / 2);
+
+		}
+		else if (_typeAmulet == HalveScore) {
+			Player::Instance()->setRateOfScore(Player::Instance()->getRateOfScore() * 2);
+
+		}
+	}
+	
+	
+	
+
+
+
 };
 

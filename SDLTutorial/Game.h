@@ -223,7 +223,7 @@ public:
 
 			_background = loadImage("Image/GrassBackground.png", _renderer);
 			_ball->setImage("Image/Ball.png");
-			_map = Map(_renderer, "map2.txt");
+			_map = Map(_renderer, "map1.txt");
 
 			//Cài đặt font cho màn hình menu game
 			_menuScreen.setFont("MachineGunk-nyqg.ttf");
@@ -245,6 +245,8 @@ public:
 			_fileMapName.push_back("map7.txt");
 			_fileMapName.push_back("map8.txt");
 			_fileMapName.push_back("map9.txt");
+			SDL_WarpMouseInWindow(_window, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED);
+			SDL_SetWindowGrab(_window, SDL_TRUE);
 		}
 	}
 	//Kích hoạt một màn hình nào đó 
@@ -419,7 +421,7 @@ public:
 			//Khi nhận tín hiệu là người chơi đã tích chọn một map
 			if (_mapDiagram.getSelectedMap() != 0) {
 				//Nếu mà người chơi chọn chơi tiếp tục
-				if (_menuScreen.getCurrentChoose() == Continue || _previousScreen == "GameOverScreen") {
+				if (_menuScreen.getCurrentChoose() != NewGame) {
 					//Khi đó ta cặp nhật lại biến mapCurrent bằng map mà người chơi chọn 
 					_currentMap = _mapDiagram.getSelectedMap();
 					//Khi mà máp người chơi chọn trùng với map mà người chơi đã chơi ở lần chơi trước 
@@ -444,9 +446,10 @@ public:
 				}
 				//Ngược lại người chơi chọn 1 nghĩa là người chơi muốn chơi mới luôn
 				//do đó ta load map 1 
-				else if (_menuScreen.getCurrentChoose() == NewGame) {
+				else {
 					_currentMap = 1;
 					_map.loadData(_fileMapName[_currentMap % _fileMapName.size()]);
+					_menuScreen.resetData();
 					//reset all
 
 				}
@@ -525,8 +528,6 @@ public:
 
 					enableScreen(_previousScreen);
 					_previousScreen = "SettingScreen";
-					//listScreen[previousScreen] = true;
-					//listScreen["SettingScreen"] = false;
 				}
 				//Sau khi chuyển màn hình thì ta reset lại thuộc tính get hành động người dùng 
 				//để không bị nhảy vào if ngay khi vòng lặp tiếp theo gọi màn hình này
@@ -769,36 +770,44 @@ public:
 			//Di chuyển trái bóng
 			_ball->move();
 			//Kiểm tra sự va chạm trái bóng với paddle
-			if (isBoundFromPaddle() && _ball->getIsLaunch() == true) {
-				int degree = (int)_ball->getDegree() % 360;
-				if (degree > 0 && degree < 300) {
-					degree -= 360;
-				}
-				//Phần bù để cho quả bóng phản xạ lại  làm cho điều kiện va chạm bị sai
-				float offset = abs(_ball->getY() + _ball->getRadius() - _paddle->getY());
-				_ball->setY(_ball->getY() - float(1.1) * offset);
-				//Đổi hướng cho quả bóng theo chiều rơi của quả bóng
-				//khi paddle có vận tốc và có va chạm thì ta
-				//deltaX > 0 nghĩa là paddle đang dịch chuyển qua phải và có va chạm với quả bóng
+			if (_ball->getIsLaunch() == true) {
+				if (_paddle->intersectionLineAndCircle(_paddle->getX(), _paddle->getY(), _paddle->getX() + _paddle->getWidth(), _paddle->getY())) {
+					int degree = (int)_ball->getDegree() % 360;
+					if (degree > 0 && degree < 300) {
+						degree -= 360;
+					}
+					//Phần bù để cho quả bóng phản xạ lại  làm cho điều kiện va chạm bị sai
+					float offset = abs(_ball->getY() + _ball->getRadius() - _paddle->getY());
+					_ball->setY(_ball->getY() - float(1.1) * offset);
+					//Đổi hướng cho quả bóng theo chiều rơi của quả bóng
+					//khi paddle có vận tốc và có va chạm thì ta
+					//deltaX > 0 nghĩa là paddle đang dịch chuyển qua phải và có va chạm với quả bóng
 
-				if (_paddle->getDeltaX() > 0 && -degree + 15 < 135) {
-					_ball->setDegree(-degree + 15);
-				}
-				//khi quả bóng có vận tốc và di chuyển về phía bên trái
-				else if (_paddle->getDeltaX() < 0 && -degree - 15 > 180 - 135) {
-					_ball->setDegree(-degree - 15);
+					if (_paddle->getDeltaX() > 0 && -degree + 15 < 135) {
+						_ball->setDegree(-degree + 15);
+					}
+					//khi quả bóng có vận tốc và di chuyển về phía bên trái
+					else if (_paddle->getDeltaX() < 0 && -degree - 15 > 180 - 135) {
+						_ball->setDegree(-degree - 15);
 
-				}
-				//Ngược lại khi paddle không di chuyển
-				else {
-					_ball->setDegree(-_ball->getDegree());
-				}
-				//Kiểm soát speed của trái banh ở mức tối đa 
-				//speed <11
-				if (_ball->getSpeed() <= 8.5) {
+					}
+					//Ngược lại khi paddle không di chuyển
+					else {
+						_ball->setDegree(-_ball->getDegree());
+					}
+					//Kiểm soát speed của trái banh ở mức tối đa 
+					//speed <11
+					if (_ball->getSpeed() <= 8.5) {
 
-					_ball->setSpeed(_ball->getSpeed() * (float)1.1);
+						_ball->setSpeed(_ball->getSpeed() * (float)1.1);
 
+					}
+				}
+				else if (_paddle->intersectionLineAndCircle(_paddle->getX(), _paddle->getY(), _paddle->getX(), _paddle->getY() + _paddle->getHeight()) ||
+					_paddle->intersectionLineAndCircle(_paddle->getX() + _paddle->getWidth(), _paddle->getY(), _paddle->getX() + _paddle->getWidth(), _paddle->getY() + _paddle->getHeight()
+					))
+				{
+					_ball->setDegree(180-_ball->getDegree());
 				}
 
 			}
@@ -836,7 +845,15 @@ public:
 			case SDLK_d:
 				_MoveLR[1] = true;
 				break;
+			case SDLK_ESCAPE:
+				_running = false;
+				_player->writeDataToFile();
+				if (_player->getLife() != 0) {
+					_map.saveData();
+				}
+				break;
 			}
+			
 		}
 		else if (Events.type == SDL_KEYUP)
 		{
@@ -852,6 +869,7 @@ public:
 			case SDLK_d:
 				_MoveLR[1] = false;
 				break;
+
 			}
 		}
 		//Bắt sự kiện chuột
@@ -868,6 +886,8 @@ public:
 				//người chơi không nhấn chuột thì biến đó có giá trị là false
 			case SDL_MOUSEBUTTONDOWN:
 				_mouseActionClicked = true;
+				SDL_WaitEvent(&Events);
+				
 				break;
 			case SDL_MOUSEBUTTONUP:
 				_mouseActionClicked = false;
