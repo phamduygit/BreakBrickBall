@@ -211,6 +211,32 @@ public:
 			}
 		}
 	}
+	void clearAt(int x, int y, string direction) {
+		//d
+		int count = 0;
+		if (direction == "Horizontal") {
+			for (int i = 0; i < _list.size(); i++) {
+				if (abs(_list[i].getY()-y)<0.001) {
+					count++;
+					_list.erase(_list.begin()+i);
+				}
+
+			}
+
+		}
+		else if (direction == "Vertical") {
+			for (int i = 0; i < _list.size(); i++) {
+				if (_list[i].getX() == x) {
+					count++;
+					_list.erase(_list.begin() + i);
+
+				}
+
+			}
+		}
+		Player::Instance()->setCurrentMapScore(Player::Instance()->getCurrentMapScore() + count * Player::Instance()->getRateOfScore());
+		Player::Instance()->setTotalScore(Player::Instance()->getTotalScore() + Player::Instance()->getRateOfScore() * count);
+	}
 
 };
 

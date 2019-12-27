@@ -26,7 +26,11 @@ enum TypeAmulet {
 	//sẽ bay ra ở hố trắng
 	BlackHole = 10,
 	//Hố trắng là nơi mà trái banh sẽ bay ra 
-	WhiteHole = 11
+	WhiteHole = 11,
+	//Phá hủy những viên gạch theo chiều ngang
+	HorizontalDestruction = 12,
+	//Phá hủy những viên gạch theo chiều dọc
+	VerticalDestruction = 13
 
 
 };
@@ -51,7 +55,8 @@ public:
 		// 9 là vật cản
 		//10 là hố đen
 		//11 là hố trắng
-		if (_typeAmulet != BlackHole && _typeAmulet != WhiteHole) {
+		if (_typeAmulet != BlackHole && _typeAmulet != WhiteHole&&
+			_typeAmulet!=HorizontalDestruction&&_typeAmulet!=VerticalDestruction) {
 			this->_currentFrame = typeAmulet - 1;
 		}
 		else {
@@ -63,6 +68,9 @@ public:
 		//
 		if (_typeAmulet == Double) {
 			this->setMaxTime(10000);
+		}
+		else if (_typeAmulet == HorizontalDestruction || _typeAmulet == VerticalDestruction) {
+			setMaxTime(3000);
 		}
 		
 	}
@@ -100,7 +108,7 @@ public:
 	//Vẽ bùa lên màn hình
 	void draw(bool finalMap = false) {
 		//Nếu bùa không phải là hố đen và hố trắng thì vẽ theo khung trên sprite sheet
-		if (_typeAmulet != BlackHole && _typeAmulet != WhiteHole) {
+		if (_typeAmulet != BlackHole && _typeAmulet != WhiteHole&& _typeAmulet != HorizontalDestruction&& _typeAmulet != VerticalDestruction) {
 			TextureManager::GetInstance()->drawFrame("Amulet", float(_x), float(_y), float(_size), float(_size), 1, _currentFrame, _renderer);
 		}
 		//ngược lại nếu bùa là hố đen thì vẽ theo khung hình riêng tính từ 1 đến 120 
@@ -118,7 +126,14 @@ public:
 			if (_currentFrame == 0) {
 				_currentFrame = 1;
 			}
-
+		}
+		else if (_typeAmulet == HorizontalDestruction) {
+			//TODO
+			TextureManager::GetInstance()->drawFrame("Horizontal", float(_x), float(_y), 50, 50, 1,1, _renderer);
+		}
+		else if (_typeAmulet == VerticalDestruction) {
+			//TODO
+			TextureManager::GetInstance()->drawFrame("Vertical", float(_x), float(_y), 50, 50, 1,1, _renderer);
 		}
 	}
 	void reset() {
@@ -148,11 +163,5 @@ public:
 
 		}
 	}
-	
-	
-	
-
-
-
 };
 

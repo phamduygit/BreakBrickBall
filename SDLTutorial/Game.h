@@ -110,6 +110,7 @@ private:
 	//singleton vì trong game ta chỉ có một người chơi duy nhất
 	Player* _player;
 	//Hàm khỏi tạo không đối số của đối tượng game
+	int start;
 	Game() {
 		_player = Player::Instance();
 		_ball = NULL;
@@ -219,6 +220,8 @@ public:
 			TextureManager::GetInstance()->load("Image/WhiteHole.png", "WhiteHole", _renderer);
 			TextureManager::GetInstance()->load("Image/RedHole.png", "RedHole", _renderer);
 			TextureManager::GetInstance()->load("Image/Explosion.png", "Explosion", _renderer);
+			TextureManager::GetInstance()->load("Image/Horizontal.png", "Horizontal", _renderer);
+			TextureManager::GetInstance()->load("Image/Vertical.png", "Vertical", _renderer);
 			//Load hình ảnh cho background
 
 			_background = loadImage("Image/GrassBackground.png", _renderer);
@@ -265,6 +268,8 @@ public:
 			_listScreen[screenName[i]] = false;
 		}
 		_listScreen[nameScreen] = true;
+
+		_mouseActionClicked = false;
 	}
 
 	void render() {
@@ -713,6 +718,7 @@ public:
 			if (_mouseActionClicked == true && !_ball->getIsLaunch()) {
 				//Sét trạng thái cho trái banh bay lên
 				_ball->setIsLaunch(true);
+				_mouseActionClicked == false;
 				//Tính toán góc bay lên của quả bóng dựa vào hệ số góc
 				float degree = atan(_line.getHeSoGoc()) * 180 / float(PI);
 				if (degree > 0) {
@@ -723,6 +729,7 @@ public:
 				}
 
 				_ball->setDegree(degree);
+
 			}
 			//Khi trái banh trở lại vị trí ban đầu thì ta sét lại vị trí cho trái banh
 			if (_isResetState == true) {
@@ -875,8 +882,7 @@ public:
 		//Bắt sự kiện chuột
 		else if (Events.type == SDL_MOUSEMOTION || Events.type == SDL_MOUSEBUTTONUP || Events.type == SDL_MOUSEBUTTONDOWN) {
 			//Lấy ra tính hiệu chuột mà đưa vào hai thuộc tính xMouse và yMouse
-			SDL_GetMouseState(&_xMouse, &_yMouse);
-		
+			SDL_GetMouseState(&_xMouse, &_yMouse);	
 
 			switch (Events.type)
 			{
@@ -884,8 +890,7 @@ public:
 				//Nếu nhấn thì ta cặp nhât mouseActionClicked là true
 				//người chơi không nhấn chuột thì biến đó có giá trị là false
 			case SDL_MOUSEBUTTONDOWN:
-				_mouseActionClicked = true;
-				SDL_WaitEvent(&Events);
+				start = SDL_GetTicks();
 				
 				break;
 			case SDL_MOUSEBUTTONUP:
@@ -895,14 +900,27 @@ public:
 			default:
 				break;
 			}
+			
+			int limit = 10;
+			
+			if (SDL_GetTicks() - start <= limit) {
+				_mouseActionClicked = true;
+			}
+			else {
+				_mouseActionClicked = false;
+			}
 			if ((size_t)Events.button.button == 3) {
 				SDL_SetWindowGrab(_window, SDL_FALSE);
 
 			}
 			else if ((size_t)Events.button.button == 1) {
 				SDL_SetWindowGrab(_window, SDL_TRUE);
+				
 
 			}
+			cout << _mouseActionClicked;
+		
+			
 			
 		}
 	}

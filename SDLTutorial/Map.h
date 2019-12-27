@@ -159,7 +159,11 @@ public:
 	virtual void update() {
 
 		_listBrick.handleCollision();
-		_listAmulet.handleCollision();
+		auto res = _listAmulet.handleCollision();
+	
+		if (res.direction != "") {
+			_listBrick.clearAt(res.x, res.y, res.direction);
+		}
 		_computerPaddle.move();
 		_computerPaddle.handleCollision();		
 	}

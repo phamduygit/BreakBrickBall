@@ -10,7 +10,12 @@
 #include <map>
 #include <queue>
 using namespace std;
+struct HandleDestruction {
+	string direction;
+	int x;
+	int y;
 
+};
 class ListAmulet
 {
 private:
@@ -39,11 +44,11 @@ public:
 	}
 	//Hàm khỏi tạo có đối số
 	ListAmulet(SDL_Renderer*& value) {
-		
+
 		this->_renderer = value;
 	}
 	//Cài đặt renderer cho đối tượng
-	void setRenderer(SDL_Renderer* &renderer) {
+	void setRenderer(SDL_Renderer*& renderer) {
 		this->_renderer = renderer;
 	}
 	//Xóa tất cả các bùa có trong mảng bùa
@@ -52,7 +57,7 @@ public:
 	}
 	//Vẽ danh sách bùa lên màn hình
 	void drawListAmulet() {
-		for(size_t i = 0; i < _list.size(); i++) {
+		for (size_t i = 0; i < _list.size(); i++) {
 			_list[i].draw();
 		}
 	}
@@ -71,10 +76,10 @@ public:
 				map.push_back(data);
 			}
 		}
-		
+
 		file.close();
 		for (int k = 0; k < int(map.size()); k++) {
-			if (map[k] != 0 && map[k] != 1&&map[k]!=9) {
+			if (map[k] != 0 && map[k] != 1 && map[k] != 9) {
 				int i = k % 10;
 				int j = k / 10;
 				Amulet amulet(_renderer, i * 50, (j + 1) * 50, TypeAmulet(map[k]));
@@ -84,7 +89,7 @@ public:
 		/*vector<int> map;
 		fstream file(fileName, ios::in);
 		while (!file.eof()) {
-			
+
 			string data;
 			getline(file, data);
 			if (data == "") {
@@ -102,7 +107,7 @@ public:
 			int j = k / 10;
 			if (map[k] == 1) {
 				Amulet amulet(_renderer, i * 50,(j + 1) * 50,TypeAmulet(map[k]));
-				
+
 				_list.push_back(amulet);
 			}
 		}*/
@@ -113,7 +118,9 @@ public:
 	}
 	//Kiểm soát việc xẩy ra va chạm giữa banh 
 	// với các bùa
-	void  handleCollision() {
+	HandleDestruction handleCollision() {
+		HandleDestruction result = HandleDestruction();
+		
 		//Khi xẩy ra hiệu ứng của bùa nam châm thì sét vị trí của banh luôn nằm 
 		//ở chính giữa của paddle		
 		for (size_t i = 0; i < _list.size(); i++) {
@@ -130,19 +137,16 @@ public:
 				}
 				//Nếu loại bùa đó là nam châm
 				else if (_list[i].getType() == Magnet) {
-					_isTouchedMagnet = true;					
+					_isTouchedMagnet = true;
 					//Lưu giữ lại tốc độ khi xẩy ra hiệu ứng 
 					MagicBall::Instance(_renderer)->explode();
 					MagicBall::Instance(_renderer)->setBackupSpeed(MagicBall::Instance(_renderer)->getSpeed());
 					//Cập nhật lại vị trí quả bóng 
 					MagicBall::Instance(_renderer)->setX(Paddle::Instance(_renderer)->getX() + Paddle::Instance(_renderer)->getWidth() / 2);
-					MagicBall::Instance(_renderer)->setY(Paddle::Instance(_renderer)->getY()+10);
+					MagicBall::Instance(_renderer)->setY(Paddle::Instance(_renderer)->getY() + 10);
 					//Khi đó quả bóng sẽ không di chuyển
 					//FIX
 					MagicBall::Instance(_renderer)->setSpeed(0);
-
-
-
 				}
 				//Nếu gặp loại bùa tăng kích thước paddle
 				else if (_list[i].getType() == IncreasePaddle) {
@@ -163,7 +167,7 @@ public:
 				}
 				else if (DecreaseSpeedBall == _list[i].getType()) {
 					MagicBall::Instance(_renderer)->setSpeed(MagicBall::Instance(_renderer)->getSpeed() * float(0.6));
-					
+
 				}
 				//Nếu gặp bùa tăng mạng
 				else if (IncreaseLife == _list[i].getType()) {
@@ -171,7 +175,7 @@ public:
 					life++;
 					Player::Instance()->setLife(life);
 				}
-				else if (BlackHole == _list[i].getType()&&_list[i].getFrame()>=1&& _list[i].getFrame() <=120) {
+				else if (BlackHole == _list[i].getType() && _list[i].getFrame() >= 1 && _list[i].getFrame() <= 120) {
 					Amulet whiteHole;
 
 					for (auto amulet : _list) {
@@ -183,12 +187,30 @@ public:
 					MagicBall::Instance(_renderer)->setX(whiteHole.getX() + whiteHole.getSize() / 2);
 					MagicBall::Instance(_renderer)->setY(whiteHole.getY() + whiteHole.getSize() / 2);
 				}
+				else if (HorizontalDestruction == _list[i].getType()) {
+					result.direction = "Horizontal";
+					result.x = _list[i].getX();
+					result.y = _list[i].getY();
+
+				}
+				else if (VerticalDestruction == _list[i].getType()) {
+					result.direction = "Vertical";
+					result.x = _list[i].getX();
+					result.y = _list[i].getY();
+				}
 				//Sau khi trái banh va chạm vào bùa thì bùa biến mất
-				if (_list[i].getType() != BlackHole && _list[i].getType() != WhiteHole) {
-					if (_list[i].getType() != IncreaseLife) {
+				if (_list[i].getType() != BlackHole &&
+					_list[i].getType() != WhiteHole	) {
+					if (_list[i].getType() != IncreaseLife&& 
+						_list[i].getType() != HorizontalDestruction &&
+						_list[i].getType() != VerticalDestruction) {
+						//Queue chứa amulet còn hiệu ứng
 						_waitForEndTimeAmulet.push(_list[i]);
 					}
-					_list.erase(_list.begin() + i);		
+					if(_list[i].getType() != HorizontalDestruction &&
+						_list[i].getType() != VerticalDestruction)
+						_list.erase(_list.begin() + i);							
+					
 				}
 				break;
 
@@ -216,9 +238,10 @@ public:
 				_waitForEndTimeAmulet.pop();
 			}
 		}
+		return result;
 
-	
+
 	}
-	
+
 };
 
