@@ -880,54 +880,41 @@ public:
 			}
 		}
 		//Bắt sự kiện chuột
-		else if (Events.type == SDL_MOUSEMOTION || Events.type == SDL_MOUSEBUTTONUP || Events.type == SDL_MOUSEBUTTONDOWN) {
+		else if (Events.type == SDL_MOUSEMOTION) {
 			//Lấy ra tính hiệu chuột mà đưa vào hai thuộc tính xMouse và yMouse
 			SDL_GetMouseState(&_xMouse, &_yMouse);	
-
-			switch (Events.type)
-			{
-				//Kiểm soát xem người chơi có nhấn chuột xuống không
-				//Nếu nhấn thì ta cặp nhât mouseActionClicked là true
-				//người chơi không nhấn chuột thì biến đó có giá trị là false
-			case SDL_MOUSEBUTTONDOWN:
-				start = SDL_GetTicks();
-				
-				break;
-			case SDL_MOUSEBUTTONUP:
-				_mouseActionClicked = false;
-				break;
-
-			default:
-				break;
-			}
+		
+			int limit = 1;
 			
-			int limit = 10;
 			
-			if (SDL_GetTicks() - start <= limit) {
-				_mouseActionClicked = true;
-			}
-			else {
-				_mouseActionClicked = false;
-			}
+		
+			
+			
+		}
+		else if (Events.type == SDL_MOUSEBUTTONUP) {
+			_mouseActionClicked = false;
+		}
+		else if (Events.type == SDL_MOUSEBUTTONDOWN) {
+			_mouseActionClicked = true;
 			if ((size_t)Events.button.button == 3) {
 				SDL_SetWindowGrab(_window, SDL_FALSE);
 
 			}
 			else if ((size_t)Events.button.button == 1) {
-				SDL_SetWindowGrab(_window, SDL_TRUE);
+				_mouseActionClicked = true;
 				
+				SDL_SetWindowGrab(_window, SDL_TRUE);
 
 			}
-			cout << _mouseActionClicked;
-		
-			
-			
+			SDL_WaitEvent(&Events);
+
 		}
 	}
 	//Trả về trạng thái hoạt động của game
 	//true là game đang hoạt động
 	//false là game không hoạt động
 	bool getRunning() {
+		cout << _mouseActionClicked;
 		return _running;
 	}
 };
